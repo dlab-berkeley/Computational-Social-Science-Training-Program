@@ -1,1 +1,1 @@
-# Computational-Social-Science-Training-Program
+# Computational-Social-Science-Labs
