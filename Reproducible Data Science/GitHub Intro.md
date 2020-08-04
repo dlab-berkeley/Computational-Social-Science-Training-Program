@@ -37,3 +37,32 @@ GitHub can be a great resource because it provides access to the world's largest
 3. Star and/or fork a repository that you find.
 
 You can also follow specific users to see all of the repositories associated with them. This is a great way to see what others are working on and keep up to date with new developments. For example, try navigating to [Aniket's page](https://github.com/akesari12/) page and following it. 
+
+## Create Your Own Repo
+
+Next, let's look at how to make your own repos. Over time, you will create new repos to host code for your projects and collaborations. Doing so will help others reproduce your code, and serve as a useful way to showcase your work to employers and other social scientists. From the GitHub homepage, look for the "New" button near the top left.
+
+![New Repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/github%20new%20repo.png)
+
+Once you do this, click the green button, then name your new repository "My First Repository" or whatever else you like. Make sure you click the box to initialize it with a README.
+
+![Initialize New Repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/github%20create%20repo.png) 
+
+# Git from Command Line
+
+## Configure credentials
+
+Now we will see how to use some of git's core functions to work with repos and use version control. First, make sure to configure your global options for GitHub so that you don't have to login every time you want to do something. Open a bash terminal and do the following (substitute your GitHub handle and username):
+
+```
+git config --global user.name "Your Username"
+git config --global user.email "your.email@berkeley.edu"
+```
+
+Then to make sure you only need to type in your password once, run the following:
+
+```
+git config --global credential.helper cache
+```
+
+
