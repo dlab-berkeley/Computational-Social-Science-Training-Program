@@ -61,3 +61,25 @@ Working with big data usually means that need to access resources beyond those a
 	ssh ...
 
 Note: fill this in once we figure out how we're going to do cloud computing.
+
+## Challenge Question
+
+Accomplish the following tasks using only Bash commands:
+
+1. Create a folder named challenge inside of your "newdir" directory
+
+2. cd into this directory
+
+3. Inside of the challenge directory, create a file named movies.txt
+
+4. Add your favorite movie to this file
+
+5. Copy this file to your Desktop
+
+6. Delete the file from your challenge folder
+
+7. Show the contents of movies.txt on your screen
+
+8. Open movies.txt
+
+BONUS: what happens if you try to delete the challenge folder while there is still a file inside of it?
