@@ -65,4 +65,48 @@ Then to make sure you only need to type in your password once, run the following
 git config --global credential.helper cache
 ```
 
+The next time you try to interact with a git repo from the command line (as we'll do momentarily), you'll be asked to type in your username and password. After doing this once, you shouldn't have to do so again.
+
+## Basic Workflow
+
+First, we'll go through working with your own repository on your own. Some key terms:
+
+- **Clone**: Download and copy a remote directory to a newly created folder on your machine. 
+- **Add**: Stage changes you made to different files to get them ready to be uploaded back to the remote repository.
+- **Commit**: Add a message to describe the changes that you have made.
+- **Push**: Upload your changes.
+
+Let's start by cloning the repository that you just created. Navigate to your repo's page, and find the green "Code" button.
+
+![Initialize New Repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/clone%20button.png) 
+
+Click the button, and then copy the HTML link that is displayed. Then run the following code in your terminal (substitute your link for the one here):
+
+```
+git clone https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program.git
+```
+
+Running this command in your terminal should create a folder in your current directory with the contents of your repo. Now let's practice adding content and updating the repo. Open the README.md file and add a short description of the repo (you can do this either from command line or your favorite text editor). Save the changes in the file, and then get ready to make the changes in the repository. First enter the following command:
+
+```
+git add README.md
+```
+
+OR
+
+```
+git add *
+```
+
+You can either add individual files, or add all of the files that you have changed at once with the "\*". When working with others or on complex projects, it is generally good practice to not add all files at once.
+
+Next add a commit message describing the changes that you made. Try to make these descriptions as meaningful as possible. Every programmer is guilt of doing something like this:
+
+![Commit Messages](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/commit%20message.png) 
+
+But in general, the more meaningful your commit messages and documentation, the easier it will be for you and your collaborators to revisit the code later! Try running the following code:
+
+```
+git commit -m "My first git commit message"
+```
 
