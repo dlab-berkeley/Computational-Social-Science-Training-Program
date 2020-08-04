@@ -18,7 +18,9 @@ After today's lab, I recommend you head over to GitHub Education and follow the 
 
 # Navigating GitHub
 
-GitHub is built on top of [git](https://en.wikipedia.org/wiki/Git), which is a Linux-based version-control system. Git is used by software engineers and data scientists to track changes in code and other files, work together, and support distributed workflows. GitHub builds on top of the core toolkit by providing a suite of tools and graphical interfaces that streamline collaboration and code organization. Let's take a look at some of the features on the webpage. The first thing we will look at is how to interact with other users' repositories. 
+## Interacting with Other Repos
+
+GitHub is built on top of [git](https://en.wikipedia.org/wiki/Git), which is a Linux-based version-control system. Git is used by software engineers and data scientists to track changes in code and other files, work together, and support distributed workflows. GitHub builds on top of the core toolkit by providing a suite of tools and graphical interfaces that streamline collaboration and code organization. Let's take a look at some of the features on the webpage. The first thing we will look at is how to interact with other users' repositories. Follow along by navigating to the GitHub repo for the [Computational Social Science](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program) course. 
 
 ![Interact With Repos](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/repo%20interaction.png)
 
@@ -27,3 +29,11 @@ There are three basic ways you can interact with someone else's repo:
 - **Watch**: Notify you when there are changes or conversations in the repo.
 - **Star**: Add this repo to a list of repos that appear in your feed. Think of this as "favoriting" a repo.
 - **Fork**: Make a copy of this repository in your own account. This is useful if you are not directly involved with a project but want to build on top of someone else's code.
+
+GitHub can be a great resource because it provides access to the world's largest collection of source code, and it hosts many open source projects. Depending on your field, there may already be lots of repositories available that are worth exploring. Try to do the following steps:
+
+1. Find the search bar in the top left.
+2. Search for repositories based on some key words that are common for your field. For example, try searching "public health" or "economics."
+3. Star and/or fork a repository that you find.
+
+You can also follow specific users to see all of the repositories associated with them. This is a great way to see what others are working on and keep up to date with new developments. For example, try navigating to [Aniket's page](https://github.com/akesari12/) page and following it. 
