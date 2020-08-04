@@ -102,7 +102,7 @@ You can either add individual files, or add all of the files that you have chang
 
 Next add a commit message describing the changes that you made. Try to make these descriptions as meaningful as possible. Every programmer is guilt of doing something like this:
 
-![Commit Messages](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/git%commit.png) 
+![Commit Messages](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/git%20commit.png) 
 
 But in general, the more meaningful your commit messages and documentation, the easier it will be for you and your collaborators to revisit the code later! Try running the following code:
 
