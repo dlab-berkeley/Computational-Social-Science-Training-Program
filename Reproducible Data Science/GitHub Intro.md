@@ -120,3 +120,80 @@ This will upload your changes, and if you navigate back to your repository, you 
 
 ## Collaborative Tools
 
+One of the best parts about using git for managing code is that it allows you to easily collaborate on code with others. To sync your local copy of a repository with the most current version, run the following code:
+
+```
+git pull
+```	
+
+Always be sure to pull down the latest changes from a repo before you stage, commit, and push your own changes. If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo.
+
+Another useful feature is the ability to create a "branch". When working on code with others, you usually want to avoid overwriting each other's work. It is generally good practice to create a "branch" where you can work on code without colliding with your teammates. Notice on a repo page there is a master branch by default (circled in red). If you create a separate branch and work from there, none of those changes will affect the master branch. To merge those changes into the master branch, a project maintainer can look at the "pull requests" (circled in blue) to review the changes, see if they would create any conflicts, and either approve, reject, or suggest changes for them.
+
+![Branches](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/branches.png) 
+
+To create and switch to a new branch, do the following:
+
+```
+git checkout -b new_branch
+```
+
+This code will create a new branch called "new_branch". To switch back to the master branch, you can run the following:
+
+```
+git checkout master
+```
+
+Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the github repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into master. If so, merge the changes and see if they updated on the master branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
+
+## Project Management Tools
+
+Besides the command line interface, GitHub also provides some other useful collaboration tools. Issues are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. In your groupwork, you might consider using Issues with Projects to create a board that allows you to manage various issues. Each time you create an issue, you can describe the problem, assign it to a team member, and then track its progress with the project dashboard.
+
+![Project Management](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/projects.png) 
+
+# Challenge Questions
+
+These challenges are taken from [D-Lab's BashGit workshop.]()
+
+# Git Challenge 1
+
+1. Create an example repository on your GitHub account. 
+
+2. git clone this repository to your computer. cd into this directory.
+
+3. Create three files named file1.txt, file2.txt, and file3.txt in your local repository using a Bash command. 
+
+4. Stage, commit, and push file1.txt to your remote repository. Refresh the URL on your GitHub page. Do you see your commit?
+
+5. Stage, commit, and push file2.txt and file3.txt to your remote repository as a single commit. 
+
+# Git Challenge 2
+
+1. Divide yourselves into groups of 3.
+
+2. Have one person act as the "maintainer" and the other two act as "contributors" A and B. 
+
+3. The maintainer creates a repository with a README.md file so that it can immediately be cloned. 
+
+4. Maintainer adds contributors A and B as collaborators on the project (click "Settings" --> "Collaborators" --> "Add collaborator") 
+
+5. The maintainer creates a file named animals.txt and adds their favorite animal to this file. 
+
+6. Contributors A and B fork this repository and each add their favorite animals to this file. 
+
+7. Contributors A and B then create a pull request (click the "pull request" button, then click it again) so the maintainer can see the proposed changes. 
+
+8. Maintainer reviews changes and accepts the proposed changes. 
+
+### Did it work!?
+
+9. If conflicts, the issue is "resolved" as long as the headers <<<< ==== and >>>> are deleted. 
+
+10. All people in each group should add an issue using the "Issues" tab. Did you each receive emails about the creation of these issues? 
+
+11. Click the "commits" tab to see changes made by your group members. 
+
+# Git Challenge 3
+
+Star the [D-Lab BashGit repo](https://github.com/dlab-berkeley/BashGit) if you learned something! All of the materials for our course will be hosted from D-Lab's GitHub page, and you can find lots of other useful resources for Python, R, SQL, and other computational tools that we teach in our workshops.  
