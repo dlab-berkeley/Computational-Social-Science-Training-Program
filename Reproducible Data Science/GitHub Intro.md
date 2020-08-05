@@ -197,3 +197,9 @@ These challenges are taken from [D-Lab's BashGit workshop.]()
 # Git Challenge 3
 
 Star the [D-Lab BashGit repo](https://github.com/dlab-berkeley/BashGit) if you learned something! All of the materials for our course will be hosted from D-Lab's GitHub page, and you can find lots of other useful resources for Python, R, SQL, and other computational tools that we teach in our workshops.  
+
+# What if Something Goes Wrong?
+
+![XKCD on Git](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/git%20xkcd.png) 
+
+Inevitably, especially as you get started, you are likely to run into errors. Usually these arise because of conflicts introduced during collaboration. You can mostly avoid these problems by making good use of branches and pull requests, or by reverting to the last point where you know things worked. We encourage you to do your best to resolve these kinds of problems directly and consult the instructors and/or stackexchange regularly. If you truly get stuck though, try downloading a fresh copy of the repo as a last resort.
