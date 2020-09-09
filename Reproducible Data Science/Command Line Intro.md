@@ -54,13 +54,30 @@ Navigate to newdir and find test.txt. Next try the following command:
 
 Try following the instructions in the text file to add your name to the beginning of the file. Vim is a lightweight text editor that will allow you to create and edit basic text files. While you might mostly use applications like Notepad, [Sublime](https://www.sublimetext.com/), or [Visual Studio](https://visualstudio.microsoft.com/), vim can still be useful for making small edits and working with files on a server. 
 
-## Working with a Remote Server
+## Running a Python Script
 
-Working with big data usually means that need to access resources beyond those available on our own laptops. To do this, we can login to a remote server with much more space and computing power:
+The last thing we will cover is using the terminal to run Python code. We won't have you regularly do this for this course, but it is useful to know this is an option if you ever are working with a remote server. This is a fairly common situation when you are working with sensitive data (i.e. medical records) or big data.
 
-	ssh ...
+First, use `touch` to create a file called "hello.py".
 
-Note: fill this in once we figure out how we're going to do cloud computing.
+
+	touch hello.py
+
+Now check the files in your current working directory to see if it's there. If so, use vim to add the following text:
+
+	#!/usr/bin/env python3
+
+	print('Hello World!')
+
+Exit the vim editor, and then in the command line, run the following:
+
+	python3 hello.py
+
+or if that doesn't work, try:
+
+	python hello.py
+
+What happens when you run this? Ideally, it should have printed "Hello World!" to the console! As you progress with your coding skills, your projects may require you to run complicated Python scripts for long periods of time. Being able to run them on remote servers, or chain together many different scripts together will be a key skill in helping you manage that workflow.
 
 ## Challenge Question
 
