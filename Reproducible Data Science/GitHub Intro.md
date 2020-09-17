@@ -188,7 +188,7 @@ These challenges are taken from [D-Lab's BashGit workshop.]()
 
 ### Did it work!?
 
-9. If conflicts, the issue is "resolved" as long as the headers <<<< ==== and >>>> are deleted. 
+9. If there are no conflicts, the issue is "resolved" as long as the headers <<<< ==== and >>>> are deleted. 
 
 10. All people in each group should add an issue using the "Issues" tab. Did you each receive emails about the creation of these issues? 
 
@@ -196,7 +196,7 @@ These challenges are taken from [D-Lab's BashGit workshop.]()
 
 # Git Challenge 3
 
-Star the [D-Lab BashGit repo](https://github.com/dlab-berkeley/BashGit) if you learned something! All of the materials for our course will be hosted from D-Lab's GitHub page, and you can find lots of other useful resources for Python, R, SQL, and other computational tools that we teach in our workshops.  
+Star the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/Reproducible%20Data%20Science/GitHub%20Intro.md) if you learned something! All of the materials for our course will be hosted from D-Lab's GitHub page, and you can find lots of other useful resources for Python, R, SQL, and other computational tools that we teach in our workshops.  
 
 # What if Something Goes Wrong?
 
