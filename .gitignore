@@ -1,1 +1,8 @@
+# .ipynb_checkpoints
 **/*.ipynb_checkpoints/
+
+# google news vector
+GoogleNews-vectors-negative300.bin.gz
+
+# congress tweets data
+116th Congressional Tweets and Demographics.csv
