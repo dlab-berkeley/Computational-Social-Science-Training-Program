@@ -59,26 +59,26 @@ df <- df %>%
   mutate(type = as.factor(4 - (Y_1*2 + Y_0)))
 
 # Create a frequency table showing how many individuals there are of each causal type
-df.freq <- df %>%
+df_freq <- df %>%
   count(Y_1, Y_0, type) %>%
   group_by(Y_1) %>% 
   mutate(prop = n/nrow(df)) %>%
   arrange(type)
-df.freq
+df_freq
 
 # Save the proportions of each causal type
-p_1 <- df.freq$prop[1]
-p_2 <- df.freq$prop[2]
-p_3 <- df.freq$prop[3]
-p_4 <- df.freq$prop[4]
+p_1 <- df_freq$prop[1]
+p_2 <- df_freq$prop[2]
+p_3 <- df_freq$prop[3]
+p_4 <- df_freq$prop[4]
 ```
 
 This shows us how many individuals in our population of interest had each of four possible sets of outcomes with and without the use of AspiTyleCedrin, which we may refer to as four different causal "types":
 
-* **Type 1 or "doomed":** These individuals experience a migraine regardless of whether they take AspiTyleCedrin. In our population of interest there are `r df.freq[4]` such individuals. The proportion of these individuals out of the entire population of interest is $p_1 \approx$ `r round(p_1, 3)`.
-* **Type 2 or "causal":** These individuals experience a migraine if and only if they take AspiTyleCedrin. In our population of interest there are `r df.freq[3]` such individuals. The proportion of these individuals out of the entire population of interest is $p_2 \approx$ `r round(p_2, 3)`.
-* **Type 3 or "preventive":** These individuals experience a migraine if and only if they do not take AspiTyleCedrin. In our population of interest there are `r df.freq[2]` such individuals. The proportion of these individuals out of the entire population of interest is $p_3 \approx$ `r round(p_3, 3)`.
-* **Type 4 or "immune":**  These individuals do not experience a migraine regardless of whether they take AspiTyleCedrin. In our population of interest there are `r df.freq[1]` such individuals. The proportion of these individuals out of the entire population of interest is $p_4 \approx$ `r round(p_4, 3)`.
+* **Type 1 or "doomed":** These individuals experience a migraine regardless of whether they take AspiTyleCedrin. In our population of interest there are `r df_freq$n[4]` such individuals. The proportion of these individuals out of the entire population of interest is $p_1 \approx$ `r round(p_1, 3)`.
+* **Type 2 or "causal":** These individuals experience a migraine if and only if they take AspiTyleCedrin. In our population of interest there are `r df_freq$n[3]` such individuals. The proportion of these individuals out of the entire population of interest is $p_2 \approx$ `r round(p_2, 3)`.
+* **Type 3 or "preventive":** These individuals experience a migraine if and only if they do not take AspiTyleCedrin. In our population of interest there are `r df_freq$n[2]` such individuals. The proportion of these individuals out of the entire population of interest is $p_3 \approx$ `r round(p_3, 3)`.
+* **Type 4 or "immune":**  These individuals do not experience a migraine regardless of whether they take AspiTyleCedrin. In our population of interest there are `r df_freq$n[1]` such individuals. The proportion of these individuals out of the entire population of interest is $p_4 \approx$ `r round(p_4, 3)`.
 
 
 
@@ -116,7 +116,7 @@ $$\text{ATE} = E[Y_{i1} - Y_{i0}] =  E[Y_{i1}] - E[Y_{i0}]$$
 **\textcolor{blue}{Question 3:}** Confirm this using `R`.
 
 ```{r}
-ATE == mean(df$Y_1 - df$Y_0)
+ATE == mean(df$Y_1) - mean(df$Y_0)
 ```
 
 Let us consider this in terms of the proportions of causal types above, that is, $p_1, p_2, p_3, p_4$. The expected value of $Y_{i1}$ is simply the proportion of the entire population of interest that experiences migraines if everyone takes AspiTyleCedrin, so it is really the sum of both types that experience migraines when everyone takes AspiTyleCedrin (i.e. the sum of the "doomed" and the "causal" groups):
@@ -146,14 +146,14 @@ ATE == p_2 - p_3
 
 Another common causal parameter that we may be interested in is the Average Treatment Effect on the Treated which, instead of considering the entire population of interest, only considers those who would actually be treated. 
 
-**\textcolor{blue}{Question 5:}** Use the `filter()` function to create a new data frame `df.treat` which is a subset of `df` containing only those who receive the treatment. Then find the average treatment effect on the treated of AspiTyleCedrin on migraines in this population and assign it to the variable name `ATT`.
+**\textcolor{blue}{Question 5:}** Use the `filter()` function to create a new data frame `df_treat` which is a subset of `df` containing only those who receive the treatment. Then find the average treatment effect on the treated of AspiTyleCedrin on migraines in this population and assign it to the variable name `ATT`.
 
 ```{r}
 # Create a subset of the dataset containing only those individuals who received the treatment
-df.treat <- df %>%
+df_treat <- df %>%
   filter(A == 1)
 
-ATT <- mean(df.treat$ITE)
+ATT <- mean(df_treat$ITE)
 ATT
 ```
 
@@ -166,10 +166,10 @@ In many cases, treatment effects may look very different among different groups,
 **\textcolor{blue}{Question 6:}** Use the `group_by()` and `summarize()` functions to calculate separate average treatment effects for each race category. Discuss your results.
 
 ```{r}
-df.group <- df %>% 
+df_group <- df %>% 
   group_by(W2) %>%
   summarize(ATE = mean(ITE))
-df.group
+df_group
 ```
 
 We see a clear difference in the average treatment effect for White individuals than other racial groups. The average treatment effect of AspiTyleCedrin among White people is an approximately 53% decrease in migraine incidence whereas for people of color it is only an approximately 28% decrease in migraine incidence. AspiTyleCedrin appears to be less effective for people of color than it is for White people.
@@ -207,35 +207,35 @@ The above table is the only information (aside from covariates, etc.) that we wo
 How does this table relate to the different causal types? Let's consider this same table, but separate out each causal type.
 
 ```{r}
-df.freq.obs.type <- df %>%
+df_freq_obs_type <- df %>%
   count(A, Y_obs, type) %>%
   group_by(type)
-df.freq.obs.type
+df_freq_obs_type
 ```
 
-Thus we can see that each of the cells in the original table is actually composed of a mixture of two different causal types, each, and conversely, that each causal type makes up part of the cell count for two different arrangements of `A` and `Y_obs`. In other words:
+Thus we can see that each of the cells in the original table is actually composed of a mixture of two different causal types each, and conversely, that each causal type makes up part of the cell count for two different arrangements of `A` and `Y_obs`. In other words:
 
 * Those that DID NOT take AspiTyleCedrin and DID NOT experience a migraine could be either *"causal"* or *"immune"*.
 * Those that DID NOT take AspiTyleCedrin and DID experience a migraine could be either *"doomed"* or *"preventive"*.
 * Those that DID take AspiTyleCedrin and DID NOT experience a migraine could be either *"preventive"* or *"immune"*.
 * Those that DID take AspiTyleCedrin and DID experience a migraine could be either *"doomed"* or *"causal"*.
 
-And, importantly, in reality, for each of these categories **we have no way of knowing which is which** of the corresponding two causal types. This makes it difficult to estimate the average treatment effect in practice. For that reason, there are a number of different estimators used to estimate this parameter, but for now we will consider a very naive one, that is:
+And importantly, in reality, for each of these categories **we have no way of knowing which is which** of the corresponding two causal types. This makes it difficult to estimate the average treatment effect in practice. For that reason, there are a number of different estimators used to estimate this parameter, but for now we will consider a very naive one, that is:
 
 $$\hat{\text{ATE}} = E[Y_i |A_i = 1] - E[Y_i|A_i = 0]$$
 **\textcolor{blue}{Question 7:}** Use the `group_by()` and `summarize()` functions to find the estimated average treatment effect using the `A` and `Y_obs` columns. Compare this result to the actual ATE calculated earlier.
 
 ```{r}
 # Find the mean of Y_obs among different values of A
-est.obs <- df %>%
+est_obs <- df %>%
   group_by(A) %>%
   summarize(mean = mean(Y_obs))
 
-ATE.obs <- est.obs$mean[2] - est.obs$mean[1]
-ATE.obs
+ATE_obs <- est_obs$mean[2] - est_obs$mean[1]
+ATE_obs
 ```
 
-Our estimate $\hat{\text{ATE}} \approx$ `r ATE.obs` is close but definitely not the same as the true parameter $ATE \approx$ `r ATE`.
+Our estimate $\hat{\text{ATE}} \approx$ `r ATE_obs` is close but definitely not the same as the true parameter $ATE \approx$ `r ATE`.
 
 ## Independence Assumption and Random Assignment
 
@@ -263,7 +263,7 @@ Unfortunately, we've seen that these assumptions do not hold for our observed da
 
 **\textcolor{blue}{Question 8:}** Explain why this is true. That is, show mathematically that if `A` and `type` are independent, then all of the question marks above are equivalent.
 
-If `A` and `type` are independent, then by definition, $P(\text{type}|A = 0) = P(\text{type}|A = 1)$. As we saw in `df.freq.obs.type`, each causal type is split into two groups, one for $A = 0$ and one for $A = 1$. Therefore, if $P(\text{type}|A = 0) = P(\text{type}|A = 1)$, then both of these probabilities must be $0.5$. This applies to all four causal types, so:
+If `A` and `type` are independent, then by definition, $P(\text{type}|A = 0) = P(\text{type}|A = 1)$. As we saw in `df_freq_obs_type`, each causal type is split into two groups, one for $A = 0$ and one for $A = 1$. Therefore, if $P(\text{type}|A = 0) = P(\text{type}|A = 1)$, then both of these probabilities must be $0.5$. This applies to all four causal types, so:
 
 \begin{align*}
 \frac{(?n_1 + ?n_2)}{(?n_1 + ?n_2 + ?n_3 + ?n_4)} - \frac{(?n_1 + ?n_3)}{(?n_1 + ?n_2 + ?n_3 + ?n_4)} &= \frac{(0.5n_1 + 0.5n_2)}{(0.5n_1 + 0.5n_2 + 0.5n_3 + 0.5n_4)} - \frac{(0.5n_1 + 0.5n_3)}{(0.5n_1 + 0.5n_2 + 0.5n_3 + 0.5n_4)} \\
@@ -284,11 +284,11 @@ We will simulate this by creating a new assignment variable `A_comp`, and a new 
 
 ```{r}
 df <- df %>%
-  mutate(A_comp = as.numeric(rbernoulli(n, p =0.5)),
+  mutate(A_comp = as.numeric(rbernoulli(n, p=0.5)),
          Y_comp = as.numeric((A_comp & Y_1) | (!A_comp & Y_0)))
 ```
 
-**\textcolor{blue}{Question 10:}** Create a new frequency table for `A_comp` and `Y_comp` (of whichever layout you prefer) and then assign the new estimated average treatment effect to the variable `ATE.comp`. Then briefly compare your result to the true parameter `ATE`.
+**\textcolor{blue}{Question 10:}** Create a new frequency table for `A_comp` and `Y_comp` (of whichever layout you prefer) and then assign the new estimated average treatment effect to the variable `ATE_comp`. Then briefly compare your result to the true parameter `ATE`.
 
 ```{r}
 df %>%
@@ -303,12 +303,12 @@ df %>%
 ```
 
 ```{r}
-est.comp <- df %>%
+est_comp <- df %>%
   group_by(A_comp) %>%
   summarize(mean = mean(Y_comp))
 
-ATE.comp <- est.comp$mean[2] - est.comp$mean[1]
-ATE.comp
+ATE_comp <- est_comp$mean[2] - est_comp$mean[1]
+ATE_comp
 ```
 
 This is much closer to the true `ATE`.
@@ -326,7 +326,7 @@ df <- df %>%
 ```
 
 
-**\textcolor{blue}{Question 11:}** Create a new assignment variable `A_clus`, and a new outcome variable `Y_clus`, making sure that all members of a given cluster have the same value for `A_clus`. Then, create a new frequency table for `A_clus` and `Y_clus`, assign the new estimated average treatment effect to the variable `ATE.clus`, and briefly compare your result to the true parameter `ATE`.
+**\textcolor{blue}{Question 11:}** Create a new assignment variable `A_clus`, and a new outcome variable `Y_clus`, making sure that all members of a given cluster have the same value for `A_clus`. Then, create a new frequency table for `A_clus` and `Y_clus`, assign the new estimated average treatment effect to the variable `ATE_clus`, and briefly compare your result to the true parameter `ATE`.
 
 ```{r}
 df <- df %>%
@@ -347,12 +347,12 @@ df %>%
 ```
 
 ```{r}
-est.clus <- df %>%
+est_clus <- df %>%
   group_by(A_clus) %>%
   summarize(mean = mean(Y_clus))
 
-ATE.clus <- est.clus$mean[2] - est.clus$mean[1]
-ATE.clus
+ATE_clus <- est_clus$mean[2] - est_clus$mean[1]
+ATE_clus
 ```
 
 This too is much closer to the true `ATE` than the observed estimate.
@@ -371,7 +371,7 @@ df <- df %>%
   mutate(block = rep(1:20, each = n/20))
 ```
 
-**\textcolor{blue}{Question 12:}** Create a new assignment variable `A_bloc`, and a new outcome variable `Y_bloc`. Then, create a new frequency table for `A_bloc` and `Y_bloc`, assign the new estimated average treatment effect to the variable `ATE.bloc`, and briefly compare your result to the true parameter `ATE`. Hint: Before creating `A_bloc`, take a look at the help page for the `replicate()` function.
+**\textcolor{blue}{Question 12:}** Create a new assignment variable `A_bloc`, and a new outcome variable `Y_bloc`. Then, create a new frequency table for `A_bloc` and `Y_bloc`, assign the new estimated average treatment effect to the variable `ATE_bloc`, and briefly compare your result to the true parameter `ATE`. Hint: Before creating `A_bloc`, take a look at the help page for the `replicate()` function.
 
 ```{r}
 df <- df %>%
@@ -392,12 +392,12 @@ df %>%
 ```
 
 ```{r}
-est.bloc <- df %>%
+est_bloc <- df %>%
   group_by(A_bloc) %>%
   summarize(mean = mean(Y_bloc))
 
-ATE.bloc <- est.bloc$mean[2] - est.bloc$mean[1]
-ATE.bloc
+ATE_bloc <- est_bloc$mean[2] - est_bloc$mean[1]
+ATE_bloc
 ```
 
 Yet again this is much closer to the true `ATE` than the observed estimate.

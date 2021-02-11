@@ -56,9 +56,11 @@ df <- data.frame(ID = seq.int(n),
                     shape = 36,
                     scale = (2/3)))
 df <- df %>% 
-  mutate(W3 = W3 + 8*(W1 == 1)+ 12*(W2==2) + 8*(W2==3) + 4*(W2==4) + (-4)*(W2 == 5),
+  mutate(W3 = W3 + 8*(W1 == 1)+ 12*(W2==2) + 
+           8*(W2==3) + 4*(W2==4) + (-4)*(W2 == 5),
          A = as.numeric(rbernoulli(n, 
-                                   p = (0.16 + 0.07*(W1 > 0) + 0.21*(W2 == 0) - 0.1*(W3 > 25) ))),
+                                   p = (0.16 + 0.07*(W1 > 0) + 0.21*(W2 == 0) - 
+                                          0.1*(W3 > 25) ))),
          Y_0 = as.numeric(rbernoulli(n, 
                                      p = (0.87 + 0.035*(W1 > 0) + 0.05*(W2 > 0)) + 
                                        abs((W3 - 22)/100))),
@@ -68,13 +70,13 @@ df <- df %>%
          ITE = Y_1 - Y_0,
          Y_obs = as.numeric((A & Y_1) | (!A & Y_0))) 
 
-ATE.true <- mean(df$ITE)
-df.a1 <- df %>% filter(A == 1)
-ATT.true <- mean(df.a1$ITE)
+ATE_true <- mean(df$ITE)
+df_a1 <- df %>% filter(A == 1)
+ATT_true <- mean(df_a1$ITE)
 
 df <- df %>% select(-Y_0, -Y_1, -ITE)
-df.a1 <- df.a1 %>% select(-Y_0, -Y_1, -ITE)
-df.a0 <- df %>% filter(A == 0)
+df_a1 <- df_a1 %>% select(-Y_0, -Y_1, -ITE)
+df_a0 <- df %>% filter(A == 0)
                  
 head(df)
 summary(df)
@@ -150,26 +152,26 @@ In other words, the exact distance between two points $X_i,X_j$, where $X_i = \{
 \end{cases}
 \end{align*}
 
-**\textcolor{blue}{Question 1:}** The data frame `df.a0` contains all the individuals that did not take AspiTyleCedrin, and the data frame `df.a1` contains all those who did. In the `R` code chunk below, use the first ten rows of `df.a0` and the first five rows of `df.a1` to find the exact distance of the first ten individuals who did not take AspiTyleCedrin from *each* of the first five individuals who did. (Hint: How many comparisons should you be making?)
+**\textcolor{blue}{Question 1:}** The data frame `df_a0` contains all the individuals that did not take AspiTyleCedrin, and the data frame `df_a1` contains all those who did. In the `R` code chunk below, use the first ten rows of `df_a0` and the first five rows of `df_a1` to find the exact distance of the first ten individuals who did not take AspiTyleCedrin from *each* of the first five individuals who did. (Hint: How many comparisons should you be making?)
 
 ```{r}
-df.a0.small <- df.a0[1:10,]
-df.a1.small <- df.a1[1:5,]
+df_a0_small <- df_a0[1:10,]
+df_a1_small <- df_a1[1:5,]
 cols <- c("W1", "W2", "W3")
 
 dist.exact <- function(x,y) {
   ifelse(all(x == y), 0, Inf)
 }
 
-calculate.dist <- function(x, y, dist.method, xnames = df.a1.small$ID, ynames = df.a0.small$ID) {
+calculate.dist <- function(x, y, dist.method, xnames = df_a1_small$ID, ynames = df_a0_small$ID) {
   dists <- apply(y, 1, function(j) {apply(x, 1, function(i) {dist.method(i,j)})})
   rownames(dists) <- xnames
   colnames(dists) <- ynames
   return(dists)
 }
 
-dists.ex <- calculate.dist(df.a1.small[, cols], df.a0.small[, cols], dist.exact)
-dists.ex
+dists_ex <- calculate.dist(df_a1_small[, cols], df_a0_small[, cols], dist.exact)
+dists_ex
 ```
 
 
@@ -182,8 +184,8 @@ The probability of any exact value of a continuous variable is by definition zer
 **\textcolor{blue}{Question 3:}** Modify your code above to only check the distance for `W1` and `W2` values.
 
 ```{r}
-dists.ex.lim <- calculate.dist(df.a1.small[, cols[1:2]], df.a0.small[, cols[1:2]], dist.exact)
-dists.ex.lim
+dists_ex_lim <- calculate.dist(df_a1_small[, cols[1:2]], df_a0_small[, cols[1:2]], dist.exact)
+dists_ex_lim
 ```
 
 Since exact matching is not always possible, there are a variety of alternative distance metrics which may be used to determine how similar a potential match is. A few of these methods are discussed below.
@@ -200,15 +202,15 @@ where $S^{-1}$ is the covariance matrix of $X_i$ and $X_j$.
 **\textcolor{blue}{Question 4:}** Using the `cov()` function to find the covariance matrix of $\{W1, W2, W3\}$ from the *whole dataset*, modify your code from **Question 1** to instead find the Mahalanobis distance of the first ten individuals who did not take AspiTyleCedrin from *each* of the first five individuals who did. (Hint: The `t()` function will transpose a vector or matrix, and matrix multiplication uses the `%*%` character, not `*`)
 
 ```{r}
-cov.df <- cov(df[,cols])
+cov_df <- cov(df[,cols])
 
-dist.mahalanobis <- function(x,y) {
+dist_mahalanobis <- function(x,y) {
   diff <- (x - y)
-  sqrt( t(diff) %*% cov.df %*% (diff) )
+  sqrt( t(diff) %*% cov_df %*% (diff) )
 }
 
-dists.ma <- calculate.dist(df.a1.small[, cols], df.a0.small[, cols], dist.mahalanobis)
-dists.ma
+dists_ma <- calculate.dist(df_a1_small[, cols], df_a0_small[, cols], dist_mahalanobis)
+dists_ma
 ```
 
 ### Propensity Score Matching
@@ -220,20 +222,20 @@ $\pi_i = P(A_i = 1 | X_i) = \frac{1}{1 + e^{-X_i \beta}}$
 We can estimate these propensity scores using logistic regression, by regressing the treatment $A$ on the baseline covariates $X$, like so:
 
 ```{r}
-model.ps <- glm(A ~ W1 + W2 + W3, family = binomial(), data = df)
-summary(model.ps)
+model_ps <- glm(A ~ W1 + W2 + W3, family = binomial(), data = df)
+summary(model_ps)
 ```
 
 We can then use this model and the `predict()` function to add all of the estimated propensity scores for each data point in `df`:
 
 ```{r}
-df <- df %>% mutate(prop_score = predict(model.ps))
+df <- df %>% mutate(prop_score = predict(model_ps))
 
 # Also update the subsetted datasets
-df.a0 <- df %>% filter(A == 0)
-df.a1 <- df %>% filter(A == 1)
-df.a0.small <- df.a0[1:10,]
-df.a1.small <- df.a1[1:5,]
+df_a0 <- df %>% filter(A == 0)
+df_a1 <- df %>% filter(A == 1)
+df_a0_small <- df_a0[1:10,]
+df_a1_small <- df_a1[1:5,]
 ```
 
 Propensity score *matching* uses the absolute difference between two propensity scores as its distance metric, or rather:
@@ -246,10 +248,10 @@ dist.prop.score <- function(x,y) {
   abs(x-y) 
 }
 
-dists.ps <- calculate.dist(as.matrix(df.a1.small[, "prop_score"]),
-                           as.matrix(df.a0.small[, "prop_score"]),
+dists_ps <- calculate.dist(as.matrix(df_a1_small[, "prop_score"]),
+                           as.matrix(df_a0_small[, "prop_score"]),
                            dist.prop.score)
-dists.ps
+dists_ps
 ```
 
 #### Double Robustness
@@ -284,19 +286,19 @@ Most greedy matching algorithms in common use (including those listed above) are
 ```{r}
 treat <- c()
 control <- c()
-df.a1.small.copy <- as.data.frame(df.a1.small)
-dists.ps.copy <- as.data.frame(dists.ps)
+df_a1_small_copy <- as.data.frame(df_a1_small)
+dists_ps_copy <- as.data.frame(dists_ps)
 
-for(i in 1:nrow(df.a1.small)) {
-  max.treat <- which.max(df.a1.small.copy$prop_score)
-  treat[i] <- names(max.treat)
-  df.a1.small.copy <- df.a1.small.copy %>% slice(-max.treat)
+for(i in 1:nrow(df_a1_small)) {
+  max_treat <- which.max(df_a1_small_copy$prop_score)
+  treat[i] <- names(max_treat)
+  df_a1_small_copy <- df_a1_small_copy %>% slice(-max_treat)
   
-  match.control <- which.min(dists.ps.copy[max.treat,])
-  control[i] <- names(match.control)
-  dists.ps.copy <- dists.ps.copy %>% 
-      select(-match.control) %>% 
-      slice(-max.treat)
+  match_control <- which.min(dists_ps_copy[max_treat,])
+  control[i] <- names(match_control)
+  dists_ps_copy <- dists_ps_copy %>% 
+      select(-match_control) %>% 
+      slice(-max_treat)
 }
 
 treat
@@ -308,19 +310,19 @@ control
 ```{r}
 treat <- c()
 control <- c()
-df.a1.small.copy <- as.data.frame(df.a1.small)
-dists.ps.copy <- as.data.frame(dists.ps)
+df_a1_small_copy <- as.data.frame(df_a1_small)
+dists_ps_copy <- as.data.frame(dists_ps)
 
-for(i in 1:nrow(df.a1.small)) {
-  min.treat <- which.min(df.a1.small.copy$prop_score)
-  treat[i] <- names(min.treat)
-  df.a1.small.copy <- df.a1.small.copy %>% slice(-min.treat)
+for(i in 1:nrow(df_a1_small)) {
+  min_treat <- which.min(df_a1_small_copy$prop_score)
+  treat[i] <- names(min_treat)
+  df_a1_small_copy <- df_a1_small_copy %>% slice(-min_treat)
   
-  match.control <- which.min(dists.ps.copy[min.treat,])
-  control[i] <- names(match.control)
-  dists.ps.copy <- dists.ps.copy %>% 
-      select(-match.control) %>% 
-      slice(-min.treat)
+  match_control <- which.min(dists_ps_copy[min_treat,])
+  control[i] <- names(match_control)
+  dists_ps_copy <- dists_ps_copy %>% 
+      select(-match_control) %>% 
+      slice(-min_treat)
 }
 
 treat
@@ -333,14 +335,14 @@ control
 ```{r}
 treat <- c()
 control <- c()
-dists.ps.copy <- as.data.frame(dists.ps)
+dists_ps_copy <- as.data.frame(dists_ps)
 
-for(i in 1:nrow(df.a1.small)) {
-  best <- which(dists.ps.copy == min(dists.ps.copy), arr.ind = TRUE)
-  treat[i] <- rownames(dists.ps.copy)[best[1]]
-  control[i] <- colnames(dists.ps.copy)[best[2]]
+for(i in 1:nrow(df_a1_small)) {
+  best <- which(dists_ps_copy == min(dists_ps_copy), arr.ind = TRUE)
+  treat[i] <- rownames(dists_ps_copy)[best[1]]
+  control[i] <- colnames(dists_ps_copy)[best[2]]
   
-  dists.ps.copy <- dists.ps.copy %>% 
+  dists_ps_copy <- dists_ps_copy %>% 
     slice(-(best[1])) %>%
     select(-(best[2]))
 }
@@ -365,35 +367,35 @@ You may have noticed that in the previous examples we only selected one "control
 
 ```{r}
 treat <- c()
-control.1 <- c()
-control.2 <- c()
-df.a1.small.copy <- as.data.frame(df.a1.small)
-dists.ps.copy <- as.data.frame(dists.ps)
+control_1 <- c()
+control_2 <- c()
+df_a1_small_copy <- as.data.frame(df_a1_small)
+dists_ps_copy <- as.data.frame(dists_ps)
 
-for(i in 1:nrow(df.a1.small)) {
-  max.treat <- which.max(df.a1.small.copy$prop_score)
-  treat[i] <- names(max.treat)
-  df.a1.small.copy <- df.a1.small.copy %>% slice(-max.treat)
+for(i in 1:nrow(df_a1_small)) {
+  max_treat <- which.max(df_a1_small_copy$prop_score)
+  treat[i] <- names(max_treat)
+  df_a1_small_copy <- df_a1_small_copy %>% slice(-max_treat)
   
-  match.control.1 <- which.min(dists.ps.copy[max.treat,])
-  control.1[i] <- names(match.control.1)
-  dists.ps.copy <- dists.ps.copy %>% select(-match.control.1)
+  match_control_1 <- which.min(dists_ps_copy[max_treat,])
+  control_1[i] <- names(match_control_1)
+  dists_ps_copy <- dists_ps_copy %>% select(-match_control_1)
   
-  if(ncol(dists.ps.copy) > 1) {
-    match.control.2 <- which.min(dists.ps.copy[max.treat,])
-    control.2[i] <- names(match.control.2)
-    dists.ps.copy <- dists.ps.copy %>% 
-      select(-match.control.2) %>% 
-      slice(-max.treat)
+  if(ncol(dists_ps_copy) > 1) {
+    match_control_2 <- which.min(dists_ps_copy[max_treat,])
+    control_2[i] <- names(match_control_2)
+    dists_ps_copy <- dists_ps_copy %>% 
+      select(-match_control_2) %>% 
+      slice(-max_treat)
   } else {
-    control.2[i] <- names(dists.ps.copy)
+    control_2[i] <- names(dists_ps_copy)
   }
   
 }
 
 treat
-control.1
-control.2
+control_1
+control_2
 ```
 
 **\textcolor{blue}{Question 11:}** Did any of the matches you made in Question 6 change in Question 10?
@@ -413,9 +415,9 @@ Another consideration when deciding upon a matching algorithm is whether matches
 **\textcolor{blue}{Question 12:}** Write code to perform the same greedy matching as in Question 6 but **with** replacement. (Hint: This code will likely be much simpler!)
 
 ```{r}
-row.mins <- apply(dists.ps, 1, which.min)
-treat <- names(row.mins)
-control <- colnames(dists.ps)[row.mins]
+row_mins <- apply(dists_ps, 1, which.min)
+treat <- names(row_mins)
+control <- colnames(dists_ps)[row_mins]
 treat
 control
 ```
@@ -454,8 +456,8 @@ The main `matchit()` function of this package includes the following arguments:
 For example, for an exact matching on our dataset ignoring BMI we would do the following to estimate ATE:
 
 ```{r}
-match.exact.ate <- matchit(formula = A ~ W1 + W2, data = df, method = "exact", estimand = "ATE")
-summary(match.exact.ate)
+match_exact_ate <- matchit(formula = A ~ W1 + W2, data = df, method = "exact", estimand = "ATE")
+summary(match_exact_ate)
 ```
 
 We can see from the summary how much the balance has improved after matching, but remember that this is only the balance on `W1` and `W2`.
@@ -463,32 +465,32 @@ We can see from the summary how much the balance has improved after matching, bu
 To use this matching to estimate the ATE we first get the matched data using the `match.data()` function. We can then use logistic regression to estmate the ATE.
 
 ```{r}
-match.exact.ate.data <- match.data(match.exact.ate)
-lm.exact.ate <- lm(Y_obs ~ A + W1 + W2 + W3, data = match.exact.ate.data, weights = weights)
-lm.exact.ate.summ <- summary(lm.exact.ate)
-lm.exact.ate.summ
+match_exact_ate_data <- match.data(match_exact_ate)
+lm_exact_ate <- lm(Y_obs ~ A + W1 + W2 + W3, data = match_exact_ate_data, weights = weights)
+lm_exact_ate_summ <- summary(lm_exact_ate)
+lm_exact_ate_summ
 ```
 
 The ATE estimate is the coefficient estimate on the treatment variable `A`:
 
 ```{r}
-ATE.exact <- lm.exact.ate.summ$coefficients["A", "Estimate"]
-ATE.exact
+ATE_exact <- lm_exact_ate_summ$coefficients["A", "Estimate"]
+ATE_exact
 ```
 
 We could also have estimated the ATT using this method:
 
 ```{r}
-match.exact.att <- matchit(formula = A ~ W1 + W2, data = df, method = "exact", estimand = "ATT")
-summary(match.exact.att, un = FALSE)
+match_exact_att <- matchit(formula = A ~ W1 + W2, data = df, method = "exact", estimand = "ATT")
+summary(match_exact_att, un = FALSE)
 
-match.exact.att.data <- match.data(match.exact.att)
-lm.exact.att <- lm(Y_obs ~ A + W1 + W2 + W3, data = match.exact.att.data, weights = weights)
-lm.exact.att.summ <- summary(lm.exact.att)
-lm.exact.att.summ
+match_exact_att_data <- match.data(match_exact_att)
+lm_exact_att <- lm(Y_obs ~ A + W1 + W2 + W3, data = match_exact_att_data, weights = weights)
+lm_exact_att_summ <- summary(lm_exact_att)
+lm_exact_att_summ
 
-ATT.exact <- lm.exact.att.summ$coefficients["A", "Estimate"]
-ATT.exact
+ATT_exact <- lm_exact_att_summ$coefficients["A", "Estimate"]
+ATT_exact
 ```
 
 
@@ -497,16 +499,16 @@ ATT.exact
 Now let's perform a 2:1 nearest neighbor matching using (logistic regression) propensity scores on all three covariates. Remember that we can only estimate ATT in this case.
 
 ```{r}
-match.ps.att <- matchit(formula = A ~ W1 + W2 + W3, data = df, method = "nearest", distance = "glm", link = "logit", discard = "control", replace = FALSE, ratio = 2)
-summary(match.ps.att)
+match_ps_att <- matchit(formula = A ~ W1 + W2 + W3, data = df, method = "nearest", distance = "glm", link = "logit", discard = "control", replace = FALSE, ratio = 2)
+summary(match_ps_att)
 
-match.ps.att.data <- match.data(match.ps.att)
-lm.ps.att <- lm(Y_obs ~ A + W1 + W2 + W3, data = match.ps.att.data, weights = weights)
-lm.ps.att.summ <- summary(lm.ps.att)
-lm.ps.att.summ
+match_ps_att_data <- match.data(match_ps_att)
+lm_ps_att <- lm(Y_obs ~ A + W1 + W2 + W3, data = match_ps_att_data, weights = weights)
+lm_ps_att_summ <- summary(lm_ps_att)
+lm_ps_att_summ
 
-ATT.ps <- lm.ps.att.summ$coefficients["A", "Estimate"]
-ATT.ps
+ATT_ps <- lm_ps_att_summ$coefficients["A", "Estimate"]
+ATT_ps
 ```
 
 ## Full Optimal Mahalanobis Matching Example
@@ -514,50 +516,50 @@ ATT.ps
 Now let's perform a full optimal matching on all three covariates using Mahalanobis distances. (We'll need to do this on a smaller subset of the data)
 
 ```{r}
-df.small <- sample_n(df, 1000) # SRS of 1000
+df_small <- sample_n(df, 1000) # SRS of 1000
 ```
 
 
 ```{r}
-match.full.ate <- matchit(formula = A ~ W1 + W2 + W3, data = df.small, method = "full", distance = "mahalanobis")
-summary(match.full.ate)
+match_full_ate <- matchit(formula = A ~ W1 + W2 + W3, data = df_small, method = "full", distance = "mahalanobis")
+summary(match_full_ate)
 
-match.full.ate.data <- match.data(match.full.ate)
-lm.full.ate <- lm(Y_obs ~ A + W1 + W2 + W3, data = match.full.ate.data, weights = weights)
-lm.full.ate.summ <- summary(lm.full.ate)
-lm.full.ate.summ
+match_full_ate_data <- match.data(match_full_ate)
+lm_full_ate <- lm(Y_obs ~ A + W1 + W2 + W3, data = match_full_ate_data, weights = weights)
+lm_full_ate_summ <- summary(lm_full_ate)
+lm_full_ate_summ
 
-ATE.full <- lm.full.ate.summ$coefficients["A", "Estimate"]
-ATE.full
+ATE_full <- lm_full_ate_summ$coefficients["A", "Estimate"]
+ATE_full
 ```
 
 ```{r}
-match.full.att <- matchit(formula = A ~ W1 + W2 + W3, data = df.small, method = "full", distance = "mahalanobis")
-summary(match.full.att)
+match_full_att <- matchit(formula = A ~ W1 + W2 + W3, data = df_small, method = "full", distance = "mahalanobis")
+summary(match_full_att)
 
-match.full.att.data <- match.data(match.full.att)
-lm.full.att <- lm(Y_obs ~ A + W1 + W2 + W3, data = match.full.att.data, weights = weights)
-lm.full.att.summ <- summary(lm.full.att)
-lm.full.att.summ
+match_full_att_data <- match.data(match_full_att)
+lm_full_att <- lm(Y_obs ~ A + W1 + W2 + W3, data = match_full_att_data, weights = weights)
+lm_full_att_summ <- summary(lm_full_att)
+lm_full_att_summ
 
-ATT.full <- lm.full.att.summ$coefficients["A", "Estimate"]
-ATT.full
+ATT_full <- lm_full_att_summ$coefficients["A", "Estimate"]
+ATT_full
 ```
 
-**\textcolor{blue}{Question 15:}** Perform a matching algorithm of your own choosing. Report the estimated ATE or ATT where available. (Note: If your chosen algorithm takes too long to run on `df` you may instead use `df.small`)
+**\textcolor{blue}{Question 15:}** Perform a matching algorithm of your own choosing. Report the estimated ATE or ATT where available. (Note: If your chosen algorithm takes too long to run on `df` you may instead use `df_small`)
 
 ```{r}
 # Your code here
 ```
 
-**\textcolor{blue}{Question 16:}** Compare the estimates of ATE and ATT found above with the true values (saved as `ATE.true` and `ATT.true`). Which method was most accurate? Considering the pros and cons of different methods we have discussed, which method do you prefer?
+**\textcolor{blue}{Question 16:}** Compare the estimates of ATE and ATT found above with the true values (saved as `ATE_true` and `ATT_true`). Which method was most accurate? Considering the pros and cons of different methods we have discussed, which method do you prefer?
 
 ```{r}
-ATE.true
-c(ATE.exact, ATE.full)
+ATE_true
+c(ATE_exact, ATE_full)
 
-ATT.true
-c(ATT.exact, ATT.ps, ATT.full)
+ATT_true
+c(ATT_exact, ATT_ps, ATT_full)
 ```
 
 > Your answer here.
