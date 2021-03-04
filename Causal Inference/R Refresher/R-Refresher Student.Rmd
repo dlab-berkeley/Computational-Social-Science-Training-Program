@@ -109,7 +109,7 @@ Before we start looking at the data though, we'll need to deal with some issues 
 
 ```{r here}
 #install.packages('here')
-here::i_am('R Refresher.Rmd')
+here::i_am('R Refresher Student.Rmd')
 library(here)
 setwd(here())
 ```

@@ -44,7 +44,7 @@ In Python, we mainly worked organized data in dataframes, lists, and dictionarie
 ```{r data_types}
 pets_vector <- c('dog', 'cat', 'parrot')
 
-pets_list <- list('dog', 'cat', 'parrot')
+pets_list <- list('dog', 'cat', 'parrot') 
 
 num_vector <- c(1, 2, 3)
 
@@ -147,7 +147,7 @@ tidyverse also provides the pipe operator. This operator (%>%) can be used to pa
 #piping
 tidy_df <- df %>% 
   rename(treatment = tx) %>%
-  mutate(rescale_y = y * 1000)
+  mutate(rescale_y = y * 1000) 
 head(tidy_df)
 ```
 
@@ -200,7 +200,7 @@ The *data.table* package is a package that is useful for manipulating large data
 Sometimes we want to generate random numbers from probability distributions. This will be useful later when we assess the performance of estimators on a sample from a known data-generating process.
 
 ```{r, message=FALSE, warning=FALSE}
-library("tidyverse")
+#library("tidyverse")
 #X1 and X2 are independently generated normal random variables
 X1 <- rnorm(n = 100, mean = 5, sd = 1)
 X2 <- rnorm(n = 100, mean = 5, sd = 10)
@@ -222,7 +222,7 @@ head(rand_nums)
 ```
 # ggplot
 
-Aside from dplyr and tidyr, another pillar of the tidyverse is ggplot. R has base plotting functions that are good for visualizing data quickly (as we saw above), but ggplot offers a ot more customization and aesthetically pleasing options.
+Aside from dplyr and tidyr, another pillar of the tidyverse is ggplot. R has base plotting functions that are good for visualizing data quickly (as we saw above), but ggplot offers a of more customization and aesthetically pleasing options.
 
 ```{r ggplot}
 tidy_df %>%
@@ -248,7 +248,7 @@ tidy_df %>%
 
 Challenge 2:
 
-Try making some of your own plots! Plot the mean mean_strength by treatment based on the dataframe we created earlier in challenge 1, and then another plot of your choice! Hint: You may want to look up the documentation for a method like geom_bar() to plot this one.
+Try making some of your own plots! Plot the mean_strength by treatment based on the dataframe we created earlier in challenge 1, and then another plot of your choice! Hint: You may want to look up the documentation for a method like geom_bar() to plot this one.
 
 ```{r ggplot practice}
 tidy_df %>% 
