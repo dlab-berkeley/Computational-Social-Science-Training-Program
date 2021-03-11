@@ -290,7 +290,7 @@ df_a1_small_copy <- as.data.frame(df_a1_small)
 dists_ps_copy <- as.data.frame(dists_ps)
 
 for(i in 1:nrow(df_a1_small)) {
-  max_treat <- which.max(df_a1_small_copy$prop_score)
+  max_treat <- which.max(df_a1_small_copy$prop_score %>% select(-ID))
   treat[i] <- names(max_treat)
   df_a1_small_copy <- df_a1_small_copy %>% slice(-max_treat)
   
