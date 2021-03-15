@@ -1,0 +1,566 @@
+---
+title: 'Natural Experiments and Instrumental Variables'
+author: "Your Name Here"
+date: "MM/DD/YYYY"
+output: pdf_document
+---
+
+```{r message=FALSE, echo=FALSE}
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(purrr)
+library(dagitty)
+library(ggdag)
+library(AER)
+theme_set(theme_dag())
+source("pretty_dag.R")
+```
+
+
+# Causal Graph (DAG) Review
+
+Let's briefly review what we know about directed acyclic graphs (DAGs) or causal graphs. 
+
+Firstly, it is imperative that we keep in mind that DAGs are essentially a __visual representation of our *assumptions* about the causal relationships between variables__. We are rarely, if ever, able to prove that our DAG is actually "true"--we simply assume that it is. 
+
+Therefore we must proceed with **\textcolor{red}{extreme caution}** when deciding upon the assumptions we wish to encode in our DAG (most assumptions are derived from knowledge within the field such as literature review, expert insight, etc.). And we must also take great care when interpreting any results from our statistical analysis, as they are only valid in the context of our DAG (and any other assumptions made).
+
+The assumptions encoded in our DAG include (but are not limited to):
+
+1. The variables included (and *not* included) in the DAG as a whole
+2. Exclusion restriction(s) (defined below) 
+3. Independence assumption(s) (defined below) 
+
+## DAG Key Terms
+
+Let's recall some key terms:
+
+* **Endogenous** variables - Measured variables including exposure ($A$), outcome ($Y$), and any other measured covariates ($W$). Sometimes collectively referred to as $X$ (as in $X = \{W, A, Y\}$).
+* **Exogenous** variables - Unmeasured variables ($U_X$) which feed into the endogenous variables. Sometimes collectively referred to as $U$ (as in $U = \{U_W, U_A, U_Y\}$).
+* **Exclusion restriction** - Assumption that a particular arrow *does not* exist between two endogenous variables $X$. In other words, the absence of an arrow between any pair of endogenous variables is inherently an exclusion restriction--an assumption that *must be justified*.
+* **Independence assumption** - Assumption regarding the joint distribution of the exogenous variables $U$. That is, the assumption that any pair of exogenous variables ($U_{X1}, U_{X2}$) are independent from each other ($U_{X1} \perp U_{X2}$) i.e. there is no arrow between them. In other words, the absence of an arrow between any pair of exogenous variables is inherently an independence assumption--an assumption that *must be justified*.
+* **Unblocked backdoor path** - A causal path between the exposure ($A$) and the outcome ($Y$) (besides the direct "main effect" path of interest) which does not contain a collider. In other words, an indirect path which may explain some or all of the relationship between the exposure and outcome.
+* **Collider** - A covariate $W$ with two parent nodes (two arrows pointed inward) on some backdoor path between the exposure ($A$) and the outcome ($Y$). The existence of a collider on a particular path "blocks" said path. NB: Conditioning on a collider induces a path between its two parents (thereby possibly inducing a *new* unblocked backdoor path).
+
+**Example:** In the first DAG below, $W$ is a collider. In the second DAG, we have conditioned on $W$, thereby introducing a new path between $A$ and $Y$.
+
+```{r out.width="50%", echo=FALSE}
+ex_dag1 <- dagify(Y ~ A,
+                 W ~ Y,
+                 W ~ A,
+                 exposure = "A",
+                 outcome = "Y") %>%
+  tidy_dagitty() %>%
+  pretty_dag() 
+ex_dag1 %>%
+  ggdag() +
+  geom_dag_node(aes(color = color)) +
+  geom_dag_text(col = "white") +
+  theme(legend.position = "none") +
+  scale_color_manual(values=c("darkred","darkgrey", "navy"))
+
+ex_dag1 %>% control_for(var = "W") %>%
+  ggdag_adjust() +
+  geom_dag_node(aes(color = adjusted)) +
+  geom_dag_text(col = "white") 
+```
+
+## DAG Example Questions
+
+```{r out.width="75%", echo=FALSE}
+dagify(Y ~ A,
+       Y ~ W1,
+       A ~ W1,
+       Y ~ U,
+       A ~ U,
+       W1 ~ U,
+       exposure = "A",
+       outcome = "Y") %>%
+  tidy_dagitty() %>%
+  pretty_dag() %>%
+  ggdag() +
+  geom_dag_edges() +
+  geom_dag_node(aes(color = color)) +
+  geom_dag_text(col = "white") +
+  theme(legend.position = "none") +
+  scale_color_manual(values=c("darkred", "lightgrey", "darkgrey", "navy"))
+```
+
+**\textcolor{blue}{Question 1:}** Answer the following questions for the DAG above:
+
+a. What are the endogenous variables?
+b. What are the exogenous variables?
+c. Are there any exclusion restrictions? If so, what are they?
+d. Are there any independence assumptions? If so, what are they?
+e. Are there any unblocked backdoor paths? If so, what is the path? (Note: There may be multiple paths)
+f. Are there any colliders? If so, what are they? What path(s) do they block? What would happen if you were to condition on them?
+
+**Solutions:**
+
+a. $X = \{W1, A, Y\}$
+b. $U = \{U\}$
+c. No.
+d. No.
+e. Yes, $A \rightarrow W1 \rightarrow Y$
+f. No.
+
+```{r out.width="75%", echo=FALSE}
+dagify(Y ~ A,
+       W1 ~ Y,
+       W1 ~ A,
+       Y ~ U_Y,
+       A ~ U_A,
+       W1 ~ U_W1,
+       exposure = "A",
+       outcome = "Y") %>%
+  tidy_dagitty() %>%
+  pretty_dag() %>%
+  ggdag() +
+  geom_dag_edges() +
+  geom_dag_node(aes(color = color)) +
+  geom_dag_text(col = "white") +
+  theme(legend.position = "none") +
+  scale_color_manual(values=c("darkred", "lightgrey", "darkgrey", "navy"))
+```
+
+**\textcolor{blue}{Question 2:}** Answer the following questions for the DAG above:
+
+a. What are the endogenous variables?
+b. What are the exogenous variables?
+c. Are there any exclusion restrictions? If so, what are they?
+d. Are there any independence assumptions? If so, what are they?
+e. Are there any unblocked backdoor paths? If so, what is the path? (Note: There may be multiple paths)
+f. Are there any colliders? If so, what are they? What path(s) do they block? What would happen if you were to condition on them?
+
+**Solutions:**
+
+a. $X = \{W1, A, Y\}$
+b. $U = \{U_{W1}, U_A, U_Y\}$
+c. No.
+d. Yes; $U_{W1} \perp U_A$, $U_{W1} \perp U_Y$, and $U_{A} \perp U_Y$
+e. No. 
+f. Yes; $W1$; $A \rightarrow W1 \rightarrow Y$; it would induce an unblocked backdoor path between $A$ and $Y$.
+
+```{r out.width="75%", echo=FALSE}
+dagify(Y ~ A,
+       W1 ~ Y,
+       W1 ~ A,
+       W2 ~ W1,
+       Y ~ W2,
+       Y ~ U_Y,
+       A ~ U_A,
+       W1 ~ U_W1,
+       W2 ~ U_W2,
+       exposure = "A",
+       outcome = "Y") %>%
+  tidy_dagitty() %>%
+  pretty_dag() %>%
+  ggdag() +
+  geom_dag_edges() +
+  geom_dag_node(aes(color = color)) +
+  geom_dag_text(col = "white") +
+  theme(legend.position = "none") +
+  scale_color_manual(values=c("darkred", "lightgrey", "darkgrey", "navy"))
+```
+
+**\textcolor{blue}{Question 3:}** Answer the following questions for the DAG above:
+
+a. What are the endogenous variables?
+b. What are the exogenous variables?
+c. Are there any exclusion restrictions? If so, what are they?
+d. Are there any independence assumptions? If so, what are they?
+e. Are there any unblocked backdoor paths? If so, what is the path? (Note: There may be multiple paths)
+f. Are there any colliders? If so, what are they? What path(s) do they block? What would happen if you were to condition on them?
+
+**Solutions:**
+
+a. $X = \{W1, W2, A, Y\}$
+b. $U = \{U_{W1}, U_{W2}, U_A, U_Y\}$
+c. Yes; there is an assumption of no direct causal relationship between $W_2$ and $A$.
+d. Yes; $U_{W1} \perp U_A$, $U_{W1} \perp U_Y$, $U_{W1} \perp U_{W2}$, $U_{W2} \perp U_{A}$, $U_{W2} \perp U_{Y}$, and $U_{A} \perp U_Y$
+e. Yes; $A \rightarrow W1 \rightarrow W2 \rightarrow Y$.
+f. Yes; $W1$; $A \rightarrow W1 \rightarrow Y$; it would induce an unblocked backdoor path between $A$ and $Y$.
+
+
+# Instrumental Variables
+
+## Instrumental Variables Rationale
+
+Recall from our consideration of randomized experiments that, when implemented properly, randomizing the exposure allows us to ensure independence between the exposure and any other covariates. A simple DAG representing this situation when considering only the exposure $A$ and outcome $Y$ is seen below.
+
+```{r out.width="75%", echo=FALSE}
+dagify(Y ~ A,
+       Y ~ U,
+       Y ~ W,
+       W ~ U,
+       exposure = "A",
+       outcome = "Y") %>%
+  tidy_dagitty() %>%
+  pretty_dag() %>%
+  ggdag() +
+  geom_dag_edges() +
+  geom_dag_node(aes(color = color)) +
+  geom_dag_text(col = "white") +
+  theme(legend.position = "none") +
+  scale_color_manual(values=c("darkred", "lightgrey", "darkgrey", "navy"))
+```
+
+This independence of $A$ from any measured covariates $W$ and from any unmeasured confounders $U$ is what allows us to make direct causal inferences on the effect of $A$ on $Y$ in random experiments.
+
+As we have seen, however, observational data usually do not afford us the same freedom. Let us consider the DAG below.
+
+```{r out.width="75%", echo=FALSE}
+dagify(Y ~ A,
+       Y ~ U,
+       Y ~ W,
+       W ~ U,
+       A ~ U,
+       A ~ W,
+       exposure = "A",
+       outcome = "Y") %>%
+  tidy_dagitty() %>%
+  pretty_dag() %>%
+  ggdag() +
+  geom_dag_edges() +
+  geom_dag_node(aes(color = color)) +
+  geom_dag_text(col = "white") +
+  theme(legend.position = "none") +
+  scale_color_manual(values=c("darkred", "lightgrey", "darkgrey", "navy"))
+```
+
+This simple DAG represents an unfortunately common situation in observational studies, in which the exposure $A$ and the outcome $Y$ are thought to have measured and unmeasured confounders in common.
+
+We have explored many methods of accounting for *measured* confounders $W$, but what of *unmeasured* confounders $U$? We cannot control for a variable we cannot measure.
+
+One strategy to combat this concern is to determine whether we might find some measurable covariate $Z$ which can "represent" the exposure $A$ but which, unlike $A$, *is independent from unmeasured confounders*. 
+
+Such a covariate, if found, is called an **instrumental variable**.
+
+## Instrumental Variable Criteria
+
+While instrumental variables can be an exciting, clever "loophole" to the problem of exposure non-independence, they must be chosen with care.
+
+In order for some variable $Z$ to be a valid instrument, it must be:
+
+* Causally related to the exposure $A$. This can be represented in the DAG with an arrow $Z \rightarrow A$. This is commonly referred to as the **First Stage**.
+* Exogenous to the system. That is, independent from (or **not** correlated with) the other covariates in the system *both* measured ($W$) and unmeasured ($U$). This can be represented in the DAG as the absence of arrows between $Z$ and the $W$s (a.k.a. exclusion restrictions) *and* the absence of arrows between unmeasured confounders of $Z$ ($U_Z$) and any other unmeasured confounders $U$ (a.k.a. independence assumptions). 
+    * In other words, there should be no unblocked backdoor path from $Z$ to $Y$--**the only path from $Z$ to $Y$ must be that through $A$.** Confusingly, this criterion is commonly referred to simply as the **Exclusion Restriction**.
+
+In the following DAG, $Z$ satisifies these requirements and is a valid instrument of the effect of $A$ on $Y$.
+
+```{r out.width="75%", echo=FALSE}
+dagify(Y ~ A,
+       Y ~ U,
+       Y ~ W,
+       W ~ U,
+       A ~ U,
+       A ~ W,
+       A ~ Z,
+       Z ~ U_Z,
+       exposure = "A",
+       outcome = "Y") %>%
+  tidy_dagitty() %>%
+  pretty_dag() %>%
+  ggdag() +
+  geom_dag_edges() +
+  geom_dag_node(aes(color = color)) +
+  geom_dag_text(col = "white") +
+  theme(legend.position = "none") +
+  scale_color_manual(values=c("darkred", "lightgrey", "darkgrey", "navy", "darkgreen"))
+```
+
+This second criteria has some inherent flexibility, however. In the case of a causal relationship between $Z$ and any *measured* confounders $W$, we can control for said confounders and still find this requirement satisfied. Consider the following DAG:
+
+```{r out.width="75%", echo=FALSE}
+ex_dag2 <- dagify(Y ~ A,
+       Y ~ U_YA,
+       Y ~ W,
+       W ~ U_W,
+       A ~ U_YA,
+       A ~ W,
+       A ~ Z,
+       W ~ Z,
+       Z ~ U_Z,
+       exposure = "A",
+       outcome = "Y") %>%
+  tidy_dagitty() %>%
+  pretty_dag() 
+ex_dag2 %>%
+  ggdag() +
+  geom_dag_edges() +
+  geom_dag_node(aes(color = color)) +
+  geom_dag_text(col = "white") +
+  theme(legend.position = "none") +
+  scale_color_manual(values=c("darkred", "lightgrey", "darkgrey", "navy", "darkgreen"))
+```
+
+The above DAG shows an unblocked backdoor path from $Z$ to $Y$ through $W$. However, if we control for $W$ we see this path disappear (Note: arrows are grey when adjusted for and can be ignored):
+
+```{r echo=FALSE,warning=FALSE}
+ex_dag2 %>% control_for(var = "W") %>%
+  ggdag_adjust() +
+  geom_dag_node(aes(color = adjusted)) +
+  geom_dag_text(col = "white") 
+```
+
+Now the only path from $Z$ to $Y$ is the direct path through $A$.
+
+However, remember we must as always be cautious when adjusting for any covariates. In the previous example, we began with an independance assumption that $U_W \perp U_{YA}$.
+
+Let us consider the following DAG *without* this independence assumption:
+
+```{r out.width="75%", echo=FALSE}
+ex_dag3 <- dagify(Y ~ A,
+       Y ~ U,
+       Y ~ W,
+       W ~ U,
+       A ~ U,
+       A ~ W,
+       A ~ Z,
+       W ~ Z,
+       Z ~ U_Z,
+       exposure = "A",
+       outcome = "Y") %>%
+  tidy_dagitty() %>%
+  pretty_dag() 
+ex_dag3 %>%
+  ggdag() +
+  geom_dag_edges() +
+  geom_dag_node(aes(color = color)) +
+  geom_dag_text(col = "white") +
+  theme(legend.position = "none") +
+  scale_color_manual(values=c("darkred", "lightgrey", "darkgrey", "navy", "darkgreen"))
+```
+
+Note the only difference here is that $W$ shares unmeasured confounding $U$ with $A$ and $Y$. Now we again control for $W$:
+
+```{r echo=FALSE,warning=FALSE}
+ex_dag3 %>% control_for(var = "W") %>%
+  ggdag_adjust() +
+  geom_dag_node(aes(color = adjusted)) +
+  geom_dag_text(col = "white") 
+```
+
+Here we see that we still have an unblocked backdoor path from $Z$ to $Y$.
+
+**\textcolor{blue}{Question 4:}** What is the new unblocked backdoor path from $Z$ to $Y$? Why did controlling for $W$ open up this path?
+
+**Solution:** $Z \rightarrow U \rightarrow Y$. $W$ is essentially a collider of $Z$ and $U$.
+
+Recall that whenever we control for a covariate we must be on the lookout for colliders. Consider the following DAG:
+
+```{r out.width="75%", echo=FALSE}
+ex_dag4 <- dagify(Y ~ A,
+       Y ~ U_YA,
+       W ~ Y,
+       W ~ U_W,
+       A ~ U_YA,
+       A ~ W,
+       A ~ Z,
+       W ~ Z,
+       Z ~ U_Z,
+       exposure = "A",
+       outcome = "Y") %>%
+  tidy_dagitty() %>%
+  pretty_dag() 
+ex_dag4 %>%
+  ggdag() +
+  geom_dag_edges() +
+  geom_dag_node(aes(color = color)) +
+  geom_dag_text(col = "white") +
+  theme(legend.position = "none") +
+  scale_color_manual(values=c("darkred", "lightgrey", "darkgrey", "navy", "darkgreen"))
+```
+
+Notice here that we again have the independence assumption $U_W \perp U_{YA}$, saving us from the problem just considered. However, $W$ itself is now a collider on the path from $Z$ to $Y$. 
+
+**\textcolor{blue}{Question 5:}** Why is this a problem? What would happen if we controlled for $W$? Include a DAG in your answer.
+
+```{r out.width="75%"}
+# You may draw your DAG by hand and include a picture of it here
+# Be sure to change "example-dag.jpg" below to the correct name of your file
+include_graphics("example-dag.jpg")
+```
+
+**Solution:** Conditioning on $W$ will induce a path from $Z$ to $Y$ directly, which is therefore an unblocked backdoor path (of sorts) since it does not pass through $A$.
+
+```{r echo=FALSE,warning=FALSE,eval=FALSE}
+## NOTE: This is not working and I'm not sure why :/
+## All else fails, can include a drawn DAG picture
+ex_dag4 %>% control_for(var = "W") %>%
+  ggdag_adjust() +
+  geom_dag_node(aes(color = adjusted)) +
+  geom_dag_text(col = "white") 
+```
+
+# Two-Stage Least Squares (2SLS) Regression
+
+In practice, instrumental variables are used most often in the context of linear regression models using Two-Stage Least Squares (2SLS) Regression.
+
+Recall that a simple linear regression model looks as follows:
+
+$$Y = \beta_0 + \beta_1A + \epsilon$$
+Where the parameter coefficients $\beta_0$, $\beta_1$ represent the y-intercept and slope, respectively, and $\epsilon$ represents the error term.
+
+Earlier we saw that a problem arises when $A$ and $Y$ have unmeasured confounders $U$ in common. This problem is diagnosed when considering the causal relationships represented in our DAG, but in practice is often discovered as a correlation between $A$ and the error term $\epsilon$.
+
+## Exclusion Restriction
+
+There is no empirical way to determine whether the "exclusion restriction" requirement discussed above (that the only causal path from $Z$ to $Y$ must be that through $A$) is met. You must use your knowledge of the system to develop what you believe to be an accurate DAG, and then determine whether your intended instrument satisfies this requirement based on that DAG. However, in practice, a variable $Z$ can be *ruled out* as a potential instrument if it appears correlated with $\epsilon$.
+
+## First Stage 
+
+The "first stage" requirement (that $Z$ must have a causal effect on $A$), however, can be empirically tested, and as the name implies, doing so is indeed the first stage in implementing an instrumental variable analysis. 
+
+To do so, we simply run a linear regression of the intended instrument $Z$ on the exposure $A$ (and any measured confounders $W$ that we have determined appropriate to control for):
+
+$$Z = \beta_0 + \beta_1A + \epsilon$$
+If this regression results in a high correlation value, $Z$ is considered a **strong** instrument and we may proceed. If correlation is low, however, $Z$ is considered a **weak** instrument and may be a poor choice of instrument.
+
+If we decide to move forward with using $Z$ as an instrument, we save the predicted values of the instrument $\hat{Z}$ and the covariance of $Z$ and $A$ ($Cov(Z,A)$) for the next stage.
+
+**\textcolor{blue}{Question 6:}** Consider, what are some potential concerns with using a weak instrument?
+
+**Solution:** There are many possible answers, but the primary concern is that $Z$ may not truly have a causal effect on $A$ (or at least, not a very strong one).
+
+## Second Stage 
+
+Now that we have the predicted values of the instrument $\hat{Z}$, we regress the outcome $Y$ on these values, like so:
+
+$$Y = \beta_0 + \beta_1\hat{Z} + \epsilon$$
+We then retrieve the covariance between $Z$ and $Y$ ($Cov(Z,Y)$). The ratio between this and $Cov(Z,X)$ is then our 2SLS estimate of the coefficient on $A$ in the original model.
+
+$$\hat{\beta}_1 = \frac{Cov(Z,Y)}{Cov(Z,A)}$$
+
+**\textcolor{blue}{Question 7:}** Explain in your own words why you think the above estimates the desired parameter.
+
+> Your answer here.
+
+# Natural Experiments
+
+A common source of potential instrumental variables explored arise from natural experiments. A "natural experiment" refers to observational data in which randomization has been applied to an exposure (or instrumental) variable, but that randomization was *not* implemented by the researchers (i.e. it was implemented by "nature"). Common examples include legislative differences in similar jurisdictions (or legislative changes in a single jurisdiction, comparing shortly before and shortly after said change), proximity to a source the exposure of interest, and many others.
+
+## Simulation
+
+Let us consider a modified version of our AspiTyleCedrin example explored previously. In this version, say that both exposure to AspiTyleCedrin and the outcome of experiencing a migraine are affected by watching cable news, since AspiTyleCedrin are commonly shown on cable news channels, and stress from excessive cable news watching can trigger migraines. Say also that living near a pharmacy that carries AspiTyleCedrin makes people more likely to use it, but is not related to cable news watching or experience of migraines. Furthermore, say sex assigned at birth does have an effect on both AspiTyleCedrin use and experience of migraines, but is not causally related to either cable news watching or proximity to a pharmacy that sells AspiTyleCedrin.
+(Note: This is just an example, in reality there may be reason to suspect causal relationships that we are not considering here).
+
+Thus we have the following variables:
+
+**Endogenous variables:**
+
+* `A`: Treatment variable indicating whether the individual $i$ took AspiTyleCedrin ($A_i = 1$) or not ($A_i = 0$).
+* `Y`: Continuous outcome variable indicating the number of migraines experienced by an individual in the past month. (NOTE: We have previously measured this variable as binary!)
+* `W`: Variable representing sex assigned at birth, with $W = 0$ indicating AMAB (assigned male at birth), $W = 1$ indicating AFAB (assigned female at birth), and $W = 2$ indicating an X on the birth certificate, possibly representing an intersex individual or left blank.
+* `Z`: Instrumental variable indicating proximity in miles the individual $i$ lives near a pharmacy that sells AspiTyleCedrin. 
+
+**Exogenous variables:**
+* `U_YA`: Unmeasured confounding variable, cable news watching, which affects the exposure $A$ and the outcome $Y$, 
+* `U_Z`: Unmeasured confounding variable(s) which affect the instrument $Z$.
+
+And our DAG is as follows:
+
+```{r out.width="75%", echo=FALSE}
+ex_dag5 <- dagify(Y ~ A,
+       Y ~ U_YA,
+       Y ~ W,
+       A ~ U_YA,
+       A ~ W,
+       A ~ Z,
+       W ~ Z,
+       Z ~ U_Z,
+       exposure = "A",
+       outcome = "Y") %>%
+  tidy_dagitty() %>%
+  pretty_dag() 
+ex_dag5 %>%
+  ggdag() +
+  geom_dag_edges() +
+  geom_dag_node(aes(color = color)) +
+  geom_dag_text(col = "white") +
+  theme(legend.position = "none") +
+  scale_color_manual(values=c("darkred", "lightgrey", "darkgrey", "navy", "darkgreen"))
+```
+
+Simulate the dataset:
+
+```{r}
+n = 1e4 # Number of individuals (smaller than last time)
+
+# NOTE: Again, don't worry too much about how we're creating this dataset, 
+# this is just an example.
+
+df <- data.frame(U_Z = rnorm(n, mean=50, sd=5),
+                 U_YA = rbinom(n, size = 1, prob = 0.34),
+                 W = sample(0:2, size = n, replace = TRUE, 
+                             prob = c(0.49,0.50,0.01)),
+                 eps = rnorm(n)
+)
+df <- df %>% 
+  mutate(Z = 1.2*U_Z + 5,
+         A = as.numeric(rbernoulli(n, 
+                                   p = (0.03 + 0.06*(W > 0) + 0.7*(Z < 60) + 0.21*(U_YA == 1)))),
+         Y = 5 - 4*A + 1*W + 3*U_YA) 
+head(df)
+summary(df)
+```
+**\textcolor{blue}{Question 8:}** Use the `lm()` function to regress proximity $Z$ on AspiTyleCedrin use $A$ and sex assigned at birth $W$. Assign the predicted values to the variable name `Z_hat`. Use the `cov()` function to find $Cov(Z,A)$ and assign the result to the variable name `cov_za`.
+
+```{r}
+lm_out1 <- lm(Z ~ A + W, data = df)
+summary(lm_out1)
+
+Z_hat <- lm_out1$fitted.values
+cov_za <- cov(df$Z, df$A)
+```
+
+**\textcolor{blue}{Question 9:}** Use the `lm()` function to regress migraines $Y$ on your fitted values `Z_hat`. Use the `cov()` function to find $Cov(Z,Y)$ and assign the result to the variable name `cov_zy`.
+
+```{r}
+lm_out2 <- lm(Y ~ Z_hat, data = df)
+summary(lm_out2)
+cov_zy <- cov(df$Z, df$Y)
+```
+
+**\textcolor{blue}{Question 10:}** Use your `cov_za` and `cov_zy` to estimate the coefficient $\beta_1$ in the following equation:
+
+$$Y = \beta_0 + \beta_1 A + \beta_2 W + \epsilon$$
+Interpret your result in words.
+
+```{r}
+beta_hat <- cov_zy/cov_za
+beta_hat
+```
+
+> When controlling for sex assigned at birth, use of AspiTyleCedrin reduces migraines by approximately 4 per month.
+
+
+The `AER` package also provides us with the `ivreg()` function which allows us to perform IV regression in one command:
+
+```{r}
+lm_out3 <- ivreg(Y ~ A + W | W + Z , data = df)
+summary(lm_out3)
+```
+
+**\textcolor{blue}{Question 11:}** Compare the estimate of the coefficient on $A$ in the output above to your previous answer.
+
+> Your answer here.
+
+
+# References
+
+http://dx.doi.org/10.2139/ssrn.3135313
+
+https://www.statisticshowto.com/instrumental-variable/
+
+https://umanitoba.ca/faculties/health_sciences/medicine/units/chs/departmental_units/mchp/protocol/media/Instrumental_variables.pdf
+
+https://rpubs.com/wsundstrom/t_ivreg
+
+https://en.wikipedia.org/wiki/Instrumental_variables_estimation#Testing_the_exclusion_restriction 
+
+https://towardsdatascience.com/a-beginners-guide-to-using-instrumental-variables-635fd5a1b35f
+
+https://www.econometrics-with-r.org/12-1-TIVEWASRAASI.html
