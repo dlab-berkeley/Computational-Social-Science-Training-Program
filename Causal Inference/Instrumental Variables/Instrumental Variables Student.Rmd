@@ -21,7 +21,7 @@ source("pretty_dag.R")
 
 # Causal Graph (DAG) Review
 
-Let's briefly review what we know about directed acyclic graphs (DAGs) or causal graphs. 
+Let's briefly review what we know about directed acyclic graphs (DAGs) or causal graphs. In this lab, we will introduce the [daggity](http://www.dagitty.net/) and ggdag(https://cran.r-project.org/web/packages/ggdag/vignettes/intro-to-ggdag.html#:~:text=Overview,from%20the%20tidyverse%2C%20like%20dplyr%20.) libraries for drawing DAGs in R.
 
 Firstly, it is imperative that we keep in mind that DAGs are essentially a __visual representation of our *assumptions* about the causal relationships between variables__. We are rarely, if ever, able to prove that our DAG is actually "true"--we simply assume that it is. 
 
