@@ -4,16 +4,16 @@ author: "Your Name Here"
 date: "MM/DD/YYYY"
 output: pdf_document
 ---
-
 ```{r message=FALSE, echo=FALSE}
-library(knitr)
-library(dplyr)
-library(ggplot2)
-library(stringr)
-library(purrr)
-library(dagitty)
-library(ggdag)
-library(AER)
+# Install packages 
+if (!require("pacman")) install.packages("pacman")
+
+pacman::p_load(# Tidyverse packages including dplyr and ggplot2 
+               tidyverse,
+               dagitty,
+               ggdag,
+               AER)
+
 theme_set(theme_dag())
 source("pretty_dag.R")
 ```
@@ -54,6 +54,7 @@ ex_dag1 <- dagify(Y ~ A,
                  outcome = "Y") %>%
   tidy_dagitty() %>%
   pretty_dag() 
+
 ex_dag1 %>%
   ggdag() +
   geom_dag_node(aes(color = color)) +
@@ -99,12 +100,12 @@ f. Are there any colliders? If so, what are they? What path(s) do they block? Wh
 
 **Solutions:**
 
-a. $X = \{W1, A, Y\}$
-b. $U = \{U\}$
-c. No.
-d. No.
-e. Yes, $A \rightarrow W1 \rightarrow Y$
-f. No.
+a. ...
+b. ...
+c. ...
+d. ...
+e. ...
+f. ...
 
 ```{r out.width="75%", echo=FALSE}
 dagify(Y ~ A,
@@ -136,12 +137,12 @@ f. Are there any colliders? If so, what are they? What path(s) do they block? Wh
 
 **Solutions:**
 
-a. $X = \{W1, A, Y\}$
-b. $U = \{U_{W1}, U_A, U_Y\}$
-c. No.
-d. Yes; $U_{W1} \perp U_A$, $U_{W1} \perp U_Y$, and $U_{A} \perp U_Y$
-e. No. 
-f. Yes; $W1$; $A \rightarrow W1 \rightarrow Y$; it would induce an unblocked backdoor path between $A$ and $Y$.
+a. ...
+b. ...
+c. ...
+d. ...
+e. ... 
+f. ...
 
 ```{r out.width="75%", echo=FALSE}
 dagify(Y ~ A,
@@ -176,12 +177,12 @@ f. Are there any colliders? If so, what are they? What path(s) do they block? Wh
 
 **Solutions:**
 
-a. $X = \{W1, W2, A, Y\}$
-b. $U = \{U_{W1}, U_{W2}, U_A, U_Y\}$
-c. Yes; there is an assumption of no direct causal relationship between $W_2$ and $A$.
-d. Yes; $U_{W1} \perp U_A$, $U_{W1} \perp U_Y$, $U_{W1} \perp U_{W2}$, $U_{W2} \perp U_{A}$, $U_{W2} \perp U_{Y}$, and $U_{A} \perp U_Y$
-e. Yes; $A \rightarrow W1 \rightarrow W2 \rightarrow Y$.
-f. Yes; $W1$; $A \rightarrow W1 \rightarrow Y$; it would induce an unblocked backdoor path between $A$ and $Y$.
+a. ...
+b. ...
+c. ...
+d. ...
+e. ...
+f. ...
 
 
 # Instrumental Variables
@@ -347,7 +348,7 @@ Here we see that we still have an unblocked backdoor path from $Z$ to $Y$.
 
 **\textcolor{blue}{Question 4:}** What is the new unblocked backdoor path from $Z$ to $Y$? Why did controlling for $W$ open up this path?
 
-**Solution:** $Z \rightarrow U \rightarrow Y$. $W$ is essentially a collider of $Z$ and $U$.
+**Solution:** ...
 
 Recall that whenever we control for a covariate we must be on the lookout for colliders. Consider the following DAG:
 
@@ -378,36 +379,16 @@ Notice here that we again have the independence assumption $U_W \perp U_{YA}$, s
 
 **\textcolor{blue}{Question 5:}** Why is this a problem? What would happen if we controlled for $W$? Include a DAG in your answer.
 
-
 ```{r out.width="75%"}
 # You may draw your DAG by hand and include a picture of it here
 # Be sure to change "example-dag.jpg" below to the correct name of your file
-include_graphics("example-dag.jpg")
+
+#knitr::include_graphics("example-dag.jpg")
 ```
 
-**Solution:** Conditioning on $W$ will induce a path from $Z$ to $Y$ directly, which is therefore an unblocked backdoor path (of sorts) since it does not pass through $A$.
+**Solution:** ...
 
-```{r out.width = "75%"}
-## NOTE: This is not working and I'm not sure why :/
-## All else fails, can include a drawn DAG picture
-#ex_dag4 %>% control_for(var = "W") %>%
-#  ggdag_adjust() +
-#  geom_dag_node(aes(color = adjusted)) +
-#  geom_dag_text(col = "white") 
 
-dagify(Y ~ A,
-                 Y ~ W,
-                 A ~ W,
-                 exposure = "A",
-                 outcome = "Y") %>%
-  tidy_dagitty() %>%
-  pretty_dag() %>%
-  ggdag() +
-  geom_dag_node(aes(color = color)) +
-  geom_dag_text(col = "white") +
-  theme(legend.position = "none") +
-  scale_color_manual(values=c("darkred","darkgrey", "navy"))
-```
 
 # Two-Stage Least Squares (2SLS) Regression
 
@@ -437,7 +418,7 @@ If we decide to move forward with using $Z$ as an instrument, we save the predic
 
 **\textcolor{blue}{Question 6:}** Consider, what are some potential concerns with using a weak instrument?
 
-**Solution:** There are many possible answers, but the primary concern is that $Z$ may not truly have a causal effect on $A$ (or at least, not a very strong one).
+**Solution:** ...
 
 ## Second Stage 
 
@@ -520,22 +501,23 @@ df <- df %>%
 head(df)
 summary(df)
 ```
+
 **\textcolor{blue}{Question 8:}** Use the `lm()` function to regress proximity $Z$ on AspiTyleCedrin use $A$ and sex assigned at birth $W$. Assign the predicted values to the variable name `Z_hat`. Use the `cov()` function to find $Cov(Z,A)$ and assign the result to the variable name `cov_za`.
 
 ```{r}
-lm_out1 <- lm(Z ~ A + W, data = df)
+lm_out1 <- lm(..., data = df)
 summary(lm_out1)
 
-Z_hat <- lm_out1$fitted.values
-cov_za <- cov(df$Z, df$A)
+Z_hat <- lm_out1$...
+cov_za <- cov(..., ...)
 ```
 
 **\textcolor{blue}{Question 9:}** Use the `lm()` function to regress migraines $Y$ on your fitted values `Z_hat`. Use the `cov()` function to find $Cov(Z,Y)$ and assign the result to the variable name `cov_zy`.
 
 ```{r}
-lm_out2 <- lm(Y ~ Z_hat, data = df)
+lm_out2 <- lm(..., data = df)
 summary(lm_out2)
-cov_zy <- cov(df$Z, df$Y)
+cov_zy <- cov(..., ...)
 ```
 
 **\textcolor{blue}{Question 10:}** Use your `cov_za` and `cov_zy` to estimate the coefficient $\beta_1$ in the following equation:
@@ -544,17 +526,17 @@ $$Y = \beta_0 + \beta_1 A + \beta_2 W + \epsilon$$
 Interpret your result in words.
 
 ```{r}
-beta_hat <- cov_zy/cov_za
+beta_hat <- ...
 beta_hat
 ```
 
-> When controlling for sex assigned at birth, use of AspiTyleCedrin reduces migraines by approximately 4 per month.
+> ...
 
 
 The `AER` package also provides us with the `ivreg()` function which allows us to perform IV regression in one command:
 
 ```{r}
-lm_out3 <- ivreg(Y ~ A + W | W + Z , data = df)
+lm_out3 <- ivreg(..., data = df)
 summary(lm_out3)
 ```
 
