@@ -6,14 +6,15 @@ output: pdf_document
 ---
 
 ```{r message=FALSE, echo=FALSE}
-library(knitr)
-library(dplyr)
-library(ggplot2)
-library(stringr)
-library(purrr)
-library(dagitty)
-library(ggdag)
-library(AER)
+# Install packages 
+if (!require("pacman")) install.packages("pacman")
+
+pacman::p_load(# Tidyverse packages including dplyr and ggplot2 
+               tidyverse,
+               dagitty,
+               ggdag,
+               AER)
+
 theme_set(theme_dag())
 source("pretty_dag.R")
 ```
@@ -395,18 +396,10 @@ include_graphics("example-dag.jpg")
 #  geom_dag_node(aes(color = adjusted)) +
 #  geom_dag_text(col = "white") 
 
-dagify(Y ~ A,
-                 Y ~ W,
-                 A ~ W,
-                 exposure = "A",
-                 outcome = "Y") %>%
-  tidy_dagitty() %>%
-  pretty_dag() %>%
-  ggdag() +
-  geom_dag_node(aes(color = color)) +
-  geom_dag_text(col = "white") +
-  theme(legend.position = "none") +
-  scale_color_manual(values=c("darkred","darkgrey", "navy"))
+ex_dag4 %>% control_for(var = "W")%>%
+  ggdag_adjust() +
+  geom_dag_node(aes(color = adjusted)) +
+  geom_dag_text(col = "white")
 ```
 
 # Two-Stage Least Squares (2SLS) Regression
