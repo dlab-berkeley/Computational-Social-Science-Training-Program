@@ -10,8 +10,7 @@ header-includes:
 
 ```{r message=FALSE}
 set.seed(13)
-library(dplyr)
-library(purrr)
+library(tidyverse)
 ```
 
 In this lab, we are going to discuss Randomized Experiments. Causal inference methods can be used for observational data, but it is easier to first consider them in the context of randomized experiments. We will also be using the `dplyr` library. You may find it helpful to refer the the [`dplyr` cheat sheet](https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf) to refresh your memory.

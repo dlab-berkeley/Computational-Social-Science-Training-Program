@@ -21,7 +21,7 @@ source("pretty_dag.R")
 
 # Causal Graph (DAG) Review
 
-Let's briefly review what we know about directed acyclic graphs (DAGs) or causal graphs. 
+Let's briefly review what we know about directed acyclic graphs (DAGs) or causal graphs. In this lab, we will introduce the [daggity](http://www.dagitty.net/) and [ggdag](https://cran.r-project.org/web/packages/ggdag/vignettes/intro-to-ggdag.html#:~:text=Overview,from%20the%20tidyverse%2C%20like%20dplyr%20.) libraries for drawing DAGs in R.
 
 Firstly, it is imperative that we keep in mind that DAGs are essentially a __visual representation of our *assumptions* about the causal relationships between variables__. We are rarely, if ever, able to prove that our DAG is actually "true"--we simply assume that it is. 
 
@@ -378,6 +378,7 @@ Notice here that we again have the independence assumption $U_W \perp U_{YA}$, s
 
 **\textcolor{blue}{Question 5:}** Why is this a problem? What would happen if we controlled for $W$? Include a DAG in your answer.
 
+
 ```{r out.width="75%"}
 # You may draw your DAG by hand and include a picture of it here
 # Be sure to change "example-dag.jpg" below to the correct name of your file
@@ -386,13 +387,26 @@ include_graphics("example-dag.jpg")
 
 **Solution:** Conditioning on $W$ will induce a path from $Z$ to $Y$ directly, which is therefore an unblocked backdoor path (of sorts) since it does not pass through $A$.
 
-```{r echo=FALSE,warning=FALSE,eval=FALSE}
+```{r out.width = "75%"}
 ## NOTE: This is not working and I'm not sure why :/
 ## All else fails, can include a drawn DAG picture
-ex_dag4 %>% control_for(var = "W") %>%
-  ggdag_adjust() +
-  geom_dag_node(aes(color = adjusted)) +
-  geom_dag_text(col = "white") 
+#ex_dag4 %>% control_for(var = "W") %>%
+#  ggdag_adjust() +
+#  geom_dag_node(aes(color = adjusted)) +
+#  geom_dag_text(col = "white") 
+
+dagify(Y ~ A,
+                 Y ~ W,
+                 A ~ W,
+                 exposure = "A",
+                 outcome = "Y") %>%
+  tidy_dagitty() %>%
+  pretty_dag() %>%
+  ggdag() +
+  geom_dag_node(aes(color = color)) +
+  geom_dag_text(col = "white") +
+  theme(legend.position = "none") +
+  scale_color_manual(values=c("darkred","darkgrey", "navy"))
 ```
 
 # Two-Stage Least Squares (2SLS) Regression

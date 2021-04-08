@@ -290,7 +290,7 @@ df_a1_small_copy <- as.data.frame(df_a1_small)
 dists_ps_copy <- as.data.frame(dists_ps)
 
 for(i in 1:nrow(df_a1_small)) {
-  max_treat <- which.max(df_a1_small_copy$prop_score)
+  max_treat <- which.max(df_a1_small_copy$prop_score)# %>% select(-ID))
   treat[i] <- names(max_treat)
   df_a1_small_copy <- df_a1_small_copy %>% slice(-max_treat)
   
@@ -446,7 +446,7 @@ The main `matchit()` function of this package includes the following arguments:
 * `distance`: Distance metric to be used. Options include (but are not limited to): "glm" (e.g.Propensity score matching using a generalized linear model such as regression), "mahalanobis", a numeric vector containing already calculated distances.
 * `link`: The link function used with the option chosen in `distance`. (e.g. "logit" if using logistic regression for propensity score matching)
 * `estimand`: The value to be estimated.  Options include (but are not limited to): "ATE", "ATT". Note that "ATE" is not available for all matching methods.
-* `discard`: Which type of units may be discardes. Options are: "control" (i.e. most of the examples we have considered so far), "treatment", "none", "both".
+* `discard`: Which type of units may be discarded. Options are: "control" (i.e. most of the examples we have considered so far), "treatment", "none", "both".
 * `replace`: Whether matching should be done with (`TRUE`) or without (`FALSE`) replacement.
 * `caliper`: The caliper widths to use for each variable (if any) while matching.
 * `ratio`: How many control units should be matched to each treatment unit.
