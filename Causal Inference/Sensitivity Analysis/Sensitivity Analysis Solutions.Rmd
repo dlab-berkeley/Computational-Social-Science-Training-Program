@@ -291,13 +291,24 @@ which is equivalent to the lower limit derived from the Manski bounds! Furthermo
 $$ATE = p \cdot \mu_{t,1} + (1 - p) - (1 - p) \cdot \mu_{c,0}$$
 which is equivalent to the upper limit derived from the Manski bounds! Therefore we can see Manski bounds as simply a special case of this type of sensitivity analysis.
 
+## Shiny App
 
+This approach has been implemented via a Shiny App [here](https://carohaensch.shinyapps.io/tippingsens/). This app allows you to upload your data and adjust two of the parameters discussed above ($q$, $\gamma_1$, $\alpha_1$, $\beta_1$) while holding the other two constant.
+
+**\textcolor{blue}{Question 9:}** Upload our data to the app and play around with a few different values/ranges of the four parameters. Take a screesnot of at least one of your iterations and include it below. Discuss what you see and interpret in terms of our original analysis. (Note: You will need to modify the format of our dataset slightly before uploading--read instructions on the app webpage for details)
+
+```{r}
+df.shiny <- df %>% 
+  mutate(Treatment = A,
+         Outcome = Y) %>%
+  select(-W)
+
+write.csv(df.shiny, "df.shiny.csv")
+```
 
 
 # References
 
-* Imbens/Rubin Chapter 22
+* Imbens, G. W., &amp; Rubin, D. B. (2018). Causal inference for statistics, social, and biomedical sciences: An introduction. New York: Cambridge University Press.
 
-* Gustafson P, McCandless LC. Probabilistic approaches to better quantifying the results of epidemiologic studies. Int J Environ Res Public Health. 2010 Apr;7(4):1520-39. doi: 10.3390/ijerph7041520. Epub 2010 Apr 1. PMID: 20617044; PMCID: PMC2872335.
-
-* Bradshaw, Patrick. Public Health 250C slides Weeks 10 & 11
+* https://carohaensch.shinyapps.io/tippingsens/
