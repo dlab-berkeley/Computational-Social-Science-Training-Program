@@ -15,7 +15,8 @@ pacman::p_load(# Tidyverse packages including dplyr and ggplot2
                tidyverse,
                rdd,
                ggthemes,
-               tidymodels)
+               tidymodels,
+               here)
 
 set.seed(1)
 ```
@@ -37,6 +38,7 @@ To explore this question, we are going to use data taken from [Lee (2008)](https
 - `incumbent`: 0/1 for whether the candidate is an incumbent
 
 ```{r}
+# update with here()
 elections <- read_csv('../../data/indiv_final.csv')
 
 elections <- elections %>%
@@ -78,7 +80,7 @@ What might be the problem with using .77 as the coefficient in this case? Let's 
 ```{r}
 elections %>% 
   mutate(incumbent = as.factor(incumbent)) %>%
-  mutate(decile = as.factor(ntile(difshare, 10)))  %>%
+  mutate(decile = as.factor(ntile(difshare, 10))) %>%
   ggplot() +
   geom_bar(aes(y = decile,
                fill = win_reelection),
@@ -88,13 +90,13 @@ elections %>%
   coord_flip()
 ```
 
-**Question**: Groups 1 - 4 look ok - by definition someone cannot win reelection if they lost the last election. But what about the difference in distributions between deciles like 5 and 6, versus the distributions in declies 7-10? Why would these different distributions pose a problem for trusting our previous point estimate?
+**Question**: Groups 1 - 4 look ok - by definition someone cannot win reelection if they lost the last election. But what about the difference in distributions between deciles like 5 and 6, versus the distributions in deciles 7-10? Why would these different distributions pose a problem for trusting our previous point estimate?
 
 **Solution**: Our main worry is that people who won huge proportions of the vote in the last election are systematically different from those who barely won in the last election. For instance, it should not be surprising when a Democratic incumbent carries CA-13 (Berkeley's congressional district) not because they enjoy an incumbency advantage but because the district is heavily Democratic for other reasons. 
 
 ## Running Variable
 
-We might assume that the selection into treatment/control conditions is driven entirely by observable characteristics (selection on the observables). If this was the case, then we could add these characteristics as controls to our regression, and we would be ok. In practice, this is rarely a realistic assumption though, and we most likely will worry about selection on unobservarble characteristics - essentially confounders that we do not see but affect both treatment and the outcome. 
+We might assume that the selection into treatment/control conditions is driven entirely by observable characteristics (selection on the observables). If this was the case, then we could add these characteristics as controls to our regression, and we would be ok. In practice, this is rarely a realistic assumption though, and we most likely will worry about selection on unobservable characteristics - essentially confounders that we do not see but affect both treatment and the outcome. 
 
 The basic intuition behind regression discontinuity designs is that we use a **running variable** that determines whether a unit was assigned to either treatment or control. Let's take a look:
 
@@ -142,6 +144,7 @@ We can go ahead and estimate our model now! Once again the `rdd` package provide
 ```{r}
 sharp_rdd_model <- RDestimate(# formula. outcome regressed on running variable x 
            # add a | c1 + c2... to add additional covariates
+          # y ~ x | c1 + c2...cn
            myoutcomenext ~ difshare, 
            # data
            data = elections,
@@ -168,7 +171,8 @@ We can also easily implement a fuzzy RD design. As we discussed in lecture, a fu
 fuzzy_rdd_model <- RDestimate(# formula. outcome regressed on running variable x 
           # To change this to a fuzzy rdd, add a +z to the formula to indicate the treatment variable
            # add a | c1 + c2... to add additional covariates
-           myoutcomenext ~ difshare + incumbent, 
+          # formula = y ~ x + z + c1 + c2
+           formula = myoutcomenext ~ difshare + incumbent, 
            # data
            data = elections,
            # specify cutpoint
