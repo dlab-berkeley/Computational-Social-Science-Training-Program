@@ -14,7 +14,6 @@ pacman::p_load(# Tidyverse packages including dplyr and ggplot2
                ggthemes,
                augsynth)
 
-
 set.seed(1)
 ```
 
@@ -319,3 +318,78 @@ summary(covsyn)
 ```
 
 ## Staggered Adoption
+
+The last technique we'll look at is "staggered adoption" of some policy. In the original Hainmueller paper, states that already had similar cigaratte taxes were discarded from the donor pool to create a synthetic California. But what if we were interested in the effect of a policy overall, for every unit that adopted treatment? The problem is, these units all choose to adopt treatment at different times. We could construct different synthetic controls for each one, or we can use a staggered adoption approach.
+
+To explore this question, we'll continue using the `augsynth` package's vignette. This time we will load a dataset that examines the effect of states instituting mandatory collective bargaining agreements.
+
+```{r}
+collective_bargaining <- read_delim("https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/WGWMAV/3UHTLP", delim = '\t')
+
+head(collective_bargaining)
+```
+The main variables we'll use here are:
+
+The dataset contains several important variables that we'll use:
+
+- `year`, `State`: The state and year of the measurement
+- `YearCBrequired`: The year that the state adopted mandatory collective bargaining
+- `lnppexpend`: Log per pupil expenditures in 2010 dollars
+
+Let's do some preprocessing before we estimate some models. We're going to remove DC and Wisconsin from the analysis and cabin our dataset to 1959 - 1997. Finally, we'll add a treatment indicator `cbr` which takes a 1 if the observation was a treated state after it adopted mandatory collective bargaining, or a 0 otherwise: 
+
+```{r}
+collective_bargaining_clean <- collective_bargaining %>%
+    filter(!State %in% c("DC", "WI"),
+           year >= 1959, 
+           year <= 1997) %>%
+    mutate(YearCBrequired = ifelse(is.na(YearCBrequired), 
+                                   Inf, YearCBrequired),
+           cbr = 1 * (year >= YearCBrequired))
+```
+
+We're ready to start estimating a model! To do this, we use the `multisynth()` function that has the following signature:
+
+```
+mutltisynth(outcome ~ treatment, unit, time, nu, data,  n_leads)
+```
+
+The key parameters here are `nu` and `n_leads`. Staggered adoption uses multi-synthetic control which essentially pools together similar units and estimates a synthetic control for each pool. `nu` determines how much pooling to do. A value of 0 will fit a separate synthetic control for each model, whereas a value of 1 will pool all units together. Leaving this argument blank with have `augsynth` search for the best value of `nu` that minimizes L2 loss. `n_leads` determines how many time periods to estimate in the post-treatment period.
+
+```{r}
+# synthetic control
+```
+
+After you've fit a model that you like, use the `summary()` function to get the ATT and balance statistics.
+
+```{r}
+#summary
+```
+
+Next, plot the estimates for each state as well as the average average treatment effect (so average for all treated states). Try to do this with `ggplot()` instead of the built-in plotting function (hint: how did we get the dataframe with the estimates before?)
+
+```{r}
+#plot
+```
+
+We can also combine our observations into "time cohorts" or units that adopted treatment at the same time. Try adding `time_cohort = TRUE` to your multisynth function and see if your estimates differ. Plot these results as well.
+
+```{r}
+# time cohorts model
+```
+
+```{r}
+# time cohorts plot
+```
+
+Finally, we can add in augmentation. Again augmentation essentially adds a regularization penalty to the synthetic control weights. In the multisynth context, you may especially want to do this when the pre-treatment fit is poor for some of your units. There are a couple of different options for augmentation. One is to specify `fixed_effects = TRUE` in the multsynth call, and this will estimate unit fixed effects models after de-meaning each unit. We can also specify a `n_factors = ` argument (substituting an integer in) to use the [`gsynth` method](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2584200) that uses cross-validation to estimate the weights for multi-synthetic control. 
+
+Try creating an augmented synthetic control model. How do your balance and estimates compare? 
+
+```{r}
+# multisynth model
+```
+
+```{r}
+# multisynth plot
+```
