@@ -319,7 +319,7 @@ summary(covsyn)
 
 ## Staggered Adoption
 
-The last technique we'll look at is "staggered adoption" of some policy. In the original Hainmueller paper, states that already had similar cigaratte taxes were discarded from the donor pool to create a synthetic California. But what if we were interested in the effect of a policy overall, for every unit that adopted treatment? The problem is, these units all choose to adopt treatment at different times. We could construct different synthetic controls for each one, or we can use a staggered adoption approach.
+The last technique we'll look at is "staggered adoption" of some policy. In the original Hainmueller paper, states that already had similar cigarette taxes were discarded from the donor pool to create a synthetic California. But what if we were interested in the effect of a policy overall, for every unit that adopted treatment? The problem is, these units all choose to adopt treatment at different times. We could construct different synthetic controls for each one, or we can use a staggered adoption approach.
 
 To explore this question, we'll continue using the `augsynth` package's vignette. This time we will load a dataset that examines the effect of states instituting mandatory collective bargaining agreements.
 

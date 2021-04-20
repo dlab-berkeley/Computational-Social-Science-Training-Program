@@ -460,6 +460,7 @@ ppool_syn_time_summ <- summary(ppool_syn_time)
 
 ppool_syn_time_summ
 ```
+
 ```{r}
 ppool_syn_time_summ$att %>%
   ggplot(aes(x = Time, y = Estimate, color = Level)) +
