@@ -15,8 +15,7 @@ pacman::p_load(# Tidyverse packages including dplyr and ggplot2
                ATE,
                dagitty,
                ggdag,
-               sensitivitymv,
-               EValue)
+               sensitivitymv)
 
 theme_set(theme_dag())
 source("pretty_dag.R")
@@ -112,10 +111,9 @@ $$\text{ATE} = E[Y_{i}(1) - Y_{i}(0)]$$
 
 $$\hat{\text{ATE}} = E[Y_i |A_i = 1, W_i = w_i] - E[Y_i|A_i = 0, W_i = w_i]$$
 ```{r}
-est <- df %>% group_by(A) %>%
-  summarise(E_Y = mean(Y))
+est <- ...
 
-ATE_crude <- est$E_Y[2] - est$E_Y[1]
+ATE_crude <- ...
 ```
 
 $$\text{ATE} = ATE_{true}$$
@@ -131,14 +129,14 @@ summary(ate_out)
 
 **\textcolor{blue}{Question 2:}** Report the estimate calculated by the `ATE()` function call above, as well as the 95% confidence interval and p-value. 
 
-$$\hat{\text{ATE}} \approx summary(ate_{out})\$Estimate[3,1]$$
-$$\text{95\% CI}_{\hat{\text{ATE}}} \approx [summary(ate_{out})\$Estimate[3,3], summary(ate_{out})\$Estimate[3,4]] $$
-$$\text{p-value} \approx summary(ate_{out})\$Estimate[3,6]$$
+$$\hat{\text{ATE}} \approx summary(ate_{out})$Estimate[3,1]$$
+$$\text{95\% CI}_{\hat{\text{ATE}}} \approx [summary(ate_{out})$Estimate[3,3], summary(ate_{out})$Estimate[3,4]] $$
+$$\text{p-value} \approx summary(ate_{out})$Estimate[3,6]$$
 
 
 **\textcolor{blue}{Question 3:}** What would you conclude from the information you reported in the previous question if you did not know the true ATE? From what you do know the true ATE and the DAG, do you think the confidence interval appropriately captures the level of uncertainty of that estimate? Explain.
 
-> These results show a very narrow confidence interval and a tiny p-value, which would generally lead us to be very confident in this estimate. However, we can see the true ATE value is not included in this CI, and furthermore we know from the DAG that there is unmeasured confounding $U$ that we have not controlled for.
+**Answer**: 
 
 This is a stark reminder that our interpretation of measures such as p-values, CIs, etc. are only valid if our assumptions are correct! Here we know they are not.
 
@@ -180,7 +178,7 @@ In practice, we can reasonably estimate $p$, $\mu_{t,1}$ and $\mu_{c,0}$, but *n
 
 **\textcolor{blue}{Question 4:}** Explain why the previous statement is true.
 
-> We can estimate $p$ from the proportion of treated individuals in our dataset. Furthermore, our observed data does contain the outcome of treatment among individuals receiving the treatment and the outcome of no treatment among individuals receiving the treatment, but it is impossible for us to observe what would happen to individuals under the opposite treatment condition than actually happened.
+**Answer**: 
 
 However, we do know that since the outcome $Y$ is binary, $\mu_{t,0}$ and $\mu_{c,1}$ must by definition lie inside the interval [0,1]. This knowledge allows us to construct bounds on $\mu_t$ and $\mu_c$ like so:
 
@@ -189,7 +187,7 @@ However, we do know that since the outcome $Y$ is binary, $\mu_{t,0}$ and $\mu_{
 \mu_c  &\in [ (1-p) \cdot \mu_{c,0} , (1-p) \cdot \mu_{c,0} + p] \\
 \end{align*}
 
-**\textcolor{blue}{Question 5:}** Show how the bounds for $\mu_t$ and $\mu_c$ above follow from bounds of [0,1] on $\mu_{t,0}$ and $\mu_{c,1}$.
+We can see how the bounds for $\mu_t$ and $\mu_c$ above follow from bounds of [0,1] on $\mu_{t,0}$ and $\mu_{c,1}$:
 
 \begin{align*}
 LL_{\mu_t} &= \mu_t, [\mu_{t,0} = 0] \\
@@ -218,7 +216,7 @@ UL_{ATE} &= UL_{\mu_t} - LL_{\mu_c} \\
 
 **\textcolor{blue}{Question 6:}** Why are the bounds for the ATE calculated in this way? For example, why not find the difference of both lower bounds and both upper bounds, respectively?
 
-> The ATE is the *difference* in the average outcome among the treatment and control, so this difference will be smallest when the average outcome of the treatment is high and average outcome of the control is low (because they will be closer to each other), and vice versa for the upper bound.
+**Answer**: 
 
 We now have a formula for the ATE using only $p$, $\mu_{t,1}$ and $\mu_{c,0}$, which we said earlier can be reasonably estimated from our data. Thus we can use plug-in estimators for these values to estimate the bounds for the ATE, like so:
 
@@ -230,12 +228,7 @@ We now have a formula for the ATE using only $p$, $\mu_{t,1}$ and $\mu_{c,0}$, w
 **\textcolor{blue}{Question 7:}** Calculate these bounds on the ATE using the data.
 
 ```{r}
-p_hat <- nrow(df %>% filter(A == 1)) / nrow(df)
-mu.t1_hat <- df %>% filter(A == 1) %>% summarise(mean = mean(Y)) %>% pull(mean)
-mu.c0_hat <- df %>% filter(A == 0) %>% summarise(mean = mean(Y)) %>% pull(mean)
-
-LL_ATE <- p_hat*mu.t1_hat - (p_hat + (1 - p_hat)*mu.c0_hat)
-UL_ATE <- p_hat*mu.t1_hat + (1 - p_hat) - (1 - p_hat)*mu.c0_hat
+...
 ```
 
 $$ATE \in [`LL_{ATE}`,`UL_{ATE}`]$$
@@ -243,7 +236,7 @@ Note that by definition this interval must contain zero and must have a width of
 
 **\textcolor{blue}{Question 8:}** Compare this interval to the true ATE.
 
-> The interval does indeed include the true ATE value. What's more, while the interval crosses zero, it clearly has more negative range than positive, which is encouraging considering the true value is in fact negative.
+**Answer**: 
 
 # Rosenbaum Sensitivity Analysis
 
@@ -323,7 +316,7 @@ Using our ATE estimates from earlier, we see that we get an E-value of 5.27. Thi
 
 **Question**: Do you find this figure to be reassuring?
 
-**Answer**: Probably not, it is easy to imagine an exogenous variable that increases the likelihood someone both takes the drug and develops a migraine anyway, and a 5-fold increase in this risk is not especially high. Like with p-values though, we should be careful about using arbitrary cutoffs to determine whether our results are valid. 
+**Answer**: 
 
 
 # References
