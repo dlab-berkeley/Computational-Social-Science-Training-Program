@@ -1,0 +1,224 @@
+---
+title: "SuperLearner and LTMLE"
+output: html_document
+---
+
+```{r}
+# Install packages 
+if (!require("pacman")) install.packages("pacman")
+
+pacman::p_load(# Tidyverse packages including dplyr and ggplot2 
+               tidyverse,
+               ggthemes,
+               ltmle,
+               tmle,
+               SuperLearner,
+               tidymodels,
+               caret,
+               e1071,
+               rpart,
+               furrr,
+               parallel)
+```
+
+# Introduction
+
+For our final lab, we will be looking at the [SuperLearner](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html) library, as well as the [Targeted Maximum Likelihood Estimation (TMLE)](https://www.jstatsoft.org/article/view/v051i13) framework, with an extension to longitudinal data structures. This lab brings together a lot of what we learned about both machine learning and causal inference this year, and serves as an introduction to this intersection!
+
+## Data
+
+For this lab, we will use the Boston dataset from the `MASS` library. This dataset is a frequently used toy dataset for machine learning. The main variables we are going to predict is `medv` which is the median home value for a house in Boston.
+
+```{r}
+# Load Boston dataset from MASS package
+data(Boston, package = "MASS")
+glimpse(Boston)
+```
+
+# SuperLearner
+
+First, we are going to introduce the SuperLearner package for machine learning in R. SuperLearner was developed here at Berkeley, and we are going to follow [the guide](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html) put together by Chris Kennedy. There are some differences, mostly because of the introduction of new machine learning tools like [caret](https://topepo.github.io/caret/) and [tidymodels](https://www.tidymodels.org/). 
+
+The basic idea underlying SuperLearner is that it combines cross-validation with ensemble learning to create a "meta-estimator" that is a weighted combination of constituent algorithms. This idea should sound familiar from when we explored ensemble methods in `sklearn` in Python. 
+
+### Train/Test Split
+
+Let's start with our typical train/test split. There are several options for doing this, but we will use the `tidymodels` method. Let's take a look:
+
+```{r}
+# initial_split function from tidymodels/rsample
+boston_split <- initial_split(Boston, prop = 3/4)
+
+# Declare the training set with rsample::training()
+train <- training(boston_split)
+# y_train is medv where medv > 22 is a 1, 0 otherwise
+y_train <- train %>% 
+  mutate(medv = ifelse(medv > 22, 
+                       1,
+                       0)) %>%
+  pull(medv) 
+
+# x_train is everything but the outcome  
+x_train <- train %>%
+  select(-medv)
+
+# Do the same procedure with the test set
+test <- testing(boston_split)
+
+y_test <- test %>%
+  mutate(medv = ifelse(medv > 22, 
+                     1,
+                     0)) %>%
+  pull(medv)
+
+x_test <- test %>%
+  select(-medv)
+```
+
+### SuperLearner Models
+
+Now that we have our train and test partitions set up, let's see what machine learning models we have available to us. We can use the `listWrappers()` function from SuperLearner:
+
+```{r}
+listWrappers()
+```
+Notice how we have both prediction algorithms for supervised learning, and screening algorithms for feature selection (some may be both).
+
+Let's go ahead and fit a mnodel. We'll start with a LASSO which we can call via `glmnet`:
+
+```{r}
+sl_lasso <- SuperLearner(Y = y_train,
+                         X = x_train,
+                         family = binomial(),
+                         SL.library = "SL.glmnet")
+
+sl_lasso
+```
+Notice how it spits out a "Risk" and a "Coef". The "Coef" here is 1 because this is the only model in our ensemble right now. Risk is essentially a measure of accuracy, in this case something like mean squared error. We can see the model in our ensemble that had the lowest risk like this:
+
+```{r}
+# Here is the risk of the best model (discrete SuperLearner winner).
+# Use which.min boolean to find minimum cvRisk in list
+sl_lasso$cvRisk[which.min(sl_lasso$cvRisk)]
+```
+
+### Multiple Models
+
+Now let's extend this framework to multiple models. Within SuperLearner, all we need to do is add models to the `SL.library` argument:
+
+```{r}
+sl = SuperLearner(Y = y_train,
+                  X = x_train,
+                  family = binomial(),
+                  SL.library = c('SL.mean',
+                                 'SL.glmnet',
+                                 'SL.ranger'))
+sl
+```
+
+Now let's move to our validation step. We'll use the `predict()` function to take our SuperLearner model (only keeping models that had weights) and generate predictions. We can then compare our predictions against our true observations.
+
+```{r}
+preds <- predict(sl,
+                 x_test,
+                 onlySL = TRUE)
+
+# start with y_test
+validation <- y_test %>%
+  # add our predictions
+  bind_cols(preds$pred[,1]) %>%
+  # rename columns
+  rename(obs = `...1`,
+         pred = `...2`) %>%
+  mutate(pred = ifelse(pred >= .5, 
+                           1,
+                           0))
+
+head(validation)
+```
+
+Notice that our estimates are not binary 1/0s but rather probabilities. We might want to recode these so that if estimate >= .5 it becomes a 1, and 0 otherwise. We can then use our standard classification metrics and create a confusion matrix using `caret`:
+
+$TP$: True Positives, predicted a 1 and observed a 1
+$FP$: False Positives, predicted a 1 and observed a 0
+$TN$: True Negatives, predicted a 0 and observed a 0
+$FN$: False Negative, predicted a 0 and observed a 1
+
+```{r}
+caret::confusionMatrix(as.factor(validation$pred),
+                       as.factor(validation$obs))
+```
+We can now plot our [AUC-ROC curve](https://en.wikipedia.org/wiki/Receiver_operating_characteristic):
+
+$$Sensitivity = True Positive Rate = Recall = \frac{TP}{TP + FN}$$ 
+$$Specificity = True Negative Rate = \frac{TN}{TN + FP}$$ 
+
+```{r}
+roc_df <- roc_curve(validation,
+          estimate,
+          truth = as.factor(truth))
+
+roc_df %>%
+  ggplot() + 
+  geom_point(aes(x = specificity, y = 1 - sensitivity)) +
+  geom_line(aes(x = specificity, y = 1 - sensitivity)) + 
+  theme_fivethirtyeight() +
+  theme(axis.title = element_text()) +
+  ggtitle('AUC-ROC Curve for SuperLearner') +
+  xlab('Specificity') +
+  ylab('Sensitivity')
+```
+
+### Ensemble Learning
+
+SuperLearner can take a long time to run, but we can also speed this up with parallelization. Unfortunately this works slightly differently in Windows and Mac/Linux (R doesn't seem to recognize Windows Subsystem for Linux).
+
+```{r}
+# Parallel backend Mac/Linux
+n_cores <- availableCores() - 1
+
+plan(multiprocess, 
+     workers = n_cores) 
+set.seed(1, "L'Ecuyer-CMRG")
+
+cv_sl = CV.SuperLearner(Y = y_train, 
+                        X = x_train, 
+                        family = binomial(),
+                          V = 20,
+                        parallel = 'multicore',
+                        #parallel = cluster,
+                          SL.library = c("SL.mean", 
+                                         "SL.glmnet", 
+                                         "SL.ranger"))
+```
+
+```{r}
+# Windows (for SL only, the above should work for tidymodels)
+cluster = parallel::makeCluster(availableCores() - 1)
+# Load SuperLearner onto all clusters
+parallel::clusterEvalQ(cluster, library(SuperLearner))
+parallel::clusterSetRNGStream(cluster, 1)
+cv_sl = CV.SuperLearner(Y = y_train, X = x_train, family = binomial(),
+                          # For a real analysis we would use V = 10.
+                          V = 20,
+                          parallel = cluster,
+                          SL.library = c("SL.mean", 
+                                         "SL.glmnet",
+                                         "SL.ranger"))
+parallel::stopCluster(cluster)
+plot(cv_sl)
+```
+
+## Targeted Maximum Likelihood Estimation (TMLE)
+
+We're now ready to move to the TMLE framework. TMLE combines machine learning and causal inference by using machine learning (i.e. data-adaptive models) to fit estimate some quantity of interest (so making inference). The key is that even though machine learning models oftentimes do not have outputs like coefficients, they can still be used to target the estimator (i.e. a regression) to that quantity of interest. This has a few different benefits, the primary one being that this framework creates a **doubly robust** estimator. Double robustness means that if we either:
+
+1. Fit the right model to estimate the expected outcome correctly
+
+OR
+
+2. Fit the model to estimate the probability of treatment correctly
+
+Then the final TMLE estimator will be **consistent**. Consistent means that as the sample size grows to infinity, the bias will drop to 0. We're going to explore this idea in depth.
+
+
