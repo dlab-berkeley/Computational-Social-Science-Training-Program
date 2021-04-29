@@ -229,7 +229,7 @@ OR
 
 2. Fit the model to estimate the probability of treatment correctly
 
-Then the final TMLE estimator will be **consistent**. Consistent means that as the sample size grows to infinity, the bias will drop to 0. We're going to explore this idea in depth. The example we will go through here is drawn from Katherine Hoffman's [blog](https://www.khstats.com/blog/tmle/tutorial-pt2/). She also provides visual guides to [SuperLearner](https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/Superlearner.pdf) and [TMLE](https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/TMLE.pdf). I recommend consulting the TMLE visual guide in particular as you work through these steps.
+Then the final TMLE estimator will be **consistent**. Consistent means that as the sample size grows to infinity, the bias will drop to 0. We're going to explore this idea in depth. The example we will go through here is drawn from Katherine Hoffman's [blog](https://www.khstats.com/blog/tmle/tutorial-pt2/). She also provides visual guides to [SuperLearner](https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/Superlearner.pdf) and [TMLE](https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/TMLE.pdf).
 
 The basic procedure we will go through is:
 
@@ -250,7 +250,7 @@ The first step in TMLE is to estimate the **outcome model**, or the prediction o
 
 ```{r}
 # SuperLearner libraries
-sl_libs <- c('SL.glmnet', 'SL.ranger', 'SL.glm')
+sl_libs <- ...
 
 # Prepare data for SuperLearner/TMLE
 # Mutate Y, A for outcome and treatment, use tax, age, and crim as covariates
@@ -263,15 +263,12 @@ data_obs <- Boston %>%
 
 # Data Prep
 # Outcome
-Y <- data_obs %>% pull(Y)
+Y <- ...
 # Covariates
-W_A <- data_obs %>% select(-Y)
+W_A <- ...
 
 # Fit SL for Q step, initial estimate of the outcome
-Q <- SuperLearner(Y = Y,
-                  X = W_A,
-                  family = binomial(),
-                  SL.library = sl_libs)
+Q <- ...
 ```
 
 Now that we have trained our model, we need to create predictions for three different scenarios:
@@ -284,15 +281,15 @@ Fill in the code to obtain these predictions.
 
 ```{r}
 # observed treatment
-Q_A <- as.vector(predict(Q)$pred)
+Q_A <- ...
 
 # if every unit was treated
-W_A1 <- W_A %>% mutate(A = 1)
-Q_1 <- as.vector(predict(Q, newdata = W_A1)$pred)
+W_A1 <- ...
+Q_1 <- ...
 
 # if everyone was control
-W_A0 <- W_A %>% mutate(A = 0) 
-Q_0 <- as.vector(predict(Q, newdata = W_A0)$pred)
+W_A0 <- ...
+Q_0 <- ...
 ```
 
 We can take our predictions and put them all into one dataframe:
@@ -314,26 +311,23 @@ ate_gcomp
 Now that we have an initial estimate, we want to "target" it. To do this, we first need to estimate the probability of every unit receiving treatment. This step should look similar to how we estimated the propensity score during matching. Fit a $g$ model using SuperLearner. **Hint**: Think carefully about what should be supplied to the $Y$ and $X$ arguments here.
 
 ```{r}
-A <- W_A$A
+A <- W_A %>% pull(A)
 W <- Boston %>% select(tax, age, crim) 
 
-g <- SuperLearner(Y = A, 
-                  X = W, 
-                  family=binomial(), 
-                  SL.library=sl_libs)
+g <- ...
 ```
 
 Now that we have a model for our propensity score, we can go ahead and calculate both the inverse probability of receiving treatment and the negative inverse probability of not receiving treatment (basically the probability of not receiving treatment). Fill in the code below to obtain both of these quantities. **Hint**: The name "negative inverse probability of not receiving treatment" is a mouthful but should give you a hint about how to set up the calculation.
 
 ```{r}
 # Prediction for probability of treatment
-g_w <- as.vector(predict(g)$pred) # Pr(A=1|W)
+g_w <- ...
 
 # probability of treatment
-H_1 <- 1/g_w
+H_1 <- ...
 
 # probability of control
-H_0 <- -1/(1-g_w) 
+H_0 <- ...
 ```
 
 We can then create the "clever covariate" which assigns the probability of treatment to treated variables, and the probability of control to control variables.  
@@ -345,8 +339,8 @@ dat_tmle <- # add clever covariate data to dat_tmle
   bind_cols(
          H_1 = H_1,
          H_0 = H_0) %>%
-  mutate(H_A = case_when(A == 1 ~ H_1, 
-                       A == 0 ~ H_0))  
+  mutate(H_A = case_when(A == ... ~ ..., 
+                       A == ... ~ ...))  
 ```
 
 We now have the initial estimate of the outcome, $Q_A$, and the estimates for the probability of treatment, $H_A$.
@@ -395,7 +389,7 @@ We now have updated expected outcomes for each unit for their actual treatment s
 Fill in the code to calculate the ATE using our updated information for Q:
 
 ```{r}
-tmle_ate <- mean(Q_1_update - Q_0_update)
+tmle_ate <- ...
 tmle_ate
 ```
 
@@ -408,10 +402,10 @@ infl_fn <- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
 ```
 
 ```{r}
-tmle_se <- sqrt(var(infl_fn)/nrow(data_obs))
+tmle_se <- ...elt()
 
-conf_low <- tmle_ate - 1.96*tmle_se
-conf_high <- tmle_ate + 1.96*tmle_se
+conf_low <- ...elt()
+conf_high <- ...
 pval <- 2 * (1 - pnorm(abs(tmle_ate / tmle_se)))
 ```
 
