@@ -402,9 +402,9 @@ infl_fn <- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
 ```
 
 ```{r}
-tmle_se <- ...elt()
+tmle_se <- ...
 
-conf_low <- ...elt()
+conf_low <- ...
 conf_high <- ...
 pval <- 2 * (1 - pnorm(abs(tmle_ate / tmle_se)))
 ```
