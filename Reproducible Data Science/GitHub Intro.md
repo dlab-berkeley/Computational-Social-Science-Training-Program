@@ -4,7 +4,7 @@ Throughout this course, we'll be using a platform called [GitHub](https://github
 
 At some point in your career, you have probably found yourself in a situation like this:
 
-![Final.doc](https://github.com/Akesari12/Computational-Social-Science-Labs/blob/master/images/phd_comics_final_doc.png?raw=true)
+![Final.doc](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/finaldoc.jpeg)
 
 GitHub is a useful tool because it removes a lot of the obstacles that we usually face when we are collaborating with others. Instead of saving multiple versions of the same document, GitHub lets us iterate on the same document while recording how it has changed over time. Rather than sending collaborators messily named documents, everyone can work from the same GitHub repository. GitHub also has tools for resolving editing conflicts between collaborators and creating a clear workflow.
 
@@ -154,7 +154,7 @@ Besides the command line interface, GitHub also provides some other useful colla
 
 # Challenge Questions
 
-These challenges are taken from [D-Lab's BashGit workshop.]()
+These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/dlab-berkeley/BashGit)
 
 # Git Challenge 1
 
