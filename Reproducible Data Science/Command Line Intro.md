@@ -8,17 +8,17 @@ Before we start with using the command line, Windows users will need to go throu
 
 1. Navigate to the [git for windows webpage](https://gitforwindows.org/), and click the "Download" buttom.
 
-![Download Git for Windows](https://github.com/Akesari12/Computational-Social-Science-Labs/blob/master/images/Install_Git_for_Windows.png?raw=true)
+![Download Git for Windows](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/Install_Git_for_Windows.png)
 
 2. Run the Git installer. For the most part, keep the defaults that the installer recommends. Importantly, you should make sure to keep the recommended settings for adding git to your PATH,  and keeping the default behavior of git pull. The installer may ask if you want to install some beta features as well, we recommend not doing so as this could introduce some bugs.
 
-![Click Next Through the Installer Options](https://github.com/Akesari12/Computational-Social-Science-Labs/blob/master/images/Git%20Installer.png?raw=true)
+![Click Next Through the Installer Options](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/Git%20Installer.png)
 
-![Make sure Git is in your PATH](https://github.com/Akesari12/Computational-Social-Science-Labs/blob/master/images/Git%20in%20PATH.png?raw=true)
+![Make sure Git is in your PATH](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/Git%20in%20PATH.png)
 
-![Keep the default "git pull" option](https://github.com/Akesari12/Computational-Social-Science-Labs/blob/master/images/Default%20git%20pull.png?raw=true)
+![Keep the default "git pull" option](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/Default%20git%20pull.png)
 
-![Uncheck the Experimental Features](https://github.com/Akesari12/Computational-Social-Science-Labs/blob/master/images/Beta%20features.png?raw=true)
+![Uncheck the Experimental Features](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/Beta%20features.png)
 
 ## Basic Command Line Prompts
 
