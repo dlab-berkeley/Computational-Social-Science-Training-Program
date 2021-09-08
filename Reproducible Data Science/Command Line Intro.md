@@ -14,11 +14,15 @@ Before we start with using the command line, Windows users will need to go throu
 
 ![Click Next Through the Installer Options](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/Git%20Installer.png)
 
+
 ![Make sure Git is in your PATH](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/Git%20in%20PATH.png)
+
 
 ![Keep the default "git pull" option](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/Default%20git%20pull.png)
 
+
 ![Uncheck the Experimental Features](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/Beta%20features.png)
+
 
 ## Basic Command Line Prompts
 
