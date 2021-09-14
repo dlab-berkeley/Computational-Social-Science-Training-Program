@@ -36,7 +36,7 @@ GitHub can be a great resource because it provides access to the world's largest
 2. Search for repositories based on some key words that are common for your field. For example, try searching "public health" or "economics."
 3. Star and/or fork a repository that you find.
 
-You can also follow specific users to see all of the repositories associated with them. This is a great way to see what others are working on and keep up to date with new developments. For example, try navigating to [Aniket's page](https://github.com/akesari12/) page and following it. 
+You can also follow specific users to see all of the repositories associated with them. This is a great way to see what others are working on and keep up to date with new developments. For example, try navigating to [KQ's page](https://github.com/sociologyquinn/) page and following it. 
 
 ## Create Your Own Repo
 
