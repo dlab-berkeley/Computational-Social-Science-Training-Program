@@ -65,7 +65,7 @@ Then to make sure you only need to type in your password once, run the following
 git config --global credential.helper cache
 ```
 
-The next time you try to interact with a git repo from the command line (as we'll do momentarily), you'll be asked to type in your username and password. After doing this once, you shouldn't have to do so again.
+The next time you try to interact with a git repo from the command line (as we'll do momentarily), you'll be asked to type in your username and password. If you are prompted to set up a Personal Access Token (PAT), follow [these steps](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) to create one and enter the PAT instead of your password. Make sure you check off at least "repo" in step 8. Once you set this up, you shouldn't have to go through this process again. 
 
 ## Basic Workflow
 
