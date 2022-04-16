@@ -17,10 +17,10 @@ pacman::p_load(# Tidyverse packages including dplyr and ggplot2
                gsynth)
 
 # set seed
-set.seed(1)
+set.seed(44)
 
 # load data
-medicaid_expansion <- read_csv('data/medicaid_expansion.csv')
+medicaid_expansion <- read_csv('../data/medicaid_expansion.csv')
 ```
 
 # Introduction
@@ -52,7 +52,7 @@ The dataset you will work with has been assembled from a few different sources a
 Create plots and provide 1-2 sentence analyses to answer the following questions:
 
 - Which states had the highest uninsured rates prior to 2014? The lowest?
-- Which states were home to most uninsured Americans prior to 2014? How about in 2021? **Note**: 2010 state population is provided as a variable to answer this question. In an actual study you would likely use population estimates over time, but to simplify you can assume these numbers stay about the same.
+- Which states were home to most uninsured Americans prior to 2014? How about in the last year in the data set? **Note**: 2010 state population is provided as a variable to answer this question. In an actual study you would likely use population estimates over time, but to simplify you can assume these numbers stay about the same.
 
 ```{r}
 # highest and lowest uninsured rates
