@@ -9,10 +9,10 @@ header-includes:
 
 ```{r message=FALSE}
 set.seed(13)
-library(dplyr)
-library(ggplot2)
-library(purrr)
+library(tidyverse)  #contains dplyr, ggplot2, and purr 
 library(MatchIt)
+
+#install.packages("optmatch", repos = "https://mran.microsoft.com/snapshot/2022-02-01")
 library(optmatch)
 ```
 
@@ -106,7 +106,7 @@ ggplot(df, aes(x = W2, fill = factor(A))) +
 chisq.test(table(df$A, df$W2))
 ```
 
-The bar plot above again shows a difference in the distribution of simplified racial category among the two groups, and this is again confirmed by the very small p-value from the $\chi^2$ test.
+The bar plot above again shows a difference in the distribution of simplified racial category among the two groups, and this is again confirmed by the very small p-value from the $\chi^2$ test. You can find more documentation for the plotting parameters [here](https://r-charts.com/distribution/histogram-density-ggplot2/).
 
 ```{r}
 ggplot(df, aes(x = W3, fill = factor(A))) + 
@@ -295,7 +295,7 @@ for(i in 1:nrow(df_a1_small)) {
   df_a1_small_copy <- df_a1_small_copy %>% slice(-max_treat)
   
   match_control <- which.min(dists_ps_copy[max_treat,])
-  control[i] <- names(match_control)
+  control[i] <- names(all_of(match_control))
   dists_ps_copy <- dists_ps_copy %>% 
       select(-match_control) %>% 
       slice(-max_treat)
@@ -378,12 +378,12 @@ for(i in 1:nrow(df_a1_small)) {
   df_a1_small_copy <- df_a1_small_copy %>% slice(-max_treat)
   
   match_control_1 <- which.min(dists_ps_copy[max_treat,])
-  control_1[i] <- names(match_control_1)
+  control_1[i] <- names(all_of(match_control_1))
   dists_ps_copy <- dists_ps_copy %>% select(-match_control_1)
   
   if(ncol(dists_ps_copy) > 1) {
     match_control_2 <- which.min(dists_ps_copy[max_treat,])
-    control_2[i] <- names(match_control_2)
+    control_2[i] <- names(all_of(match_control_2))
     dists_ps_copy <- dists_ps_copy %>% 
       select(-match_control_2) %>% 
       slice(-max_treat)
