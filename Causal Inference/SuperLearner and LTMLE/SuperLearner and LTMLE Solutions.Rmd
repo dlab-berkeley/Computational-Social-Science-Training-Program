@@ -28,7 +28,7 @@ pacman::p_load(# Tidyverse packages including dplyr and ggplot2
                parallel,
                ranger)
 
-set.seed(1)
+set.seed(44)
 ```
 
 # Introduction
@@ -147,7 +147,7 @@ validation <- y_test %>%
 head(validation)
 ```
 
-Notice that our estimates are not binary 1/0s but rather probabilities. We might want to recode these so that if estimate >= .5 it becomes a 1, and 0 otherwise. We can then use our standard classification metrics and create a confusion matrix using `caret`:
+Notice that the predictions are not binary 1/0s, but rather probabilities. So, we recode these so that if estimate >= .5 it becomes a 1, and 0 otherwise. We can then use our standard classification metrics and create a confusion matrix using `caret`:
 
 $TP$: True Positives, predicted a 1 and observed a 1
 $FP$: False Positives, predicted a 1 and observed a 0
@@ -158,48 +158,31 @@ $FN$: False Negatives, predicted a 0 and observed a 1
 caret::confusionMatrix(as.factor(validation$pred),
                        as.factor(validation$obs))
 ```
-We can now plot our [AUC-ROC curve](https://en.wikipedia.org/wiki/Receiver_operating_characteristic):
 
-$$Sensitivity = True Positive Rate = Recall = \frac{TP}{TP + FN}$$ 
-$$Specificity = True Negative Rate = \frac{TN}{TN + FP}$$ 
-
-```{r}
-roc_df <- roc_curve(validation,
-          pred,
-          truth = as.factor(obs))
-
-roc_df %>%
-  ggplot() + 
-  geom_point(aes(x = specificity, y = 1 - sensitivity)) +
-  geom_line(aes(x = specificity, y = 1 - sensitivity)) + 
-  theme_fivethirtyeight() +
-  theme(axis.title = element_text()) +
-  ggtitle('AUC-ROC Curve for SuperLearner') +
-  xlab('Specificity') +
-  ylab('Sensitivity')
-```
-
-### Ensemble Learning
+### Ensemble Learning and Parallel Processing
 
 SuperLearner can take a long time to run, but we can also speed this up with parallelization. Unfortunately this works slightly differently in Windows and Mac/Linux (R doesn't seem to recognize Windows Subsystem for Linux).
 
 ```{r}
-# Parallel backend Mac/Linux
+# Parallel backend Mac/Linux 
 n_cores <- availableCores() - 1
 
 plan(multiprocess, 
      workers = n_cores) 
-set.seed(1, "L'Ecuyer-CMRG")
+set.seed(44, "L'Ecuyer-CMRG")
 
 cv_sl = CV.SuperLearner(Y = y_train, 
                         X = x_train, 
                         family = binomial(),
-                          V = 20,
+                        V = 20,
                         parallel = 'multicore',
                         #parallel = cluster,
-                          SL.library = c("SL.mean", 
+                        SL.library = c("SL.mean", 
                                          "SL.glmnet", 
                                          "SL.ranger"))
+
+plot(cv_sl)
+
 ```
 
 ```{r}
@@ -216,6 +199,7 @@ cv_sl = CV.SuperLearner(Y = y_train, X = x_train, family = binomial(),
                                          "SL.glmnet",
                                          "SL.ranger"))
 parallel::stopCluster(cluster)
+
 plot(cv_sl)
 ```
 
@@ -412,7 +396,7 @@ tmle_se <- sqrt(var(infl_fn)/nrow(data_obs))
 
 conf_low <- tmle_ate - 1.96*tmle_se
 conf_high <- tmle_ate + 1.96*tmle_se
-pval <- 2 * (1 - pnorm(abs(tmle_ate / tmle_se)))
+pval <- 2 * (1 - pnorm(abs(tmle_ate / tmle_se))) 
 ```
 
 ## Via TMLE Package
@@ -531,4 +515,27 @@ This covers a lot of computational social science! But there's still more. As yo
   - Meta-estimators (like TMLE)
   - Heterogeneous Treatment Effects
   
+  
+# Appendix for SL & LTMLE 
+
+a)  We can now plot our [AUC-ROC curve](https://en.wikipedia.org/wiki/Receiver_operating_characteristic):
+
+$$Sensitivity = True Positive Rate = Recall = \frac{TP}{TP + FN}$$ 
+$$Specificity = True Negative Rate = \frac{TN}{TN + FP}$$ 
+
+```{r}
+roc_df <- roc_curve(validation,
+          pred,
+          truth = as.factor(obs))
+
+roc_df %>%
+  ggplot() + 
+  geom_point(aes(x = specificity, y = 1 - sensitivity)) +
+  geom_line(aes(x = specificity, y = 1 - sensitivity)) + 
+  theme_fivethirtyeight() +
+  theme(axis.title = element_text()) +
+  ggtitle('AUC-ROC Curve for SuperLearner') +
+  xlab('Specificity') +
+  ylab('Sensitivity')
+```
 

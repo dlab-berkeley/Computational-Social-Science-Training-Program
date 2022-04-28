@@ -28,7 +28,7 @@ pacman::p_load(# Tidyverse packages including dplyr and ggplot2
                parallel,
                ranger)
 
-set.seed(1)
+set.seed(44)
 ```
 
 # Introduction
@@ -147,7 +147,7 @@ validation <- y_test %>%
 head(validation)
 ```
 
-Notice that our estimates are not binary 1/0s but rather probabilities. We might want to recode these so that if estimate >= .5 it becomes a 1, and 0 otherwise. We can then use our standard classification metrics and create a confusion matrix using `caret`:
+Notice that the predictions are not binary 1/0s, but rather probabilities. So, we recode these so that if estimate >= .5 it becomes a 1, and 0 otherwise. We can then use our standard classification metrics and create a confusion matrix using `caret`:
 
 $TP$: True Positives, predicted a 1 and observed a 1
 $FP$: False Positives, predicted a 1 and observed a 0
@@ -158,28 +158,7 @@ $FN$: False Negatives, predicted a 0 and observed a 1
 caret::confusionMatrix(as.factor(validation$pred),
                        as.factor(validation$obs))
 ```
-We can now plot our [AUC-ROC curve](https://en.wikipedia.org/wiki/Receiver_operating_characteristic):
 
-$$Sensitivity = True Positive Rate = Recall = \frac{TP}{TP + FN}$$ 
-$$Specificity = True Negative Rate = \frac{TN}{TN + FP}$$ 
-
-```{r}
-roc_df <- roc_curve(validation,
-          pred,
-          truth = as.factor(obs))
-
-roc_df %>%
-  ggplot() + 
-  geom_point(aes(x = specificity, y = 1 - sensitivity)) +
-  geom_line(aes(x = specificity, y = 1 - sensitivity)) + 
-  theme_fivethirtyeight() +
-  theme(axis.title = element_text()) +
-  ggtitle('AUC-ROC Curve for SuperLearner') +
-  xlab('Specificity') +
-  ylab('Sensitivity')
-```
-
-### Ensemble Learning
 
 SuperLearner can take a long time to run, but we can also speed this up with parallelization. Unfortunately this works slightly differently in Windows and Mac/Linux (R doesn't seem to recognize Windows Subsystem for Linux).
 
@@ -189,7 +168,7 @@ n_cores <- availableCores() - 1
 
 plan(multiprocess, 
      workers = n_cores) 
-set.seed(1, "L'Ecuyer-CMRG")
+set.seed(44, "L'Ecuyer-CMRG")
 
 cv_sl = CV.SuperLearner(Y = y_train, 
                         X = x_train, 
@@ -200,6 +179,7 @@ cv_sl = CV.SuperLearner(Y = y_train,
                           SL.library = c("SL.mean", 
                                          "SL.glmnet", 
                                          "SL.ranger"))
+plot(cv_sl)
 ```
 
 ```{r}
@@ -525,4 +505,27 @@ This covers a lot of computational social science! But there's still more. As yo
   - Meta-estimators (like TMLE)
   - Heterogeneous Treatment Effects
   
+
+# Appendix for SL & LTMLE 
+
+a)  We can now plot our [AUC-ROC curve](https://en.wikipedia.org/wiki/Receiver_operating_characteristic):
+
+$$Sensitivity = True Positive Rate = Recall = \frac{TP}{TP + FN}$$ 
+$$Specificity = True Negative Rate = \frac{TN}{TN + FP}$$ 
+
+```{r}
+roc_df <- roc_curve(validation,
+          pred,
+          truth = as.factor(obs))
+
+roc_df %>%
+  ggplot() + 
+  geom_point(aes(x = specificity, y = 1 - sensitivity)) +
+  geom_line(aes(x = specificity, y = 1 - sensitivity)) + 
+  theme_fivethirtyeight() +
+  theme(axis.title = element_text()) +
+  ggtitle('AUC-ROC Curve for SuperLearner') +
+  xlab('Specificity') +
+  ylab('Sensitivity')
+```
 
