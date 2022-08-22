@@ -206,5 +206,5 @@ Inevitably, especially as you get started, you are likely to run into errors. Us
 
 # Github Pages
 
-![Github Pages](https://docs.github.com/en/pages/quickstart) are public webpages hosted and published through GitHub. They make use of Jekyll, a static site generator that takes Markdown files and converts them to a website. When creating a Github Pages website, you can easily load a pre-made theme and modify the content and style.
+[Github Pages](https://docs.github.com/en/pages/quickstart) are public webpages hosted and published through GitHub. You can use it to showcase some open source projects, host a blog, or even share your résumé. Github Pages makes use of [Jekyll](https://jekyllrb.com/), a static site generator that takes Markdown files and converts them to a website. When creating a Github Pages website, you can easily load a pre-made theme and modify the content and style.
 
