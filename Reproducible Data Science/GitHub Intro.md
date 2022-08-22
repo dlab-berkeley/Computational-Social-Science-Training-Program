@@ -203,3 +203,8 @@ Star the [D-Lab Computational Social Science Training Program repo](https://gith
 ![XKCD on Git](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/git%20xkcd.png) 
 
 Inevitably, especially as you get started, you are likely to run into errors. Usually these arise because of conflicts introduced during collaboration. You can mostly avoid these problems by making good use of branches and pull requests, or by reverting to the last point where you know things worked. We encourage you to do your best to resolve these kinds of problems directly and consult the instructors and/or stackexchange regularly. If you truly get stuck though, try downloading a fresh copy of the repo as a last resort.
+
+# Github Pages
+
+![Github Pages](https://docs.github.com/en/pages/quickstart) are public webpages hosted and published through GitHub. They make use of Jekyll, a static site generator that takes Markdown files and converts them to a website. When creating a Github Pages website, you can easily load a pre-made theme and modify the content and style.
+
