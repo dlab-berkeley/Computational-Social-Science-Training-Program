@@ -52,17 +52,17 @@ Now we're ready to start working with the command line! See the table below for 
 
 ## Keyboard shortcuts
 
-- Up/down arrow keys cycle through previous commands
-- Option + left/right arrow keys move cursor word by word
-- Ctrl c abort process
-- Ctrl d terminate input
-- Ctrl r search (recursive)
-- Ctrl l clear console
-- Ctrl a move cursor to beginning of line
-- Ctrl e move cursor to end of line
-- Ctrl k cut to end of line
-- Ctrl u cut to beginning of line
-- Ctrl y paste
+| Up/down arrow keys | cycle through previous commands |
+| Option + left/right arrow keys | move cursor word by word |
+| Ctrl c | abort process |
+| Ctrl d | terminate input |
+| Ctrl r | search (recursive) |
+| Ctrl l | clear console |
+| Ctrl a | move cursor to beginning of line |
+| Ctrl e | move cursor to end of line |
+| Ctrl k | cut to end of line | 
+| Ctrl u | cut to beginning of line | 
+| Ctrl y | paste | 
 
 TIP: The command line allows you to use TAB completion – use it!
 
