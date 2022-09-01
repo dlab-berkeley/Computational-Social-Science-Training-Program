@@ -32,13 +32,40 @@ Now we're ready to start working with the command line! See the table below for 
 |---------|--------------------|---------|
 | exit    | close the terminal | exit    | 
 | cd      | change directory   | cd data | 
-| pwd     | present working directory | pwd |
+| cd ~	  | to home directory  | cd ~ |
+| cd ..   | up one level       | cd .. |
+| pwd     | print working directory | pwd |
 | ls      | list files in directory | ls |
 | cp      | copy file          | cp ../data/test.txt ../images/test.txt|
 | mv      | move file          | mv ../data/test.txt ../images/test.txt|
+| touch   | create file        | touch test.txt
 | mkdir   | make a new directory | mkdir newdir |
 | rm      | delete a file      | rm test.txt |
 | rm -r   | delete a directory | rm -r newdir |
+| whoami  | display current user | whoami |
+| cat | view contents of a file | cat test.txt |
+| cat | concatenate files | cat \*.txt |
+| echo | print to screen | echo Hello, World |
+| > | redirect text to file | echo Hello, World > hello.txt |
+| screencapture | take screenshot | screencapture
+| say speech | function (Mac) | say fitter, happier, more productive
+
+## Keyboard shortcuts
+
+- Up/down arrow keys cycle through previous commands
+- Option + left/right arrow keys move cursor word by word
+- Ctrl c abort process
+- Ctrl d terminate input
+- Ctrl r search (recursive)
+- Ctrl l clear console
+- Ctrl a move cursor to beginning of line
+- Ctrl e move cursor to end of line
+- Ctrl k cut to end of line
+- Ctrl u cut to beginning of line
+- Ctrl y paste
+
+TIP: The command line allows you to use TAB completion – use it!
+
 
 Try doing the following:
 
