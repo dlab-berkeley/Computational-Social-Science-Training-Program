@@ -52,6 +52,8 @@ Now we're ready to start working with the command line! See the table below for 
 
 ## Keyboard shortcuts
 
+| Command | Description        |
+|---------|--------------------|
 | Up/down arrow keys | cycle through previous commands |
 | Option + left/right arrow keys | move cursor word by word |
 | Ctrl c | abort process |
