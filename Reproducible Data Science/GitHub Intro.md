@@ -153,7 +153,7 @@ git branch -a
 Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. You will need to set a remote/upstream version of your branch when you push it, like so: 
 
 ```
-git push --set-upstream origin <branch-name>
+git push --set-upstream origin new_branch
 ```
 
 Navigate to the github repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into master. If so, merge the changes and see if they updated on the master branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
