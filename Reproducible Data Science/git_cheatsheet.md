@@ -42,13 +42,15 @@ Go to [GitHub.com](https://github.com/) and create new repo. Then follow the ins
 | add origin | `git remote add origin https://github.com/<your_username>/<your_repo_name>.git` |
 | push changes | `git push -u origin main`
 
-## Creating branches on GitHub
+## Working with branches on GitHub
 
 Go to [GitHub.com](https://github.com/) and create a new branch. Then:
 
 | Instruction | Command |
 |---------|-------------|
-| pull the repo | `git pull` |
+| fetch the repo (doesn't merge) | `git fetch remote` |
+| check status | `git status` |
+| pull the repo (merge) | `git pull` |
 | see both remote and local branches | `git branch -a` |
 | create and go to new branch | `git checkout <branch-name>` |
 | push and create new remote branch | `git push --set-upstream origin <branch-name>` |
