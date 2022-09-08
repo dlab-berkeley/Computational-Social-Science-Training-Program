@@ -1,6 +1,6 @@
 # git cheatsheet
 
-Check whether you have git: `git --version`
+Check whether you have git: `git version`
 
 If not, download git from https://git-scm.com/downloads
 
@@ -9,7 +9,6 @@ If not, download git from https://git-scm.com/downloads
 
 | Instruction | Command |
 |-----------|-----------|
-| check your version of git | `git version` |
 | create a directory | `mkdir test` |
 | go into directory | `cd test` |
 | initialize git | `git init` |
