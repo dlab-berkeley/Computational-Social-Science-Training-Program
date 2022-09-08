@@ -54,9 +54,9 @@ Go to [GitHub.com](https://github.com/) and create a new branch. Then:
 | push and create new remote branch | `git push --set-upstream origin <branch-name>` |
 
 
-## Forking & Pull requests (using our repo as an example)
+## Forking, branching, and pull requests (using our repo as an example)
 
-Go to [our class repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/) and create a fork. This creates your own server-side copy. Clone your copy to your local system. Then:
+Go to [our class repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/) and create a fork. This creates your own server-side copy. Then:
 
 | Instruction | Command |
 |---------|-------------|
