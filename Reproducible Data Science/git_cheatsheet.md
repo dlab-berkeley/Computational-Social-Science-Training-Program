@@ -18,7 +18,7 @@ If not, download git from https://git-scm.com/downloads
 | check status | `git status` |
 | commit changes | `git commit -m  "create readme"` |
 
-## Local version control
+## Working with local branches
 
 First, make some changes and create several commits. Then:
 
@@ -33,10 +33,9 @@ First, make some changes and create several commits. Then:
 | go to main branch | `git checkout -b main` |
 | merge changes from named commit with current branch | `git merge <branch_name>` |
 
+## Connecting local to remote repo
 
-## Creating local repo and connecting it to remote
-
-Go to [GitHub.com](https://github.com/) and create new repo. Then:
+Go to [GitHub.com](https://github.com/) and create new repo. Then follow the instructions under **"…or push an existing repository from the command line"**:
 
 | Instruction | Command |
 |---------|-------------|
