@@ -69,3 +69,15 @@ Go to [our class repo](https://github.com/dlab-berkeley/Computational-Social-Sci
 | push commit |  `git push --set-upstream origin <branch-name>` |
 
 On [GitHub.com](https://github.com/), you can now create a pull request from your new branch to the 'official' repository. This needs to be approved by a repository maintainer.
+
+## Managing git conflicts
+
+Merge conflicts occur when competing changes are made to the same line of a file, or when one person edits a file and another person deletes the same file. To resolve a merge conflict caused by competing line changes, you must choose which changes to incorporate from the different branches in a new commit.
+
+| Instruction | Command |
+|---------|-------------|
+| list of commits that are causing a conflict | `git log --merge` | 
+| see differences between states, repos, or files | `git diff` |
+
+Open the file that has merge conflicts. Delete the conflict markers `<<<<<<<`, `=======`, `>>>>>>>` and make the changes you want in the final merge.
+
