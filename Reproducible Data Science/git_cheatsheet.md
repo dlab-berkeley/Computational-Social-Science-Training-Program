@@ -62,7 +62,7 @@ Go to [our class repo](https://github.com/dlab-berkeley/Computational-Social-Sci
 
 | Instruction | Command |
 |---------|-------------|
-| clone the repo | `git clone https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program.git` | 
+| clone the repo | `git clone <URL>` | 
 | create new branch | `git checkout -b <branch-name>` |
 | stage changes | `git add *` |
 | create commit | `git commit -m “<some message>”` |
