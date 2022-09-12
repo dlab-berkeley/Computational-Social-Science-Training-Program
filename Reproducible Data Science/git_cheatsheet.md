@@ -28,7 +28,7 @@ First, make some changes and create several commits. Then:
 | if your main branch is named “master”, do this | `git branch -m main` |
 | check the log (including commit hashes) | `git log --oneline --all` |
 | go to some commit | `git checkout <commit hash>` |
-| create and go to new branch | `git checkout -b <branch-name>` |
+| create and go to new branch | `git checkout -b <branch-name>` or `git switch -a <branch-name>`|
 | OR: go to specific commit & make new branch in one step | `git checkout -b <branch name> <commit hash>` |
 | go to main branch | `git checkout main` or `git switch main`|
 | merge changes from named commit with current branch | `git merge <branch_name>` |
