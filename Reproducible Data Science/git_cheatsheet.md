@@ -30,7 +30,7 @@ First, make some changes and create several commits. Then:
 | go to some commit | `git checkout <commit hash>` |
 | create and go to new branch | `git checkout -b <branch-name>` |
 | OR: go to specific commit & make new branch in one step | `git checkout -b <branch name> <commit hash>` |
-| go to main branch | `git checkout -b main` |
+| go to main branch | `git checkout main` or `git switch main`|
 | merge changes from named commit with current branch | `git merge <branch_name>` |
 
 ## Connecting local to remote repo
