@@ -39,8 +39,8 @@ Go to [GitHub.com](https://github.com/) and create new repo. Then follow the ins
 
 | Instruction | Command |
 |---------|-------------|
-| add origin | `git remote add origin https://github.com/<your_username>/<your_repo_name>.git` |
-| push changes | `git push -u origin main`
+| add origin | `git remote add origin <URL>` |
+| push changes to main branch | `git push -u origin main`|
 
 ## Working with branches on GitHub
 
@@ -52,8 +52,8 @@ Go to [GitHub.com](https://github.com/) and create a new branch. Then:
 | check status | `git status` |
 | pull the repo (merge) | `git pull` |
 | see both remote and local branches | `git branch -a` |
-| create and go to new branch | `git checkout <branch-name>` |
-| push and create new remote branch | `git push --set-upstream origin <branch-name>` |
+| create and go to new branch | `git checkout <branch-name>` or `git switch <branch-name>`|
+| push and create new remote branch | `git push --set-upstream origin <branch-name>` or `git push -u origin <branch_name>` |
 
 
 ## Forking, branching, and pull requests (using our repo as an example)
