@@ -25,11 +25,11 @@ First, make some changes and create several commits. Then:
 | Instruction | Command |
 |---------|-------------|
 | check all local branches | `git branch` |
-| if your main branch is named “master”, do this | `git branch -m main` |
+| change main branch from “master” to "main" | `git branch -m main` |
 | check the log (including commit hashes) | `git log --oneline --all` |
 | go to some commit | `git checkout <commit hash>` |
-| create and go to new branch | `git checkout -b <branch-name>` or `git switch -a <branch-name>`|
-| OR: go to specific commit & make new branch in one step | `git checkout -b <branch name> <commit hash>` |
+| create and go to new branch | `git checkout -b <branch-name>` or `git switch -c <branch-name>`|
+| go to specific commit & make new branch in one step | `git checkout -b <branch name> <commit hash>` |
 | go to main branch | `git checkout main` or `git switch main`|
 | merge changes from named commit with current branch | `git merge <branch_name>` |
 
@@ -54,6 +54,8 @@ Go to [GitHub.com](https://github.com/) and create a new branch. Then:
 | see both remote and local branches | `git branch -a` |
 | create and go to new branch | `git checkout <branch-name>` or `git switch <branch-name>`|
 | push and create new remote branch | `git push --set-upstream origin <branch-name>` or `git push -u origin <branch_name>` |
+
+Note that remote branches do not have to have the same name as the local branches they are tracking.
 
 
 ## Forking, branching, and pull requests (using our repo as an example)
