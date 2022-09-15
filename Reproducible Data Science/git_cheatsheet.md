@@ -18,21 +18,6 @@ If not, download git from https://git-scm.com/downloads
 | check status | `git status` |
 | commit changes | `git commit -m  "create readme"` |
 
-## Working with local branches
-
-First, make some changes and create several commits. Then:
-
-| Instruction | Command |
-|---------|-------------|
-| check all local branches | `git branch` |
-| change main branch from “master” to "main" | `git branch -m main` |
-| check the log (including commit hashes) | `git log --oneline --all` |
-| go to some commit | `git checkout <commit hash>` |
-| create and go to new branch | `git checkout -b <branch-name>` or `git switch -c <branch-name>`|
-| go to specific commit & make new branch in one step | `git checkout -b <branch name> <commit hash>` |
-| go to main branch | `git checkout main` or `git switch main`|
-| merge changes from named commit with current branch | `git merge <branch_name>` |
-
 ## Connecting local to remote repo
 
 Go to [GitHub.com](https://github.com/) and create new repo. Then follow the instructions under **"…or push an existing repository from the command line"**:
@@ -42,17 +27,28 @@ Go to [GitHub.com](https://github.com/) and create new repo. Then follow the ins
 | add origin | `git remote add origin <URL>` |
 | push changes to main branch | `git push -u origin main`|
 
-## Working with branches on GitHub
-
-Go to [GitHub.com](https://github.com/) and create a new branch. Then:
+## Fetching and pulling
 
 | Instruction | Command |
 |---------|-------------|
-| fetch the repo (doesn't merge) | `git fetch remote` |
+| fetch a repo (doesn't merge) | `git fetch remote` |
 | check status | `git status` |
 | pull the repo (merge) | `git pull` |
+| check the log (including commit hashes) | `git log --oneline --all` |
+| go to some commit | `git checkout <commit hash>` |
+
+
+## Working with branches
+
+| Instruction | Command |
+|---------|-------------|
+| check all local branches | `git branch` |
+| change main branch from “master” to "main" | `git branch -m main` |
+| go to main branch | `git checkout main` or `git switch main`|
+| create and go to new branch | `git checkout -b <branch-name>` or `git switch -c <branch-name>`|
+| go to specific commit & make new branch in one step | `git checkout -b <branch name> <commit hash>` |
+| merge changes from named commit with current branch | `git merge <branch_name>` |
 | see both remote and local branches | `git branch -a` |
-| create and go to new branch | `git checkout <branch-name>` or `git switch <branch-name>`|
 | push and create new remote branch | `git push --set-upstream origin <branch-name>` or `git push -u origin <branch_name>` |
 
 Note that remote branches do not have to have the same name as the local branches they are tracking.
@@ -65,10 +61,10 @@ Go to [our class repo](https://github.com/dlab-berkeley/Computational-Social-Sci
 | Instruction | Command |
 |---------|-------------|
 | clone the repo | `git clone <URL>` | 
-| create new branch | `git checkout -b <branch-name>` |
+| create new branch | `git checkout -b <branch-name>` or `git switch -c <branch-name>`|
 | stage changes | `git add *` |
 | create commit | `git commit -m “<some message>”` |
-| push commit |  `git push --set-upstream origin <branch-name>` |
+| push commit |  `git push -u origin <branch-name>` |
 
 On [GitHub.com](https://github.com/), you can now create a pull request from your new branch to the 'official' repository. This needs to be approved by a repository maintainer.
 
