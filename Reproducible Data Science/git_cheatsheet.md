@@ -50,6 +50,8 @@ Go to [GitHub.com](https://github.com/) and create new repo. Then follow the ins
 | merge changes from named commit with current branch | `git merge <branch_name>` |
 | see both remote and local branches | `git branch -a` |
 | push and create new remote branch | `git push --set-upstream origin <branch-name>` or `git push -u origin <branch_name>` |
+| delete local branch | `git branch -d <branch_name>` |
+| delete remote branch | `git push -d origin <branch_name>`|
 
 Note that remote branches do not have to have the same name as the local branches they are tracking.
 
