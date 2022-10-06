@@ -7,65 +7,66 @@ Most modules contains both a "student" version and a "solutions" version. These 
 ## Table of Contents
 
 0. [Setup Anaconda Installation](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/Reproducible%20Data%20Science/Anaconda%20Installation%20Guide.ipynb)
-1. [Reproducible Data Science and Introduction](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Reproducible%20Data%20Science)
-    - a. [Command Line Intro](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/Reproducible%20Data%20Science/Command%20Line%20Intro.md): 
+1. [Installation and Reproducible Data Science](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/1%20Installation%20and%20Reproducible%20Data%20Science)
+    - a. [Anaconda Installation](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/1%20Installation%20and%20Reproducible%20Data%20Science/1-1%20Anaconda%20Installation.ipynb)
+    - b. [Command Line Intro](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/1%20Installation%20and%20Reproducible%20Data%20Science/1-2%20Command%20Line%20Intro.md): 
         - Introduction to use a command line interface (CLI) to interact with a computer
         - Basics of navigating file directory, text editing, and running shell/python scripts
-    - b. [GitHub Intro](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/Reproducible%20Data%20Science/GitHub%20Intro.md): 
+    - c. [GitHub Intro](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/1%20Installation%20and%20Reproducible%20Data%20Science/1-3%20GitHub%20Intro.md): 
         - Introduction to git, version control, and GitHub.
         - Best practices for using version control to track code changes, collaborate with others without running into conflicts, and using GitHub to showcase portfolio and find open source software/code
-    - c. [Statistics Refresher](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/Reproducible%20Data%20Science/Statistics%20Refresher%20Students.ipynb)
-    - d. [**Project 1**]: 
+    - d. [Statistics Refresher](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/1%20Installation%20and%20Reproducible%20Data%20Science/1-4%20Statistics%20Refresher%20%5BStudents%5D.ipynb)
+    - e. [**Project 1**]: 
         - Use command line and GitHub to create a group repo and practice with version control and branching. 
         - Create a personal website using GitHub Pages.
-2. [Fundamentals of Machine Learning](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Fundamentals%20for%20Machine%20Learning)  
-    - a. [Math Review](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Fundamentals%20for%20Machine%20Learning/Math%20Review): 
+2. [Introduction to Machine Learning](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/2%20Introduction%20to%20Machine%20Learning)  
+    - a. [Math Review](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/2%20Introduction%20to%20Machine%20Learning/2-1%20Math%20Review): 
         - Matrix multiplication
         - Derivatives
         - Integrals 
         - numpy/scipy
-    - b. [Bias-Variance Tradeoff and Data Splitting](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Fundamentals%20for%20Machine%20Learning/Data%20Splitting%20and%20Bias-Variance%20Tradeoff): 
+    - b. [Data Splitting and Bias-Variance Tradeoff](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/2%20Introduction%20to%20Machine%20Learning/2-2%20Data%20Splitting%20and%20Bias-Variance%20Tradeoff): 
         - Introduction to train/validation/test splits and cross-validation for machine learning
         - Bias-variance tradeoff
         - Confusion matrices
-    - c. [Regression](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Fundamentals%20for%20Machine%20Learning/Regression): 
+    - c. [Regression](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/2%20Introduction%20to%20Machine%20Learning/2-3%20Regression): 
         - Ordinary Least Squares
         - Regularization via Ridge/LASSO
         - Coefficient plots
         - Hyperparameter tuning
-    - d. [**Project 2**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Project%202): 
+    - d. [**Project 2**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Projects/Project%202): 
         - Predict county-level diabetes rates
         - Exploratory data analysis, data cleaning and preparation, hyperparameter tuning, feature selection, model validation
-3. [Supervised Machine Learning](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Supervised%20Machine%20Learning)
-    - a. [Classification](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Supervised%20Machine%20Learning/Classification): 
+3. [Supervised Machine Learning](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/3%20Supervised%20Machine%20Learning)
+    - a. [Classification](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/3%20Supervised%20Machine%20Learning/3-1%20Classification): 
         - Imbalanced class labels
         - Logistic regression, decision tree classifier, support vector machine
         - Hyperparameter tuning 
         - Metrics (accuracy, recall, precision, AUC-ROC)
-    - b. [Trees and Ensembles](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Supervised%20Machine%20Learning/Trees%20and%20Ensembles): 
+    - b. [Trees and Ensembles](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/3%20Supervised%20Machine%20Learning/3-2%20Trees%20and%20Ensembles): 
         - Decision tree, random forest, adaboost
         - Variable importance plot
-    - c. [Neural Networks](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Supervised%20Machine%20Learning/Neural%20Networks): 
+    - c. [Neural Networks](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/3%20Supervised%20Machine%20Learning/3-3%20Neural%20Networks): 
         - Multi-layer perceptron
         - keras tensorflow
         - Convolutional neural network
-    - d. [**Project 3**:](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Project%203): 
+    - d. [**Project 3**:](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Projects/Project%203): 
         - Predict health code violations in Chicago restaurants. 
         - Data preprocessing, classification models, interpretable and explainable machine learning, prediction policy problems
-4. [Unsupervised Machine Learning and AutoML](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Unsupervised%20Machine%20Learning%20and%20TPOT): 
-    - a. [Clustering and PCA](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Unsupervised%20Machine%20Learning%20and%20TPOT/Clustering%20and%20PCA): 
+4. [Unsupervised Machine Learning and TPOT](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/4%20Unsupervised%20Machine%20Learning%20and%20TPOT): 
+    - a. [Clustering and PCA](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/4%20Unsupervised%20Machine%20Learning%20and%20TPOT/4-1%20Clustering%20and%20PCA): 
         - Principal components analysis
         - Clustering (k-means, spectral, etc.)
         - Unsupervised learning outputs as inputs to supervised learning
-    - b. [TPOT](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Unsupervised%20Machine%20Learning%20and%20TPOT/TPOT): 
+    - b. [TPOT](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/4%20Unsupervised%20Machine%20Learning%20and%20TPOT/4-2%20TPOT): 
         - TPOT genetic programming to automatically search for machine learning pipeline for preprocessing, unsupervised learning, and classification/regression 
-    - c. [**Project 4**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Project%204): 
+    - c. [**Project 4**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Projects/Project%204): 
         - Unsupervised learning and neural network classification on National Health and Nutrition Examination Survey (NHANES)
         - Difference between dimensionality reduction and clustering
         - Combining dimensionality reduction and clustering
         - Deep learning with one hidden layer 
-5. [Natural Language Processing](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Natural%20Language%20Processing)
-    - a. [Text Preprocessing](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Natural%20Language%20Processing/Text%20Preprocessing): 
+5. [Natural Language Processing](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/5%20Natural%20Language%20Processing)
+    - a. [Text Preprocessing](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/5%20Natural%20Language%20Processing/5-1%20Text%20Preprocessing): 
         - Tokenization
         - Stop words
         - Entity recognition
@@ -73,22 +74,23 @@ Most modules contains both a "student" version and a "solutions" version. These 
         - Bag of words/term frequency-inverse document frequency
         - Naive Bayes 
         - spaCy
-    - b. [Exploratory Data Analysis and Unsupervised Methods](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Natural%20Language%20Processing/Exploratory%20and%20Unsupervised%20Methods): 
+    - b. [Exploratory Data Analysis and Unsupervised Methods](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/5%20Natural%20Language%20Processing/5-2%20Exploratory%20and%20Unsupervised%20Methods): 
         - Word clouds
         - Sentiment polarity
         - Topic modeling
-    - c. [Text Feature Engineering and Classification](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Natural%20Language%20Processing/Text%20Feature%20Engineering%20and%20Classification): 
+    - c. [Text Feature Engineering and Classification](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/5%20Natural%20Language%20Processing/5-3%20Text%20Feature%20Engineering%20and%20Classification): 
         - N-grams
         - Word counts
         - Topic model proportions as input to classification
         - Combining text and non-text features
-    - d. [word2vec](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/Natural%20Language%20Processing/word2vec/word2vec.ipynb): 
+    - d. [word2vec](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/5%20Natural%20Language%20Processing/5-4%20word2vec): 
         - Word embeddings
         - t-SNE
         - doc2vec
         - Document average word embeddings
         - Pre-trained embeddings using gensim
-    - e. [**Project 5**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Project%205): 
+    - e. [Neural Nets for NLP](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/5%20Natural%20Language%20Processing/5-5%20Neural%20Nets%20for%20NLP)    
+    - f. [**Project 5**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Projects/Project%205): 
         - Investigate asymmetric polarization and moderation/extremism in U.S. Congress tweets. 
         - Text preprocessing, exploratory data analysis, text feature engineering, classification
 6. [Causal Inference](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Causal%20Inference)
@@ -102,7 +104,7 @@ Most modules contains both a "student" version and a "solutions" version. These 
         - Heterogenous Treatment Effects
         - Randomization Designs (completely, cluster, block)
         - Statistical tests of difference
-    - c. [Matching](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Causal%20Inference/Matching%20Methods): 
+    - c. [Matching Methods](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Causal%20Inference/Matching%20Methods): 
         - Propensity score matching
         - Full/optimal/greedy matching
         - Mahalanobis distance
