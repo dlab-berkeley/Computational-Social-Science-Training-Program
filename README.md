@@ -93,53 +93,53 @@ Most modules contains both a "student" version and a "solutions" version. These 
     - f. [**Project 5**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Projects/Project%205): 
         - Investigate asymmetric polarization and moderation/extremism in U.S. Congress tweets. 
         - Text preprocessing, exploratory data analysis, text feature engineering, classification
-6. [Causal Inference](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Causal%20Inference)
-    - a. [R Refresher](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Causal%20Inference/R%20Refresher): 
+6. [Causal Inference](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/6%20Causal%20Inference)
+    - a. [R Refresher](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/6%20Causal%20Inference/6-1%20R%20Refresher): 
         - Introduction to R
         - Dplyr, tidyr, ggplot, purrr
-    - b. [Randomized Experiments](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Causal%20Inference/Randomized%20Experiments): 
+    - b. [Randomized Experiments](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/6%20Causal%20Inference/6-2%20Randomized%20Experiments): 
         - Average Treatment Effect (ATE)
         - Individual-level Treatment Effect (ITE)
         - Average Treatment Effect on the Treated (ATT)
         - Heterogenous Treatment Effects
         - Randomization Designs (completely, cluster, block)
         - Statistical tests of difference
-    - c. [Matching Methods](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Causal%20Inference/Matching%20Methods): 
+    - c. [Matching Methods](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/6%20Causal%20Inference/6-3%20Matching%20Methods): 
         - Propensity score matching
         - Full/optimal/greedy matching
         - Mahalanobis distance
         - Double robust estimators
-    - d. [**Project 6**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Project%206): 
+    - d. [**Project 6**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Projects/Project%206): 
         - Replicate studies examining effect of college attendance on political participation. 
         - Preprocessing, matching after randomized study to improve covariate balance, simulations to examine different matching configurations effect on ATE estimates
-    - e. [Regression Discontinuity](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Causal%20Inference/Regression%20DIscontinuity): 
+    - e. [Regression Discontinuity](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/6%20Causal%20Inference/6-4%20Regression%20Discontinuity): 
         - Regression discontinuity
         - Running variable
         - McCrary density test
         - Sharp discontinuity
         - Bandwidth selection via Imbens-Kalyanaraman and cross-validation
-    - f. [Instrumental Variables](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/Causal%20Inference/Instrumental%20Variables/Instrumental-Variables-Solutions.pdf): 
+    - f. [Instrumental Variables](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/6%20Causal%20Inference/6-5%20Instrumental%20Variables): 
         - Directed Acyclic Graphs (DAGs)
         - Exclusion restriction
         - Colliders
         - Two-Stage Least Squares (2SLS)
-    - g. [Diff-in-Diffs and Synthetic Control](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Causal%20Inference/Diff%20in%20Diffs%20and%20Synthetic%20Control): 
+    - g. [Diff-in-Diffs and Synthetic Control](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/6%20Causal%20Inference/6-6%20Diff%20in%20Diffs%20and%20Synthetic%20Control): 
         - Difference-in-differences method
         - Parallel trends assumption
         - Synthetic control 
         - Augmented synthetic control with Ridge regularization
         - Staggered adoption synthetic control
-    - h. [**Project 7**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Project%207): 
+    - h. [**Project 7**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Projects/Project%207): 
         - Diff-in-diffs and synthetic control to analyze the effect of Affordable Care Act (ACA) Medicaid expansion among adoptees over time.
-    - i. [Sensitivity Analysis](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Causal%20Inference/Sensitivity%20Analysis): 
+    - i. [Sensitivity Analysis](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/6%20Causal%20Inference/6-7%20Sensitivity%20Analysis): 
         - Manski bounds
         - Rosenbaum sensitivity analysis
         - E-values
-    - j. [SuperLearner and Longitudinal Targeted Maximum Likelihood Estimation (LTMLE)](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Causal%20Inference/SuperLearner%20and%20LTMLE): 
+    - j. [SuperLearner and Longitudinal Targeted Maximum Likelihood Estimation (LTMLE)](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/6%20Causal%20Inference/6-8%20SuperLearner%20and%20LTMLE): 
         - Ensemble machine learning for causal inference
         - Parallelization in R
         - Targeted learning
         - Double robust estimators
         - Time-dependent confounding
-    - k. [**Project 8**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Project%208): 
+    - k. [**Project 8**](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/Projects/Project%208): 
         - Effect of blood pressure medication on heart disease using SuperLearner, TMLE, and LTMLE.
