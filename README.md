@@ -4,6 +4,8 @@ This repo contains all of the materials for Sociology 273, Computational Social 
 
 Most modules contains both a "student" version and a "solutions" version. These are substantially the same, with the difference being that the student versions leave some code lines partially blank for in-class challenges. Each project is designed for groups of 3-4 students who use GitHub to collaborate and version control code. Several popular data science libraries are used frequently including `sklearn`, `numpy`, `pandas`, `spaCy`, `gensim`, `tidyverse`, `tidymodels`, and `SuperLearner`. For the most part the latest versions for any of these libraries should work, with exceptions noted in the notebooks as necessary. 
 
+[![D-Lab DataHub](https://img.shields.io/badge/launch-D--Lab%20datahub-blue)](https://dlab.datahub.berkeley.edu/hub/user-redirect/git-pull?repo=https%3A%2F%2Fgithub.com%2Fdlab-berkeley%2FComputational-Social-Science-Training-Program&urlpath=lab%2Ftree%2FComputational-Social-Science-Training-Program%2F)
+
 ## Table of Contents
 
 0. [Setup Anaconda Installation](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/Reproducible%20Data%20Science/Anaconda%20Installation%20Guide.ipynb)
