@@ -132,9 +132,9 @@ git pull
 
 Always be sure to pull down the latest changes from a repo before you stage, commit, and push your own changes. If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo.
 
-Another useful feature is the ability to create a "branch". When working on code with others, you usually want to avoid overwriting each other's work. It is generally good practice to create a "branch" where you can work on code without colliding with your teammates. Notice on a repo page there is a master branch by default (circled in red). If you create a separate branch and work from there, none of those changes will affect the master branch. To merge those changes into the master branch, a project maintainer can look at the "pull requests" (circled in blue) to review the changes, see if they would create any conflicts, and either approve, reject, or suggest changes for them.
+Another useful feature is the ability to create a "branch". When working on code with others, you usually want to avoid overwriting each other's work. It is generally good practice to create a "branch" where you can work on code without colliding with your teammates. Notice on a repo page there is a main branch by default (circled in red). If you create a separate branch and work from there, none of those changes will affect the main branch. To merge those changes into the main branch, a project maintainer can look at the "pull requests" (circled in blue) to review the changes, see if they would create any conflicts, and either approve, reject, or suggest changes for them.
 
-![Branches](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/branches.png) 
+![Branches](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/main/images/branches.png) 
 
 To create and switch to a new branch, do the following:
 
@@ -142,19 +142,34 @@ To create and switch to a new branch, do the following:
 git checkout -b new_branch
 ```
 
-This code will create a new branch called "new_branch". To switch back to the master branch, you can run the following:
+This code will create a new branch called "new_branch". To switch back to the main branch, you can run the following:
 
 ```
-git checkout master
+git checkout main
 ```
 
-Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the github repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into master. If so, merge the changes and see if they updated on the master branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
+## Default Branch Name in Github
+
+In 2020, GitHub announced it would be changing the default branch name for new repositories created on GitHub from "master" to "main." This decision was made in the context of a broader industry conversation about the use of language with racial undertones. The terms "master" and "slave" have been commonly used in programming to describe one process/system that controls another, and the decision to change "master" to "main" is a step away from such potentially harmful terminology.
+
+The change is particularly significant for those in social sciences and humanities, fields which are deeply invested in the critical examination of language, culture, society, and systems of power. The move towards more inclusive language in technology acknowledges and addresses the often-unexamined biases and power structures embedded in our language. This change illustrates that our technological practices are not separate from our social, cultural, and political contexts, but rather, they are deeply intertwined and have a reciprocal influence. For scholars in these fields, this shift helps reinforce the significance of their work in challenging and changing harmful or exclusionary norms, not just in overtly social spaces, but in technological ones as well.
+
+In our tutorials and guidance, we've updated any reference to 'master' with 'main'. However, please bear in mind that in the midst of these changes, there may be instances where 'master' might still appear unintentionally.
+
+When exploring other resources and tutorials on the internet, especially those written before this change was implemented by GitHub in 2020, you'll likely encounter 'master' used frequently. It's important to remember that in these contexts, 'master' is often synonymous with what we now refer to as 'main'.
+
+If you encounter an error message such as "pathspec 'master' did not match any file(s) known to git," it's quite likely that you're trying to interact with a branch named 'master' that doesn't exist in your repository. In most cases, you should replace 'master' with 'main' in your command and try again. 
+
+
+
+
+Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the github repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into main. If so, merge the changes and see if they updated on the main branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
 
 ## Project Management Tools
 
 Besides the command line interface, GitHub also provides some other useful collaboration tools. Issues are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. In your groupwork, you might consider using Issues with Projects to create a board that allows you to manage various issues. Each time you create an issue, you can describe the problem, assign it to a team member, and then track its progress with the project dashboard.
 
-![Project Management](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/projects.png) 
+![Project Management](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/main/images/projects.png) 
 
 # Challenge Questions
 
@@ -200,7 +215,7 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 # Git Challenge 3
 
-Star the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/Reproducible%20Data%20Science/GitHub%20Intro.md) if you learned something! All of the materials for our course will be hosted from D-Lab's GitHub page, and you can find lots of other useful resources for Python, R, SQL, and other computational tools that we teach in our workshops.  
+Star the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/main/Reproducible%20Data%20Science/GitHub%20Intro.md) if you learned something! All of the materials for our course will be hosted from D-Lab's GitHub page, and you can find lots of other useful resources for Python, R, SQL, and other computational tools that we teach in our workshops.  
 
 # What if Something Goes Wrong?
 
