@@ -8,3 +8,5 @@ GoogleNews-vectors-negative300.bin.gz
 116th Congressional Tweets and Demographics.csv
 
 # add file names with appropriate folder references here
+
+.DS_Store
