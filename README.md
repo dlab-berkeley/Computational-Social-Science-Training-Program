@@ -47,10 +47,16 @@ If you cannot get materials to work locally, you may use DataHub. This allows yo
         - Logistic regression, decision tree classifier, support vector machine
         - Hyperparameter tuning 
         - Metrics (accuracy, recall, precision, AUC-ROC)
-    - 3-2 [Trees and Ensembles](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/3%20Supervised%20Machine%20Learning/3-2%20Trees%20and%20Ensembles): 
-        - Decision tree, random forest, adaboost
+    - 3-2 [Trees](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/main/3%20Supervised%20Machine%20Learning/3-2%20Trees): 
+        - Decision tree
+        - Variable importance 
+    - 3-3 [Ensembles](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/main/3%20Supervised%20Machine%20Learning/3%20-3%20Ensembles): 
+        - Drandom forest, adaboost, xgboost
         - Variable importance plot
-    - 3-3 [Neural Networks](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/3%20Supervised%20Machine%20Learning/3-3%20Neural%20Networks): 
+     - 3-4 [BART](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/main/3%20Supervised%20Machine%20Learning/3-4%20BART): 
+        - BART
+        - Partial dependence plots
+    - 3-5 [Neural Networks](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/tree/master/3%20Supervised%20Machine%20Learning/3-3%20Neural%20Networks): 
         - Multi-layer perceptron
         - keras tensorflow
         - Convolutional neural network
