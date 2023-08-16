@@ -1,8 +1,21 @@
 # [Computational Social Science] 
 ## 1-2 Command Line Intro
 
+# Best Practices for Naming and File Location
 
-# Working With The Command Line
+Before we start, let's cover two important "best practices" that can greatly simplify your work: **naming conventions** and **folder location**.  While not mandatory, following these practices will improve your overall efficiency. The first practice pertains to naming conventions. When working in the command line, dealing with spaces in file and folder names can be problematic. Your computer might misinterpret commands when there are spaces in file or folder names. For instance, using the `mkdir` command to create a new folder named "Computational Social Science" would actually create three separate folders: "Computational," "Social," and "Science." To create a single folder, you'd need to enclose the name in quotes (e.g., `mkdir "Computational Social Science"`). This approach can be unwieldy, so it's advisable to use single-word names. There are three common formats for clear naming:
+
+- The first is "snake case," which employs underscores to separate words (e.g., "this_is_my_file_name"). 
+
+- The second is "camel case," where the first letter of each word is capitalized (e.g., "ThisIsMyFileName"). 
+
+- The third is "spinal case," using hyphens to separate words (e.g., "this-is-my-file-name"). 
+
+While seemingly minor, following this convention makes it easier to work in the command line and and enhances the readability of your `python` and `R` code. For a more in-depth discussion of the benefits and drawbacks of each convention, checkout this [YoutTube video](https://www.youtube.com/watch?v=u9ue_Oj-rVg&t=22s). Generally, it's best to adhere to the default naming convention established by the community for the language you're using. 
+
+The second "best practice" to keep in mind is folder location. You will be navigating to folders in this class quite often, so you want to put them in a location that is easy to access but also is organized and intuitive. That said, there are different considerations. I keep much of my academic work on iCloud, which is not super easy to navigate to. Google Drive and DropBox can be a bit easier to work with. I generally keep projects I am not storing on iCloud but am tracking with Git in a "git" specific folder in my "home" directory so it is easy to access direclty from the terminal. For these projects,  git can function as a iCloud system of sorts. Keep this in mind as we work these the labs in the coming weeks. 
+
+# Working with the Command Line
 
 You are probably used to interacting with your computer with **Graphical User Interfaces (GUIs)**. GUIs can make understanding and using software easy and intuitive, but come with some limitations too. Another way to interact with your computer is through the **Command Line Interface (CLI)**. CLIs allow you to interact with your computer directly through code. This feature has important implications for reproducibility and scientific research. Working with CLIs will enable you to work with big data, replicate code pipelines easily, and collaborate with other researchers efficiently.
 
@@ -122,3 +135,18 @@ Accomplish the following tasks using only the command line interface:
 8. Open movies.txt
 
 BONUS: What happens if you try to delete the challenge folder while there is still a file inside of it?
+
+## Resource Summary
+
+Alternative common text editors:
+
+- [Sublime](https://www.sublimetext.com/)
+- [Visual Studio](https://visualstudio.microsoft.com/) is one of my favorites. It's free and lightweight ()
+- [Atom](https://github.blog/2022-06-08-sunsetting-atom/)
+
+- I've found [this article](https://www.igeeksblog.com/best-text-editors-mac/#google_vignette) helpful in highlighting the differences between text editors. Size and cost are key factors to keep in mind. 
+
+Tutorials: 
+
+- This [Software Carpentry tutorial](https://swcarpentry.github.io/shell-novice/index.html) takes about two hours and will give provide you with more than you need for the course. 
+- This [YoutTube video](https://www.youtube.com/watch?v=u9ue_Oj-rVg&t=22s) discusses common naming conventions along with their pros and cons and in which programming language they are most common.
