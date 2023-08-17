@@ -87,6 +87,8 @@ Decide whether you want to try Vim or Nano and try the corresponding commands:
 
 	vim test.txt
 
+<br>
+
 	nano test.txt
 
 When in the text editor, try writing your name at the top and saving the file. Here are the instructions to follow if you are using Vim: 
@@ -147,7 +149,7 @@ Accomplish the following tasks using only the command line interface:
 
 6. Delete the file from your challenge folder
 
-7. Show the contents of movies.txt on your screen using `cat movies.txt`
+7. Show the contents of movies.txt on your screen using the command: `cat movies.txt`
 
 **BONUS:** What happens if you try to delete the challenge folder while there is still a file inside of it?
 
@@ -155,9 +157,9 @@ Accomplish the following tasks using only the command line interface:
 
 Alternative common text editors:
 
-- [Sublime](https://www.sublimetext.com/)
-- [Visual Studio](https://visualstudio.microsoft.com/) is one of my favorites. It's free and lightweight ()
-- [Atom](https://github.blog/2022-06-08-sunsetting-atom/)
+- [Sublime](https://www.sublimetext.com/) is a great option.
+- [Visual Studio](https://visualstudio.microsoft.com/) is one of my favorites. It's free and lightweight.
+- [Atom](https://github.blog/2022-06-08-sunsetting-atom/) is made by GitHub and has a cool interface. 
 
 - I've found [this article](https://www.igeeksblog.com/best-text-editors-mac/#google_vignette) helpful in highlighting the differences between text editors. Size and cost are key factors to keep in mind. 
 
