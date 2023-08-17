@@ -10,7 +10,7 @@ At some point in your career, you have probably found yourself in a situation li
 
 ![Final.doc](../images/finaldoc.jpeg)
 
-GitHub is a useful tool because it removes a lot of the obstacles that we usually face when we are collaborating with others. Instead of saving multiple versions of the same document, GitHub lets us iterate on the same document while recording how it has changed over time. Rather than sending collaborators messily named documents, everyone can work from the same GitHub repository. GitHub also has tools for resolving editing conflicts between collaborators and creating a clear workflow.
+GitHub is a useful tool because it removes a lot of the obstacles that we usually face when we are collaborating with others. Instead of saving multiple versions of the same document, **GitHub lets us iterate on the same document while recording how it has changed over time. Rather than sending collaborators messily named documents, everyone can work from the same GitHub repository.** GitHub also has tools for resolving editing conflicts between collaborators and creating a clear workflow.
 
 # Getting Started
 
@@ -18,7 +18,7 @@ First, let's get started by making GitHub accounts. Navigate to GitHub's [homepa
 
 ![Sign Up](../images/github_sign_up.png)
 
-After today's lab, I recommend you head over to GitHub Education and follow the instructions for activating your [free student developer pack](https://education.github.com/pack/offers). The student developer pack is free for as long as you are a student, and offers several benefits. The most important one of these will be GitHub Pro which gives you access to more collaboration tools and the ability to make unlimited private repositories. You might also consider exploring some of the other benefits like access to cloud services like Amazon Web Services or Microsoft Azure. 
+After today's lab, I recommend you head over to GitHub Education and follow the instructions for activating your [free student developer pack](https://education.github.com/pack/offers). The student developer pack is free for as long as you are a student, and offers a lot of [great benefits](https://education.github.com/students). You might also consider exploring some of the other benefits like access to cloud services like Amazon Web Services or Microsoft Azure. 
 
 # Navigating GitHub
 
