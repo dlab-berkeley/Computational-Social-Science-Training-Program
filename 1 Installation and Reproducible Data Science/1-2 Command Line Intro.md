@@ -13,21 +13,21 @@ Before we start, let's cover two important "best practices" that can greatly sim
 
 While seemingly minor, following this convention makes it easier to work in the command line and and enhances the readability of your `python` and `R` code. For a more in-depth discussion of the benefits and drawbacks of each convention, checkout this [YoutTube video](https://www.youtube.com/watch?v=u9ue_Oj-rVg&t=22s). Generally, it's best to adhere to the default naming convention established by the community for the language you're using. 
 
-The second "best practice" to keep in mind is folder location. You will be navigating to folders in this class quite often, so you want to put them in a location that is easy to access but also is organized and intuitive. That said, there are different considerations. I keep much of my academic work on iCloud, which is not super easy to navigate to. Google Drive and DropBox can be a bit easier to work with. I generally keep projects I am not storing on iCloud but am tracking with Git in a "git" specific folder in my "home" directory so it is easy to access direclty from the terminal. For these projects,  git can function as a iCloud system of sorts. Keep this in mind as we work these the labs in the coming weeks. 
+The second "best practice" to keep in mind is **folder location.** You will be navigating to folders in this class quite often, so you want to put them in a location that is easy to access but also is organized and intuitive. That said, there are different considerations. Many people keep much of my academic work on iCloud and track them with Git within each folder. However, it is not not super easy to navigate to these files via the terminal, but you can open a terminal directly from the finder. Google Drive and DropBox can be a bit easier to work with. One option is to keep projects that are not on iCloud but are being tracking with Git in a "Git" specific subfolder in the "home" directory so it is easy to access direclty from the terminal. For these projects, Git basically functions as a cloud storage because you can push and pull files across devices as long as you have an internet connection. 
 
 # Working with the Command Line
 
 You are probably used to interacting with your computer with **Graphical User Interfaces (GUIs)**. GUIs can make understanding and using software easy and intuitive, but come with some limitations too. Another way to interact with your computer is through the **Command Line Interface (CLI)**. CLIs allow you to interact with your computer directly through code. This feature has important implications for reproducibility and scientific research. Working with CLIs will enable you to work with big data, replicate code pipelines easily, and collaborate with other researchers efficiently.
 
-## Instructions for Windows
+## Special Instructions for Windows Users
 
-Before we start with using the command line, Windows users will need to go through a couple of extra installation steps. macOS and Linux users can skip this section. Windows native command line, [Command Prompt](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/windows-commands) has some unique syntax and may not work with everything we'll do in this course. Instead, we recommend installing [Git Bash](https://gitforwindows.org/). There are other options for Windows command line as well, but we recommend starting with Git Bash to make sure you have all of the git tools we'll need when we introduce GitHub. The steps for installation are:
+Before we start with using the command line, Windows users will need to go through a couple of extra installation steps. macOS and Linux users can skip this section because most Macs and Linux operating systems come with Git already installed. So, we need to install Git for Windows users. Also, Windows native command line, [Command Prompt](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/windows-commands) has some unique syntax and may not work with everything we'll do in this course. Instead, we recommend installing [Git Bash](https://gitforwindows.org/), which will install Git Bash and Git all in one step. There are other options for Windows command line as well, but we recommend starting with Git Bash to make sure you have all of the Git tools we'll need when we introduce GitHub. The steps for installation are:
 
 1. Navigate to the [git for windows webpage](https://gitforwindows.org/), and click the "Download" buttom.
 
 ![Download Git for Windows](../images/Install_Git_for_Windows.png)
 
-2. Run the Git installer. For the most part, keep the defaults that the installer recommends. Importantly, you should make sure to keep the recommended settings for adding git to your PATH,  and keeping the default behavior of git pull. The installer may ask if you want to install some beta features as well, we recommend not doing so as this could introduce some bugs.
+2. Run the Git installer. For the most part, keep the defaults that the installer recommends. Importantly, you should make sure to keep the recommended settings for adding Git to your PATH, and keeping the default behavior of Git pull. The installer may ask if you want to install some beta features as well, we recommend not doing so as this could introduce some bugs.
 
 ![Click Next Through the Installer Options](../images/Git_Installer.png)
 
@@ -42,11 +42,13 @@ Before we start with using the command line, Windows users will need to go throu
 
 ## Accessing the Command Line
 
-For **Mac** users, you can access the command line by holding `Command + Space` and typing "terminal" into the spotlight. This is a keyboard shortcut that allows you to search any file on the computer very quickly. **Windows** users can either locate the Gitbash Icon on the desktop or click on the Windowns Icon navigate to the search bar in the lower left-hand corner of their screen and open Gitbash.
+For **Mac** users, you can access the command line by holding `Command + Space` and typing "terminal" into the spotlight. This is a keyboard shortcut that allows you to search any file on the computer very quickly. **Windows** users can either locate the Git Bash Icon on the desktop or click on the Windowns Icon navigate to the search bar in the lower left-hand corner of their screen and open Git Bash.
 
 ## Basic Command Line Prompts
 
 Now we're ready to start working with the command line! See the table below for some common commands that we'll be using the course. We won't use too much advanced command line, but if you're intereested, this is a great [Software Carpentry tutorial](https://swcarpentry.github.io/shell-novice/index.html) that will provide you a great foundational grasp of the commmand line interface. I've found it very helpful in the past, and it's free. 
+
+Let's go over these commands and then try them out in the terminal. 
 
 | Command | Description        | Example |
 |---------|--------------------|---------|
@@ -63,7 +65,7 @@ Now we're ready to start working with the command line! See the table below for 
 | rm      | delete a file      | rm test.txt |
 | rm -r   | delete a directory | rm -r newdir |
 
-Let's do the following together as a class:
+Let's practice these together as a class:
 
 1. Open a terminal and type "pwd" to see where you are. This will likely be the "home" directory, which is the default directory where you'll start when opening the terminal or Gitbash. 
 
@@ -134,7 +136,7 @@ Accomplish the following tasks using only the command line interface:
 
 8. Open movies.txt
 
-BONUS: What happens if you try to delete the challenge folder while there is still a file inside of it?
+**BONUS:** What happens if you try to delete the challenge folder while there is still a file inside of it?
 
 ## Resource Summary
 
@@ -150,3 +152,4 @@ Tutorials:
 
 - This [Software Carpentry tutorial](https://swcarpentry.github.io/shell-novice/index.html) takes about two hours and will give provide you with more than you need for the course. 
 - This [YoutTube video](https://www.youtube.com/watch?v=u9ue_Oj-rVg&t=22s) discusses common naming conventions along with their pros and cons and in which programming language they are most common.
+- Here is a great explainer for [installing Git](https://github.com/git-guides/install-git#). 
