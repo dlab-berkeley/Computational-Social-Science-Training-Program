@@ -65,32 +65,48 @@ Let's go over these commands and then try them out in the terminal.
 | rm      | delete a file      | rm test.txt |
 | rm -r   | delete a directory | rm -r newdir |
 
-Let's practice these together as a class:
+Let's practice some of these commands together as a class:
 
-1. Open a terminal and type "pwd" to see where you are. This will likely be the "home" directory, which is the default directory where you'll start when opening the terminal or Gitbash. 
+1. Open a terminal and type "pwd" to see where you are. This will likely be the "home" directory, which is the default directory where you'll start whenever you open terminal.  
 
-2. Change your working directory to the "1 Installation and Reproducible Data Science" folder of this repository. If there are spaces in the folder name, it's easiest if you wrap the folder or filepath name in quotes.
+2. Take a look around by listing the files in the working directory. What do you see? 
 
-2. Make a new directory called "newdir" using one of the commands from the table above and check to ensure it was created.
+3. Make a new directory called "newdir" using one of the commands from the table above and check to ensure it was created. 
 
-3. Copy "test.txt" from "1 Installation and Reproducible Data Science" to newdir and check to ensure it was copied. 
+4. While in "newdir", create a new file called "test.txt" using the "touch" method and verify it was created. How did you verify it was created?
 
-4. While in newdir, create a new file called "touch-testing.txt" using the "touch" method. Verify it was created. 
+5. While in "newdir", create a sub-directory called "new_subdir" and copy "test.txt" into it. Navigate into "new_subdir" to verify the file copied.
 
-5. Delete the "touch-testing.txt" file, ensure it was deleted (make sure not to delete test.txt because we will need that soon), and then navigate back to the "1 Installation and Reproducible Data Science" directory.
+6. Now navigate back up to "newdir" and then delete "new_subdir". What happened?
 
 ## Using a text editor inside the command line
 
-Navigate to newdir and find test.txt. Let's try to edit the "test.txt" file directly in the command line using a text editor. There are several different text editors. 
-One good option is Vim. Vim is a lightweight text editor that will allow you to create and edit basic text files. Nano is another text editor that is common to use inside the command line. While you might mostly use text editors like Notepad, [Sublime](https://www.sublimetext.com/), or [Visual Studio](https://visualstudio.microsoft.com/) to edit large amounts of text, Vim or Nano can still be useful for making small edits and working with files on a server. 
+Navigate to "newdir" and find test.txt. Let's try to edit the "test.txt" file directly in the command line using a text editor. There are several different text editors. One good option is Vim, which is a lightweight text editor that allows you to create and edit basic text files. Nano is another text editor that is common to use inside the command line. While you will mostly use text editors like Notepad, [Sublime](https://www.sublimetext.com/), or [Visual Studio](https://visualstudio.microsoft.com/) to edit large amounts of text, Vim or Nano can still be useful for making small edits and working with files on a server. 
 
-First, type the following command:
+Decide whether you want to try Vim or Nano and try the corresponding commands:
 
 	vim test.txt
 
-Try following the instructions in the text file to add your name to the beginning of the file. You'll need to use the arrow keys to move the cursor. If you find that a little complicated, try it again using nano instead, which I find a bit easier to use. To activate nano, type:
-
 	nano test.txt
+
+When in the text editor, try writing your name at the top and saving the file. Here are the instructions to follow if you are using Vim: 
+
+	1. Press "I" to enter "insert mode" to start typing.
+	2. Add your name to the beginning of the text in this file.
+	3. Press the "esc" key to exit "insert mode."
+	4. Type :wq to save the file.
+	5. Press Enter.
+
+Follow these instructions if you are using Nano: 
+
+	1. Just start typing your name in the text file. 
+	2. Hit `Control + x` to close
+	3. Hit `y` to save the file.
+	4. Press `Enter`.
+
+
+What did you think?
+
 
 ## Running a Python Script
 
