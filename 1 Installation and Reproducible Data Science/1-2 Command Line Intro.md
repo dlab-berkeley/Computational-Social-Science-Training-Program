@@ -100,29 +100,28 @@ When in the text editor, try writing your name at the top and saving the file. H
 Follow these instructions if you are using Nano: 
 
 	1. Just start typing your name in the text file. 
-	2. Hit `Control + x` to close
-	3. Hit `y` to save the file.
-	4. Press `Enter`.
+	2. Hit "Control + x" to close
+	3. Hit "y" to save the file.
+	4. Press "Enter".
 
 
-What did you think?
+What did you think? Try doing this later with a different text editor to see the difference.
 
 
 ## Running a Python Script
 
 The last thing we will cover is using the command line to run Python code. We won't have you regularly do this for this course, but it is useful to know this is an option if you ever are working with a remote server. This is a fairly common situation when you are working with sensitive or restricted-access data (i.e. medical records) or big data.
 
-First, use `touch` to create a file called "hello.py".
-
+First, inside "newdir" use `touch` to create a file called "hello.py". The ".py" suffix makes it a 'python' file.
 
 	touch hello.py
 
-Now check the files in your current working directory to see if it's there. If so, use vim to add the following text:
+Now check the files in your current working directory to make sure it is there and then use Vim or Nano to add the following text:
 
 	#!/usr/bin/env python3
 	print('Hello World!')
 
-Exit the vim editor, and then in the command line, run the following:
+Exit the editor, and then in the command line, run the following:
 
 	python3 hello.py
 
@@ -144,13 +143,11 @@ Accomplish the following tasks using only the command line interface:
 
 4. Add the name of your favorite movie to this file
 
-5. Copy this file to your Desktop
+5. Copy this file to your Desktop using the command line. 
 
 6. Delete the file from your challenge folder
 
-7. Show the contents of movies.txt on your screen
-
-8. Open movies.txt
+7. Show the contents of movies.txt on your screen using `cat movies.txt`
 
 **BONUS:** What happens if you try to delete the challenge folder while there is still a file inside of it?
 
