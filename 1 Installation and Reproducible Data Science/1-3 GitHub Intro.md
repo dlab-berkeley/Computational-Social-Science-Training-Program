@@ -16,7 +16,7 @@ GitHub is a useful tool because it removes a lot of the obstacles that we usuall
 
 First, let's get started by making GitHub accounts. Navigate to GitHub's [homepage](https://github.com). Navigate to "Sign Up" in the top right hand side of the page. I recommend you create an account using your berkeley.edu account.
 
-![Sign Up](../images/github_sign_up)
+![Sign Up](../images/github_sign_up.png)
 
 After today's lab, I recommend you head over to GitHub Education and follow the instructions for activating your [free student developer pack](https://education.github.com/pack/offers). The student developer pack is free for as long as you are a student, and offers several benefits. The most important one of these will be GitHub Pro which gives you access to more collaboration tools and the ability to make unlimited private repositories. You might also consider exploring some of the other benefits like access to cloud services like Amazon Web Services or Microsoft Azure. 
 
@@ -82,7 +82,7 @@ First, we'll go through working with your own repository on your own. Some key t
 
 Let's start by cloning the repository that you just created. Navigate to your repo's page, and find the green "Code" button.
 
-![Initialize New Repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/clone%20button.png) 
+![Initialize New Repo](../images/clone_button.png) 
 
 Click the button, and then copy the HTML link that is displayed. Then run the following code in your terminal (substitute your link for the one here):
 
@@ -145,7 +145,7 @@ git checkout -b new_branch
 This code will create a new branch called "new_branch". To switch back to the main branch, you can run the following:
 
 ```
-git checkout main
+git switch main
 ```
 
 ## Default Branch Name in Github
@@ -159,7 +159,6 @@ In our tutorials and guidance, we've updated any reference to 'master' with 'mai
 When exploring other resources and tutorials on the internet, especially those written before this change was implemented by GitHub in 2020, you'll likely encounter 'master' used frequently. It's important to remember that in these contexts, 'master' is often synonymous with what we now refer to as 'main'.
 
 If you encounter an error message such as "pathspec 'master' did not match any file(s) known to git," it's quite likely that you're trying to interact with a branch named 'master' that doesn't exist in your repository. In most cases, you should replace 'master' with 'main' in your command and try again. 
-
 
 Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the github repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into main. If so, merge the changes and see if they updated on the main branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
 
