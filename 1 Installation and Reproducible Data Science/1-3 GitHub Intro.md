@@ -224,3 +224,11 @@ Inevitably, especially as you get started, you are likely to run into errors. Us
 
 [Github Pages](https://docs.github.com/en/pages/quickstart) are public webpages hosted and published through GitHub. You can use it to showcase some open source projects, host a blog, or even share your résumé. Github Pages makes use of [Jekyll](https://jekyllrb.com/), a static site generator that takes Markdown files and converts them to a website. When creating a Github Pages website, you can easily load a pre-made theme and modify the content and style.
 
+
+# Resource Summary
+
+Git visualization editors?
+
+- [Sublime](https://www.sublimetext.com/) is a great option.
+- [Visual Studio](https://visualstudio.microsoft.com/) is one of my favorites. It's free and lightweight.
+- [Atom](https://github.blog/2022-06-08-sunsetting-atom/) is made by GitHub and has a cool interface. 
