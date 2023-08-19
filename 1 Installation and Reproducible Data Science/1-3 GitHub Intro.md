@@ -80,6 +80,10 @@ First, we'll go through working with your own repository on your own. Some key t
 - **Commit**: Add a message to describe the changes that you have made.
 - **Push**: Upload your changes.
 
+You only clone a repo once. After that, add, commit, and push are the key steps. Here is a visualization of the process: 
+
+![Visualization of git process](../images/git_process.png) 
+
 Let's start by cloning the repository that you just created. Navigate to your repo's page, and find the green "Code" button.
 
 ![Initialize New Repo](../images/clone_button.png) 
@@ -160,6 +164,8 @@ When exploring other resources and tutorials on the internet, especially those w
 
 If you encounter an error message such as "pathspec 'master' did not match any file(s) known to git," it's quite likely that you're trying to interact with a branch named 'master' that doesn't exist in your repository. In most cases, you should replace 'master' with 'main' in your command and try again. 
 
+##  Merge changes on new_branch to main
+
 Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the github repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into main. If so, merge the changes and see if they updated on the main branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
 
 ## Project Management Tools
@@ -227,8 +233,19 @@ Inevitably, especially as you get started, you are likely to run into errors. Us
 
 # Resource Summary
 
-Git visualization editors?
+There are tons of free Git visualization editors (Graphical User Interfaces) that will help you visually keep tract of the Git process. These are particuarlly helpful when you are manageing large projects with many commits or when many people are working on several branches simultaneously. However, I would highly recommend using the command line first to understand the basic workflow and then use one of these resources when your workflow gets more complicated and you've mastered the basics.
 
-- [Sublime](https://www.sublimetext.com/) is a great option.
-- [Visual Studio](https://visualstudio.microsoft.com/) is one of my favorites. It's free and lightweight.
-- [Atom](https://github.blog/2022-06-08-sunsetting-atom/) is made by GitHub and has a cool interface. 
+- [Gitkraken](https://www.gitkraken.com) is probably one of the most well-recognized Git GUI and works well across macOS and Windows. The free version has all you need. 
+- [Git Desktop](https://desktop.github.com) is free, developed by GitHub, and is extremely functional. 
+
+There are also a lot of text editor environments that have GitHub GUI integration as well. These are great because they simultaneously let you edit text or code and push changes to GitHub. 
+
+- [Sublime Merge](https://www.sublimemerge.com) is a great option.
+- [Visual Studio's Git Lens](https://visualstudio.microsoft.com/) is one of my favorites. It's free and lightweight.
+
+Finally, you can connect RStudio projects directly to your GitHub account and point and click to add, commit, and push your changes. This is a great option if you want code editing, analysis, and git all in one. 
+
+- [RStudio (recently rebranded as Posit)](https://happygitwithr.com/rstudio-git-github.html) is a great idea if you're using Rstudio projects for your workflow.
+
+---
+Note: Some images were borrowed from the [Software Carpentry: Version Control with Git](https://swcarpentry.github.io/git-novice/index.html) online workshop.
