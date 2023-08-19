@@ -8,17 +8,17 @@ Throughout this course, we'll be using a platform called [GitHub](https://github
 
 At some point in your career, you have probably found yourself in a situation like this:
 
-![Final.doc](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/finaldoc.jpeg)
+![Final.doc](../images/finaldoc.jpeg)
 
-GitHub is a useful tool because it removes a lot of the obstacles that we usually face when we are collaborating with others. Instead of saving multiple versions of the same document, GitHub lets us iterate on the same document while recording how it has changed over time. Rather than sending collaborators messily named documents, everyone can work from the same GitHub repository. GitHub also has tools for resolving editing conflicts between collaborators and creating a clear workflow.
+GitHub is a useful tool because it removes a lot of the obstacles that we usually face when we are collaborating with others. Instead of saving multiple versions of the same document, **GitHub lets us iterate on the same document while recording how it has changed over time. Rather than sending collaborators messily named documents, everyone can work from the same GitHub repository.** GitHub also has tools for resolving editing conflicts between collaborators and creating a clear workflow.
 
 # Getting Started
 
 First, let's get started by making GitHub accounts. Navigate to GitHub's [homepage](https://github.com). Navigate to "Sign Up" in the top right hand side of the page. I recommend you create an account using your berkeley.edu account.
 
-![Sign Up](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/github%20sign%20up.png)
+![Sign Up](../images/github_sign_up.png)
 
-After today's lab, I recommend you head over to GitHub Education and follow the instructions for activating your [free student developer pack](https://education.github.com/pack/offers). The student developer pack is free for as long as you are a student, and offers several benefits. The most important one of these will be GitHub Pro which gives you access to more collaboration tools and the ability to make unlimited private repositories. You might also consider exploring some of the other benefits like access to cloud services like Amazon Web Services or Microsoft Azure. 
+After today's lab, I recommend you head over to GitHub Education and follow the instructions for activating your [free student developer pack](https://education.github.com/pack/offers). The student developer pack is free for as long as you are a student, and offers a lot of [great benefits](https://education.github.com/students). You might also consider exploring some of the other benefits like access to cloud services like Amazon Web Services or Microsoft Azure. 
 
 # Navigating GitHub
 
@@ -26,7 +26,7 @@ After today's lab, I recommend you head over to GitHub Education and follow the 
 
 GitHub is built on top of [git](https://en.wikipedia.org/wiki/Git), which is a Linux-based version-control system. Git is used by software engineers and data scientists to track changes in code and other files, work together, and support distributed workflows. GitHub builds on top of the core toolkit by providing a suite of tools and graphical interfaces that streamline collaboration and code organization. Let's take a look at some of the features on the webpage. The first thing we will look at is how to interact with other users' repositories. Follow along by navigating to the GitHub repo for the [Computational Social Science](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program) course. 
 
-![Interact With Repos](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/repo%20interaction.png)
+![Interact With Repos](../images/repo_interaction.png)
 
 There are three basic ways you can interact with someone else's repo:
 
@@ -40,17 +40,17 @@ GitHub can be a great resource because it provides access to the world's largest
 2. Search for repositories based on some key words that are common for your field. For example, try searching "public health" or "economics."
 3. Star and/or fork a repository that you find.
 
-You can also follow specific users to see all of the repositories associated with them. This is a great way to see what others are working on and keep up to date with new developments. For example, try navigating to [KQ's page](https://github.com/sociologyquinn/) page and following it. 
+You can also follow specific users to see all of the repositories associated with them. This is a great way to see what others are working on and keep up to date with new developments. For example, try navigating to [Kasey's homepage page](https://github.com/kaseyzapatka) and following it. 
 
 ## Create Your Own Repo
 
 Next, let's look at how to make your own repos. Over time, you will create new repos to host code for your projects and collaborations. Doing so will help others reproduce your code, and serve as a useful way to showcase your work to employers and other social scientists. From the GitHub homepage, look for the "New" button near the top left.
 
-![New Repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/github%20new%20repo.png)
+![New Repo](../images/github_new_repo.png)
 
 Once you do this, click the green button, then name your new repository "My First Repository" or whatever else you like. Make sure you click the box to initialize it with a README.
 
-![Initialize New Repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/github%20create%20repo.png) 
+![Initialize New Repo](../images/github_create_repo.png) 
 
 # Git from Command Line
 
@@ -82,7 +82,7 @@ First, we'll go through working with your own repository on your own. Some key t
 
 Let's start by cloning the repository that you just created. Navigate to your repo's page, and find the green "Code" button.
 
-![Initialize New Repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/clone%20button.png) 
+![Initialize New Repo](../images/clone_button.png) 
 
 Click the button, and then copy the HTML link that is displayed. Then run the following code in your terminal (substitute your link for the one here):
 
@@ -106,7 +106,7 @@ You can either add individual files, or add all of the files that you have chang
 
 Next add a commit message describing the changes that you made. Try to make these descriptions as meaningful as possible. Every programmer is guilt of doing something like this:
 
-![Commit Messages](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/git%20commit.png) 
+![Commit Messages](../images/git_commit.png) 
 
 But in general, the more meaningful your commit messages and documentation, the easier it will be for you and your collaborators to revisit the code later! Try running the following code:
 
@@ -134,7 +134,7 @@ Always be sure to pull down the latest changes from a repo before you stage, com
 
 Another useful feature is the ability to create a "branch". When working on code with others, you usually want to avoid overwriting each other's work. It is generally good practice to create a "branch" where you can work on code without colliding with your teammates. Notice on a repo page there is a main branch by default (circled in red). If you create a separate branch and work from there, none of those changes will affect the main branch. To merge those changes into the main branch, a project maintainer can look at the "pull requests" (circled in blue) to review the changes, see if they would create any conflicts, and either approve, reject, or suggest changes for them.
 
-![Branches](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/main/images/branches.png) 
+![Branches](../images/branches.png) 
 
 To create and switch to a new branch, do the following:
 
@@ -145,7 +145,7 @@ git checkout -b new_branch
 This code will create a new branch called "new_branch". To switch back to the main branch, you can run the following:
 
 ```
-git checkout main
+git switch main
 ```
 
 ## Default Branch Name in Github
@@ -160,16 +160,13 @@ When exploring other resources and tutorials on the internet, especially those w
 
 If you encounter an error message such as "pathspec 'master' did not match any file(s) known to git," it's quite likely that you're trying to interact with a branch named 'master' that doesn't exist in your repository. In most cases, you should replace 'master' with 'main' in your command and try again. 
 
-
-
-
 Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the github repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into main. If so, merge the changes and see if they updated on the main branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
 
 ## Project Management Tools
 
 Besides the command line interface, GitHub also provides some other useful collaboration tools. Issues are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. In your groupwork, you might consider using Issues with Projects to create a board that allows you to manage various issues. Each time you create an issue, you can describe the problem, assign it to a team member, and then track its progress with the project dashboard.
 
-![Project Management](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/main/images/projects.png) 
+![Project Management](../images/projects.png) 
 
 # Challenge Questions
 
@@ -219,7 +216,7 @@ Star the [D-Lab Computational Social Science Training Program repo](https://gith
 
 # What if Something Goes Wrong?
 
-![XKCD on Git](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/master/images/git%20xkcd.png) 
+![XKCD on Git](../images/git_xkcd.png) 
 
 Inevitably, especially as you get started, you are likely to run into errors. Usually these arise because of conflicts introduced during collaboration. You can mostly avoid these problems by making good use of branches and pull requests, or by reverting to the last point where you know things worked. We encourage you to do your best to resolve these kinds of problems directly and consult the instructors and/or stackexchange regularly. If you truly get stuck though, try downloading a fresh copy of the repo as a last resort.
 
@@ -227,3 +224,11 @@ Inevitably, especially as you get started, you are likely to run into errors. Us
 
 [Github Pages](https://docs.github.com/en/pages/quickstart) are public webpages hosted and published through GitHub. You can use it to showcase some open source projects, host a blog, or even share your résumé. Github Pages makes use of [Jekyll](https://jekyllrb.com/), a static site generator that takes Markdown files and converts them to a website. When creating a Github Pages website, you can easily load a pre-made theme and modify the content and style.
 
+
+# Resource Summary
+
+Git visualization editors?
+
+- [Sublime](https://www.sublimetext.com/) is a great option.
+- [Visual Studio](https://visualstudio.microsoft.com/) is one of my favorites. It's free and lightweight.
+- [Atom](https://github.blog/2022-06-08-sunsetting-atom/) is made by GitHub and has a cool interface. 
