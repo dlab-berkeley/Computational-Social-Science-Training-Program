@@ -44,19 +44,28 @@ You can also follow specific users to see all of the repositories associated wit
 
 ## Create Your Own Repo
 
-Next, let's look at how to make your own repos. Over time, you will create new repos to host code for your projects and collaborations. Doing so will help others reproduce your code, and serve as a useful way to showcase your work to employers and other social scientists. From the GitHub homepage, look for the "New" button near the top left.
+Next, let's look at how to make your own repos. Over time, you will create new repos to host code for your projects and collaborations. Doing so will help others reproduce your code, and serve as a useful way to showcase your work to employers and other social scientists. From the GitHub homepage, look for the "New" button near the top left. If this this is your first repo, the green button might say "Create repository" instead.
 
 ![New Repo](../images/github_new_repo.png)
 
-Once you do this, click the green button, then name your new repository "My First Repository" or whatever else you like. Make sure you click the box to initialize it with a README.
+Once you do this, click the green button, then name your new repository "my_first_repo". 
+
+- Add a short description of what this repo is. You can say something like: "My first practice repo." 
+- You can choose to make it public or private. Public repos can be seen and copied by anyone with a GitHub account; private repos cannot. Go ahead and leave it as public, which is the default. 
+- Make sure you click the box to initialize it with a README.md file. It is best practice to always have a README file that explains what the repository is for. For now, you can ignore adding a .gitignore file and choosing a license. 
+- Go ahead and click the green "Create repository" button at the bottom. 
+
+The process should look something like this: 
 
 ![Initialize New Repo](../images/github_create_repo.png) 
 
 # Git from Command Line
 
-## Configure credentials
+Now that we have created a GitHub reposoitory online, we want to pull it down to our local computer so that we can work with it. This is the most common workflow. However, sometimes you might have already created a repo on your folder that you want to tract with git and store the code on GitHub. Here is a [link outline the steps](https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github), which is basically the reverse of what we are doing now. 
 
-Now we will see how to use some of git's core functions to work with repos and use version control. First, make sure to configure your global options for GitHub so that you don't have to login every time you want to do something. Open a bash terminal and do the following (substitute your GitHub handle and username):
+## Configure Credentials
+
+Now we will see how to use some of git's core functions to work with repos and use version control. First, let's make sure to configure your global options for GitHub so that you don't have to login every time you want to do something.  Open a bash terminal and do the following (substitute your GitHub handle and username):
 
 ```
 git config --global user.name "Your Username"
@@ -80,6 +89,12 @@ First, we'll go through working with your own repository on your own. Some key t
 - **Commit**: Add a message to describe the changes that you have made.
 - **Push**: Upload your changes.
 
+You only clone a repo once. After that, add, commit, and push are the key steps. Here is a visualization of the process: 
+
+![Visualization of git process](../images/git_process.png) 
+
+### Git Clone
+
 Let's start by cloning the repository that you just created. Navigate to your repo's page, and find the green "Code" button.
 
 ![Initialize New Repo](../images/clone_button.png) 
@@ -89,6 +104,8 @@ Click the button, and then copy the HTML link that is displayed. Then run the fo
 ```
 git clone https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program.git
 ```
+
+### Git Add
 
 Running this command in your terminal should create a folder in your current directory with the contents of your repo. Now let's practice adding content and updating the repo. Open the README.md file and add a short description of the repo (you can do this either from command line or your favorite text editor). Save the changes in the file, and then get ready to make the changes in the repository. First enter the following command:
 
@@ -102,7 +119,9 @@ OR
 git add *
 ```
 
-You can either add individual files, or add all of the files that you have changed at once with the "\*". When working with others or on complex projects, it is generally good practice to not add all files at once.
+You can either add individual files, or add all of the files that you have changed at once with the "\*". When working with others or on complex projects, it is generally good practice to not add all files at once unless they all have similar changes. 
+
+### Git Commit 
 
 Next add a commit message describing the changes that you made. Try to make these descriptions as meaningful as possible. Every programmer is guilt of doing something like this:
 
@@ -114,25 +133,37 @@ But in general, the more meaningful your commit messages and documentation, the 
 git commit -m "My first git commit message"
 ```
 
-Now we're ready to make our final changes! Run the following code:
+Now we're ready to make our final changes! 
+
+### Git Push
+
+Git has added the file and the changes have been committed. There is now a local record of these on your local computer. The next step is where we push those recorded changes to GitHub, where others can see them from the online repository. Run the following code to push your changes up to GitHub:
 
 ```
 git push
 ```
 
-This will upload your changes, and if you navigate back to your repository, you should see the changes reflected there.
+This will upload your changes, and if you navigate back to your online repository, you should see the changes reflected there. Go head and check it out.
 
 ## Collaborative Tools
 
-One of the best parts about using git for managing code is that it allows you to easily collaborate on code with others. To sync your local copy of a repository with the most current version, run the following code:
+We've covered the basic workflow for working with GitHub. You will follow these general steps for all projects for which you use git. However, the real power of GitHub is how it can be leveraged in collaboration. Let's dig into some of those tools.
+
+### Pulling
+
+One of the best parts about using git for managing code is that it allows you to easily collaborate on code with others. To sync your local copy of a repository with the most current version of what is on GitHub, run the following code:
 
 ```
 git pull
 ```	
 
-Always be sure to pull down the latest changes from a repo before you stage, commit, and push your own changes. If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo.
+Always be sure to pull down the latest changes from a repo before you add, commit, and push your own changes. **THIS IS A VERY IMPORTANT STEP AND WILL PREVENT YOU A LOT OF HEADACHE LATER.** If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo. Merge conflicts will happen, of course, but following each step in the process carefully will help prevent that.
 
-Another useful feature is the ability to create a "branch". When working on code with others, you usually want to avoid overwriting each other's work. It is generally good practice to create a "branch" where you can work on code without colliding with your teammates. Notice on a repo page there is a main branch by default (circled in red). If you create a separate branch and work from there, none of those changes will affect the main branch. To merge those changes into the main branch, a project maintainer can look at the "pull requests" (circled in blue) to review the changes, see if they would create any conflicts, and either approve, reject, or suggest changes for them.
+### Branching 
+
+Another useful feature is the ability to create a "branch". When working on code with others, you usually want to avoid overwriting each other's work. It is generally best practice to create a "branch" where you can work on code without colliding with your teammates. However, branching is not only limited to collboration. If you are working on a solo project, it's still a good idea to work on a branch. This will keep a static, working main branch that you can always access in case you have any issues with the new code.
+
+ Notice on a repo page there is a main branch by default (circled in red). If you create a separate branch and work from there, none of those changes will affect the main branch. To merge those changes into the main branch, a project maintainer can look at the "pull requests" (circled in blue) to review the changes, see if they would create any conflicts, and either approve, reject, or suggest changes for them.
 
 ![Branches](../images/branches.png) 
 
@@ -148,7 +179,7 @@ This code will create a new branch called "new_branch". To switch back to the ma
 git switch main
 ```
 
-## Default Branch Name in Github
+#### Default Branch Name in Github
 
 In 2020, GitHub announced it would be changing the default branch name for new repositories created on GitHub from "master" to "main." This decision was made in the context of a broader industry conversation about the use of language with racial undertones. The terms "master" and "slave" have been commonly used in programming to describe one process/system that controls another, and the decision to change "master" to "main" is a step away from such potentially harmful terminology.
 
@@ -160,31 +191,33 @@ When exploring other resources and tutorials on the internet, especially those w
 
 If you encounter an error message such as "pathspec 'master' did not match any file(s) known to git," it's quite likely that you're trying to interact with a branch named 'master' that doesn't exist in your repository. In most cases, you should replace 'master' with 'main' in your command and try again. 
 
+## Merging
+
 Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the github repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into main. If so, merge the changes and see if they updated on the main branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
 
-## Project Management Tools
+### Project Management Tools
 
-Besides the command line interface, GitHub also provides some other useful collaboration tools. Issues are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. In your groupwork, you might consider using Issues with Projects to create a board that allows you to manage various issues. Each time you create an issue, you can describe the problem, assign it to a team member, and then track its progress with the project dashboard.
+Besides the command line interface, GitHub also provides some other useful collaboration tools. Creating **issues** are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. In your groupwork, you might consider using Issues with Projects to create a board that allows you to manage various issues. Each time you create an issue, you can describe the problem, assign it to a team member, and then track its progress with the project dashboard.
 
 ![Project Management](../images/projects.png) 
 
-# Challenge Questions
+# Git Challenges
 
 These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/dlab-berkeley/BashGit)
 
-# Git Challenge 1
+## Git Challenge 1
 
-1. Create an example repository on your GitHub account. 
+1. Create an example repository on your GitHub account. Call it "git-challenges" 
 
-2. git clone this repository to your computer. cd into this directory.
+2. Clone this repository to your computer. cd into this directory.
 
-3. Create three files named file1.txt, file2.txt, and file3.txt in your local repository using a Bash command. 
+3. Create three files named file1.txt, file2.txt, and file3.txt in your local repository using a Bash command we learned in the last lab. 
 
 4. Stage, commit, and push file1.txt to your remote repository. Refresh the URL on your GitHub page. Do you see your commit?
 
 5. Stage, commit, and push file2.txt and file3.txt to your remote repository as a single commit. 
 
-# Git Challenge 2
+## Git Challenge 2
 
 1. Divide yourselves into groups of 3.
 
@@ -194,7 +227,7 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 4. Maintainer adds contributors A and B as collaborators on the project (click "Settings" --> "Collaborators" --> "Add collaborator") 
 
-5. The maintainer creates a file named animals.txt and adds their favorite animal to this file. 
+5. The maintainer creates a file named animals.txt using the command line, adds their favorite animal to this file and pushes these changes to the repo.
 
 6. Contributors A and B fork this repository and each add their favorite animals to this file. 
 
@@ -210,9 +243,20 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 11. Click the "commits" tab to see changes made by your group members. 
 
-# Git Challenge 3
+## Git Challenge 3
 
-Star the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/main/Reproducible%20Data%20Science/GitHub%20Intro.md) if you learned something! All of the materials for our course will be hosted from D-Lab's GitHub page, and you can find lots of other useful resources for Python, R, SQL, and other computational tools that we teach in our workshops.  
+All of the code you will need for the semester is contained in the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program). You will want to clone this repo to your local computer using the `git clone [url]` described above. Be sure to clone it in a location that is easy to access from your home directory via the command line, since we will be accessing it frequently. It is best practice not to store it on your Desktop. 
+
+The work flow for each lab will look like the following: 
+- At the beginninf of each class, we will activate a virtual anaconda environment 
+- Navigate to the directory where we cloned the class repo
+- Fire up a `jupyter notebook` to run our lab scripts. 
+ 
+Before we do any work, be sure to run `git pull` in your command line to pull any changes I have made. This is very important--don't forget to `git pull`. 
+
+### Forking 
+
+If you want to add the repo to your GitHub repository so that you have the repo for the future, you can fork the repo. This is good idea and you can always update the forked repo whenever changes are made to the original repo. Here are some [instructions on forking](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
 
 # What if Something Goes Wrong?
 
@@ -227,8 +271,27 @@ Inevitably, especially as you get started, you are likely to run into errors. Us
 
 # Resource Summary
 
-Git visualization editors?
 
-- [Sublime](https://www.sublimetext.com/) is a great option.
-- [Visual Studio](https://visualstudio.microsoft.com/) is one of my favorites. It's free and lightweight.
-- [Atom](https://github.blog/2022-06-08-sunsetting-atom/) is made by GitHub and has a cool interface. 
+## Git GUIs
+
+There are tons of free Git visualization editors (Graphical User Interfaces) that will help you visually keep tract of the Git process. These are particuarlly helpful when you are manageing large projects with many commits or when many people are working on several branches simultaneously. However, I would highly recommend using the command line first to understand the basic workflow and then use one of these resources when your workflow gets more complicated and you've mastered the basics.
+
+- [Gitkraken](https://www.gitkraken.com) is probably one of the most well-recognized Git GUI and works well across macOS and Windows. The free version has all you need. 
+- [Git Desktop](https://desktop.github.com) is free, developed by GitHub, and is extremely functional. 
+
+There are also a lot of text editor environments that have GitHub GUI integration as well. These are great because they simultaneously let you edit text or code and push changes to GitHub. 
+
+- [Sublime Merge](https://www.sublimemerge.com) is a great option.
+- [Visual Studio's Git Lens](https://visualstudio.microsoft.com/) is one of my favorites. It's free and lightweight.
+
+Finally, you can connect RStudio projects directly to your GitHub account and point and click to add, commit, and push your changes. This is a great option if you want code editing, analysis, and git all in one. 
+
+- [RStudio (recently rebranded as Posit)](https://happygitwithr.com/rstudio-git-github.html) is a great idea if you're using Rstudio projects for your workflow.
+
+
+## Git Tutorials
+
+The above lab is sufficient for what you will need to know this semester for git. However, if you are interested in really developing your skills, this workshop from [Software Carpentry: Version Control with Git](https://swcarpentry.github.io/git-novice/index.html) is a really great, free resource.
+
+---
+Note: Some images were borrowed from the [Software Carpentry: Version Control with Git](https://swcarpentry.github.io/git-novice/index.html) online workshop.
