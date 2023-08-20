@@ -151,7 +151,7 @@ One of the best parts about using git for managing code is that it allows you to
 git pull
 ```	
 
-Always be sure to pull down the latest changes from a repo before you stage, commit, and push your own changes. THIS IS A VERY IMPORTANT STEP AND WILL PREVENT YOU A LOT OF HEADACHE LATER. If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo.
+Always be sure to pull down the latest changes from a repo before you stage, commit, and push your own changes. **THIS IS A VERY IMPORTANT STEP AND WILL PREVENT YOU A LOT OF HEADACHE LATER.** If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo.
 
 Another useful feature is the ability to create a "branch". When working on code with others, you usually want to avoid overwriting each other's work. It is generally best practice to create a "branch" where you can work on code without colliding with your teammates. However, branching is not only limited to collboration. If you are working on a solo project, it's still a good idea to work on a branch. This will keep a static, working main branch that you can always access in case you have any issues with the new code.
 
@@ -195,7 +195,7 @@ Besides the command line interface, GitHub also provides some other useful colla
 
 # Challenge Questions
 
-These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/dlab-berkeley/BashGit).
+These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/dlab-berkeley/BashGit)
 
 ## Git Challenge 1
 
@@ -237,7 +237,18 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 ## Git Challenge 3
 
-Star the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/main/Reproducible%20Data%20Science/GitHub%20Intro.md) if you learned something! All of the materials for our course will be hosted from D-Lab's GitHub page, and you can find lots of other useful resources for Python, R, SQL, and other computational tools that we teach in our workshops.  
+All of the code you will need for the semester is contained in the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program). You will want to clone this repo to your local computer using the `git clone [url]` described above. Be sure to clone it in a location that is easy to access from your home directory via the command line, since we will be accessing it frequently. It is best practice not to store it on your Desktop. 
+
+The work flow for each lab will look like the following: 
+- At the beginninf of each class, we will activate a virtual anaconda environment 
+- Navigate to the directory where we cloned the class repo
+- Fire up a `jupyter notebook` to run our lab scripts. 
+ 
+Before we do any work, be sure to run `git pull` in your command line to pull any changes I have made. This is very important--don't forget to `git pull`. 
+
+### Forking 
+
+If you want to add the repo to your GitHub repository so that you have the repo for the future, you can fork the repo. This is good idea and you can always update the forked repo whenever changes are made to the original repo. Here are some [instructions on forking](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
 
 # What if Something Goes Wrong?
 
