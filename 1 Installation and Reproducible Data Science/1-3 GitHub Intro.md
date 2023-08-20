@@ -145,6 +145,8 @@ This will upload your changes, and if you navigate back to your online repositor
 
 ## Collaborative Tools
 
+### Pulling
+
 One of the best parts about using git for managing code is that it allows you to easily collaborate on code with others. To sync your local copy of a repository with the most current version, run the following code:
 
 ```
@@ -152,6 +154,8 @@ git pull
 ```	
 
 Always be sure to pull down the latest changes from a repo before you stage, commit, and push your own changes. **THIS IS A VERY IMPORTANT STEP AND WILL PREVENT YOU A LOT OF HEADACHE LATER.** If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo.
+
+### Branching 
 
 Another useful feature is the ability to create a "branch". When working on code with others, you usually want to avoid overwriting each other's work. It is generally best practice to create a "branch" where you can work on code without colliding with your teammates. However, branching is not only limited to collboration. If you are working on a solo project, it's still a good idea to work on a branch. This will keep a static, working main branch that you can always access in case you have any issues with the new code.
 
@@ -171,7 +175,7 @@ This code will create a new branch called "new_branch". To switch back to the ma
 git switch main
 ```
 
-### Default Branch Name in Github
+#### Default Branch Name in Github
 
 In 2020, GitHub announced it would be changing the default branch name for new repositories created on GitHub from "master" to "main." This decision was made in the context of a broader industry conversation about the use of language with racial undertones. The terms "master" and "slave" have been commonly used in programming to describe one process/system that controls another, and the decision to change "master" to "main" is a step away from such potentially harmful terminology.
 
@@ -183,17 +187,17 @@ When exploring other resources and tutorials on the internet, especially those w
 
 If you encounter an error message such as "pathspec 'master' did not match any file(s) known to git," it's quite likely that you're trying to interact with a branch named 'master' that doesn't exist in your repository. In most cases, you should replace 'master' with 'main' in your command and try again. 
 
-##  Merge changes on new_branch to main
+## Merging
 
 Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the github repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into main. If so, merge the changes and see if they updated on the main branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
 
-## Project Management Tools
+### Project Management Tools
 
 Besides the command line interface, GitHub also provides some other useful collaboration tools. Creating **issues** are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. In your groupwork, you might consider using Issues with Projects to create a board that allows you to manage various issues. Each time you create an issue, you can describe the problem, assign it to a team member, and then track its progress with the project dashboard.
 
 ![Project Management](../images/projects.png) 
 
-# Challenge Questions
+# Git Challenges
 
 These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/dlab-berkeley/BashGit)
 
