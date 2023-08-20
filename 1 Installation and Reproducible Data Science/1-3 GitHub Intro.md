@@ -44,19 +44,24 @@ You can also follow specific users to see all of the repositories associated wit
 
 ## Create Your Own Repo
 
-Next, let's look at how to make your own repos. Over time, you will create new repos to host code for your projects and collaborations. Doing so will help others reproduce your code, and serve as a useful way to showcase your work to employers and other social scientists. From the GitHub homepage, look for the "New" button near the top left.
+Next, let's look at how to make your own repos. Over time, you will create new repos to host code for your projects and collaborations. Doing so will help others reproduce your code, and serve as a useful way to showcase your work to employers and other social scientists. From the GitHub homepage, look for the "New" button near the top left. If this this is your first repo, the green button might say "Create repository" instead.
 
 ![New Repo](../images/github_new_repo.png)
 
-Once you do this, click the green button, then name your new repository "My First Repository" or whatever else you like. Make sure you click the box to initialize it with a README.
+Once you do this, click the green button, then name your new repository "my_first_repo". 
+
+- Add a short description of what this repo is. You can say something like: "My first practice repo." 
+- You can choose to make it public or private. Public repos can be seen and copied by anyone with a GitHub account; private repos cannot. Go ahead and leave it as public, which is the default. 
+- Make sure you click the box to initialize it with a README.md file. It is best practice to always have a README file that explains what the repository is about. You can ignore adding a .gitignore file and choosing a license for now. 
+- Now, go ahead and click the green "Create repository" button at the bottom. 
 
 ![Initialize New Repo](../images/github_create_repo.png) 
 
 # Git from Command Line
 
-## Configure credentials
+## Configure Credentials
 
-Now we will see how to use some of git's core functions to work with repos and use version control. First, make sure to configure your global options for GitHub so that you don't have to login every time you want to do something. Open a bash terminal and do the following (substitute your GitHub handle and username):
+Now we will see how to use some of git's core functions to work with repos and use version control. First, let's make sure to configure your global options for GitHub so that you don't have to login every time you want to do something.  Open a bash terminal and do the following (substitute your GitHub handle and username):
 
 ```
 git config --global user.name "Your Username"
@@ -84,6 +89,8 @@ You only clone a repo once. After that, add, commit, and push are the key steps.
 
 ![Visualization of git process](../images/git_process.png) 
 
+### Git Clone
+
 Let's start by cloning the repository that you just created. Navigate to your repo's page, and find the green "Code" button.
 
 ![Initialize New Repo](../images/clone_button.png) 
@@ -93,6 +100,8 @@ Click the button, and then copy the HTML link that is displayed. Then run the fo
 ```
 git clone https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program.git
 ```
+
+### Git Add
 
 Running this command in your terminal should create a folder in your current directory with the contents of your repo. Now let's practice adding content and updating the repo. Open the README.md file and add a short description of the repo (you can do this either from command line or your favorite text editor). Save the changes in the file, and then get ready to make the changes in the repository. First enter the following command:
 
@@ -108,6 +117,8 @@ git add *
 
 You can either add individual files, or add all of the files that you have changed at once with the "\*". When working with others or on complex projects, it is generally good practice to not add all files at once.
 
+### Git Commit 
+
 Next add a commit message describing the changes that you made. Try to make these descriptions as meaningful as possible. Every programmer is guilt of doing something like this:
 
 ![Commit Messages](../images/git_commit.png) 
@@ -119,6 +130,8 @@ git commit -m "My first git commit message"
 ```
 
 Now we're ready to make our final changes! Run the following code:
+
+### Git Push
 
 ```
 git push
@@ -233,6 +246,9 @@ Inevitably, especially as you get started, you are likely to run into errors. Us
 
 # Resource Summary
 
+
+## Git GUIs
+
 There are tons of free Git visualization editors (Graphical User Interfaces) that will help you visually keep tract of the Git process. These are particuarlly helpful when you are manageing large projects with many commits or when many people are working on several branches simultaneously. However, I would highly recommend using the command line first to understand the basic workflow and then use one of these resources when your workflow gets more complicated and you've mastered the basics.
 
 - [Gitkraken](https://www.gitkraken.com) is probably one of the most well-recognized Git GUI and works well across macOS and Windows. The free version has all you need. 
@@ -246,6 +262,11 @@ There are also a lot of text editor environments that have GitHub GUI integratio
 Finally, you can connect RStudio projects directly to your GitHub account and point and click to add, commit, and push your changes. This is a great option if you want code editing, analysis, and git all in one. 
 
 - [RStudio (recently rebranded as Posit)](https://happygitwithr.com/rstudio-git-github.html) is a great idea if you're using Rstudio projects for your workflow.
+
+
+## Git Tutorials
+
+The above lab is sufficient for what you will need to know this semester for git. However, if you are interested in really developing your skills, this workshop from [Software Carpentry: Version Control with Git](https://swcarpentry.github.io/git-novice/index.html) is a really great, free resource.
 
 ---
 Note: Some images were borrowed from the [Software Carpentry: Version Control with Git](https://swcarpentry.github.io/git-novice/index.html) online workshop.
