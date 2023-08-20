@@ -245,11 +245,11 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 ## Git Challenge 3
 
-All of the code you will need for the semester is contained in the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program). You will want to clone this repo to your local computer using the `git clone [url]` described above. Be sure to clone it in a location that is easy to access from your home directory via the command line, since we will be accessing it frequently. It is best practice not to store it on your Desktop. 
+All of the code you will need for the semester is contained in the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program). You will want to clone this repo to your local computer using the `git clone [url]` described above. Be sure to clone it in a location that is easy to access from your home directory via the command line, since we will be accessing it frequently. It is best practice NOT to store it on your Desktop. 
 
 The work flow for each lab will look like the following: 
-- At the beginninf of each class, we will activate a virtual anaconda environment 
-- Navigate to the directory where we cloned the class repo
+- At the beginning of each class, we will activate a virtual anaconda environment.
+- Navigate to the directory where we cloned the class repo.
 - Fire up a `jupyter notebook` to run our lab scripts. 
  
 Before we do any work, be sure to run `git pull` in your command line to pull any changes I have made. This is very important--don't forget to `git pull`. 
@@ -258,7 +258,7 @@ Before we do any work, be sure to run `git pull` in your command line to pull an
 
 If you want to add the repo to your GitHub repository so that you have the repo for the future, you can fork the repo. This is good idea and you can always update the forked repo whenever changes are made to the original repo. Here are some [instructions on forking](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
 
-# What if Something Goes Wrong?
+# What if something goes wrong?
 
 ![XKCD on Git](../images/git_xkcd.png) 
 
@@ -279,7 +279,7 @@ There are tons of free Git visualization editors (Graphical User Interfaces) tha
 - [Gitkraken](https://www.gitkraken.com) is probably one of the most well-recognized Git GUI and works well across macOS and Windows. The free version has all you need. 
 - [Git Desktop](https://desktop.github.com) is free, developed by GitHub, and is extremely functional. 
 
-There are also a lot of text editor environments that have GitHub GUI integration as well. These are great because they simultaneously let you edit text or code and push changes to GitHub. 
+There are also a lot of text editors that have GitHub GUI integration as well. These are great because they simultaneously let you edit text or code and push changes to GitHub. 
 
 - [Sublime Merge](https://www.sublimemerge.com) is a great option.
 - [Visual Studio's Git Lens](https://visualstudio.microsoft.com/) is one of my favorites. It's free and lightweight.
