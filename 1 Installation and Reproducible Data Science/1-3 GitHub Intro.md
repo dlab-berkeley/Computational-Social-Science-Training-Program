@@ -52,14 +52,16 @@ Once you do this, click the green button, then name your new repository "my_firs
 
 - Add a short description of what this repo is. You can say something like: "My first practice repo." 
 - You can choose to make it public or private. Public repos can be seen and copied by anyone with a GitHub account; private repos cannot. Go ahead and leave it as public, which is the default. 
-- Make sure you click the box to initialize it with a README.md file. It is best practice to always have a README file that explains what the repository is about. You can ignore adding a .gitignore file and choosing a license for now. 
-- Now, go ahead and click the green "Create repository" button at the bottom. 
+- Make sure you click the box to initialize it with a README.md file. It is best practice to always have a README file that explains what the repository is for. For now, you can ignore adding a .gitignore file and choosing a license. 
+- Go ahead and click the green "Create repository" button at the bottom. 
 
 The process should look something like this: 
 
 ![Initialize New Repo](../images/github_create_repo.png) 
 
 # Git from Command Line
+
+Now that we have created a GitHub reposoitory online, we want to pull it down to our local computer so that we can work with it. This is the most common workflow. However, sometimes you might have already created a repo on your folder that you want to tract with git and store the code on GitHub. Here is a [link outline the steps](https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github), which is basically the reverse of what we are doing now. 
 
 ## Configure Credentials
 
@@ -145,15 +147,17 @@ This will upload your changes, and if you navigate back to your online repositor
 
 ## Collaborative Tools
 
+We've covered the basic workflow for working with GitHub. You will follow these general steps for all projects for which you use git. However, the real power of GitHub is how it can be leveraged in collaboration. Let's dig into some of those tools.
+
 ### Pulling
 
-One of the best parts about using git for managing code is that it allows you to easily collaborate on code with others. To sync your local copy of a repository with the most current version, run the following code:
+One of the best parts about using git for managing code is that it allows you to easily collaborate on code with others. To sync your local copy of a repository with the most current version of what is on GitHub, run the following code:
 
 ```
 git pull
 ```	
 
-Always be sure to pull down the latest changes from a repo before you stage, commit, and push your own changes. **THIS IS A VERY IMPORTANT STEP AND WILL PREVENT YOU A LOT OF HEADACHE LATER.** If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo.
+Always be sure to pull down the latest changes from a repo before you add, commit, and push your own changes. **THIS IS A VERY IMPORTANT STEP AND WILL PREVENT YOU A LOT OF HEADACHE LATER.** If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo. Merge conflicts will happen, of course, but following each step in the process carefully will help prevent that.
 
 ### Branching 
 
@@ -203,11 +207,11 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 ## Git Challenge 1
 
-1. Create an example repository on your GitHub account. 
+1. Create an example repository on your GitHub account. Call it "git-challenges" 
 
-2. git clone this repository to your computer. cd into this directory.
+2. Clone this repository to your computer. cd into this directory.
 
-3. Create three files named file1.txt, file2.txt, and file3.txt in your local repository using a Bash command. 
+3. Create three files named file1.txt, file2.txt, and file3.txt in your local repository using a Bash command we learned in the last lab. 
 
 4. Stage, commit, and push file1.txt to your remote repository. Refresh the URL on your GitHub page. Do you see your commit?
 
@@ -223,7 +227,7 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 4. Maintainer adds contributors A and B as collaborators on the project (click "Settings" --> "Collaborators" --> "Add collaborator") 
 
-5. The maintainer creates a file named animals.txt and adds their favorite animal to this file. 
+5. The maintainer creates a file named animals.txt using the command line, adds their favorite animal to this file and pushes these changes to the repo.
 
 6. Contributors A and B fork this repository and each add their favorite animals to this file. 
 
