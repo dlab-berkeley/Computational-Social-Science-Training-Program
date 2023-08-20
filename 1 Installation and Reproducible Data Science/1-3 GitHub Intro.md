@@ -55,6 +55,8 @@ Once you do this, click the green button, then name your new repository "my_firs
 - Make sure you click the box to initialize it with a README.md file. It is best practice to always have a README file that explains what the repository is about. You can ignore adding a .gitignore file and choosing a license for now. 
 - Now, go ahead and click the green "Create repository" button at the bottom. 
 
+The process should look something like this: 
+
 ![Initialize New Repo](../images/github_create_repo.png) 
 
 # Git from Command Line
@@ -115,7 +117,7 @@ OR
 git add *
 ```
 
-You can either add individual files, or add all of the files that you have changed at once with the "\*". When working with others or on complex projects, it is generally good practice to not add all files at once.
+You can either add individual files, or add all of the files that you have changed at once with the "\*". When working with others or on complex projects, it is generally good practice to not add all files at once unless they all have similar changes. 
 
 ### Git Commit 
 
@@ -129,15 +131,17 @@ But in general, the more meaningful your commit messages and documentation, the 
 git commit -m "My first git commit message"
 ```
 
-Now we're ready to make our final changes! Run the following code:
+Now we're ready to make our final changes! 
 
 ### Git Push
+
+Git has added the file and the changes have been committed. There is now a local record of these on your local computer. The next step is where we push those recorded changes to GitHub, where others can see them from the online repository. Run the following code to push your changes up to GitHub:
 
 ```
 git push
 ```
 
-This will upload your changes, and if you navigate back to your repository, you should see the changes reflected there.
+This will upload your changes, and if you navigate back to your online repository, you should see the changes reflected there. Go head and check it out.
 
 ## Collaborative Tools
 
@@ -147,9 +151,11 @@ One of the best parts about using git for managing code is that it allows you to
 git pull
 ```	
 
-Always be sure to pull down the latest changes from a repo before you stage, commit, and push your own changes. If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo.
+Always be sure to pull down the latest changes from a repo before you stage, commit, and push your own changes. THIS IS A VERY IMPORTANT STEP AND WILL PREVENT YOU A LOT OF HEADACHE LATER. If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo.
 
-Another useful feature is the ability to create a "branch". When working on code with others, you usually want to avoid overwriting each other's work. It is generally good practice to create a "branch" where you can work on code without colliding with your teammates. Notice on a repo page there is a main branch by default (circled in red). If you create a separate branch and work from there, none of those changes will affect the main branch. To merge those changes into the main branch, a project maintainer can look at the "pull requests" (circled in blue) to review the changes, see if they would create any conflicts, and either approve, reject, or suggest changes for them.
+Another useful feature is the ability to create a "branch". When working on code with others, you usually want to avoid overwriting each other's work. It is generally best practice to create a "branch" where you can work on code without colliding with your teammates. However, branching is not only limited to collboration. If you are working on a solo project, it's still a good idea to work on a branch. This will keep a static, working main branch that you can always access in case you have any issues with the new code.
+
+ Notice on a repo page there is a main branch by default (circled in red). If you create a separate branch and work from there, none of those changes will affect the main branch. To merge those changes into the main branch, a project maintainer can look at the "pull requests" (circled in blue) to review the changes, see if they would create any conflicts, and either approve, reject, or suggest changes for them.
 
 ![Branches](../images/branches.png) 
 
@@ -165,7 +171,7 @@ This code will create a new branch called "new_branch". To switch back to the ma
 git switch main
 ```
 
-## Default Branch Name in Github
+### Default Branch Name in Github
 
 In 2020, GitHub announced it would be changing the default branch name for new repositories created on GitHub from "master" to "main." This decision was made in the context of a broader industry conversation about the use of language with racial undertones. The terms "master" and "slave" have been commonly used in programming to describe one process/system that controls another, and the decision to change "master" to "main" is a step away from such potentially harmful terminology.
 
@@ -183,15 +189,15 @@ Now, try switching back to new_branch, make a change to the README file, and pus
 
 ## Project Management Tools
 
-Besides the command line interface, GitHub also provides some other useful collaboration tools. Issues are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. In your groupwork, you might consider using Issues with Projects to create a board that allows you to manage various issues. Each time you create an issue, you can describe the problem, assign it to a team member, and then track its progress with the project dashboard.
+Besides the command line interface, GitHub also provides some other useful collaboration tools. Creating **issues** are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. In your groupwork, you might consider using Issues with Projects to create a board that allows you to manage various issues. Each time you create an issue, you can describe the problem, assign it to a team member, and then track its progress with the project dashboard.
 
 ![Project Management](../images/projects.png) 
 
 # Challenge Questions
 
-These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/dlab-berkeley/BashGit)
+These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/dlab-berkeley/BashGit).
 
-# Git Challenge 1
+## Git Challenge 1
 
 1. Create an example repository on your GitHub account. 
 
@@ -203,7 +209,7 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 5. Stage, commit, and push file2.txt and file3.txt to your remote repository as a single commit. 
 
-# Git Challenge 2
+## Git Challenge 2
 
 1. Divide yourselves into groups of 3.
 
@@ -229,7 +235,7 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 11. Click the "commits" tab to see changes made by your group members. 
 
-# Git Challenge 3
+## Git Challenge 3
 
 Star the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/main/Reproducible%20Data%20Science/GitHub%20Intro.md) if you learned something! All of the materials for our course will be hosted from D-Lab's GitHub page, and you can find lots of other useful resources for Python, R, SQL, and other computational tools that we teach in our workshops.  
 
