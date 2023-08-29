@@ -39,10 +39,10 @@ There are three basic ways you can interact with someone else's repo:
 GitHub can be a great resource because it provides access to the world's largest collection of source code, and it hosts many open source projects. Depending on your field, there may already be lots of repositories available that are worth exploring. Try to do the following steps:
 
 1. Find the search bar in the top right.
-2. Search for repositories based on some key words that are common for your field. For example, try searching "health determinants", "economics", or "sociology".
+2. Search for repositories based on some key words that are common for your field. For example, try searching "health determinants", "economics", or "sociology". 
 3. Star and/or fork a repository that you find.
 
-You can also follow specific users to see all of the repositories associated with them. This is a great way to see what others are working on and keep up to date with new developments. For example, try navigating to [Kasey's homepage page](https://github.com/kaseyzapatka) and following it. Or chose another repo that interests you.
+You can also follow specific users to see all of the repositories associated with them. This is a great way to see what others are working on and keep up to date with new developments. For example, try navigating to [Kasey's homepage page](https://github.com/kaseyzapatka) and following it. 
 
 ## Create Your Own Repo
 
@@ -52,7 +52,7 @@ Next, let's look at how to make your own repos. Over time, you will create new r
 
 Once you do this, click the green button, then name your new repository "my_first_repo". 
 
-- Add a short description of what this repo is. You can say something like: "My first practice repo." 
+- Add a short description of what this repo is. You can say something like: "My first practice repo." This will appear as text in the README file that we'll create in a later step.
 - You can choose to make it public or private. Public repos can be seen and copied by anyone with a GitHub account; private repos cannot. Go ahead and leave it as public, which is the default. 
 - Make sure you click the box to initialize it with a README.md file. It is best practice to always have a README file that explains what the repository is for. For now, you can ignore adding a .gitignore file and choosing a license. 
 - Go ahead and click the green "Create repository" button at the bottom. 
