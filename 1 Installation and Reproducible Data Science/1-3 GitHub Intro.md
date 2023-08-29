@@ -14,9 +14,11 @@ GitHub is a useful tool because it removes a lot of the obstacles that we usuall
 
 # Getting Started
 
-First, let's get started by making GitHub accounts. Navigate to GitHub's [homepage](https://github.com). Navigate to "Sign Up" in the top right hand side of the page. I recommend you create an account using your berkeley.edu account.
+First, let's get started by making GitHub accounts. Navigate to GitHub's [homepage](https://github.com). Navigate to "Sign Up" in the top right hand side of the page. Follow the prompts, they should be self explanatory.
 
 ![Sign Up](../images/github_sign_up.png)
+
+I recommend you create an account using your berkeley.edu account. I'd also reccomend using an easily idenitfiable and memorable name as your username. For example, I used a concatenation of my name: `kaseyzapatka`. You'll need to verify your account by playing a game. Let's take a few mins to create accounts.
 
 After today's lab, I recommend you head over to GitHub Education and follow the instructions for activating your [free student developer pack](https://education.github.com/pack/offers). The student developer pack is free for as long as you are a student, and offers a lot of [great benefits](https://education.github.com/students). You might also consider exploring some of the other benefits like access to cloud services like Amazon Web Services or Microsoft Azure. 
 
@@ -30,17 +32,17 @@ GitHub is built on top of [git](https://en.wikipedia.org/wiki/Git), which is a L
 
 There are three basic ways you can interact with someone else's repo:
 
-- **Watch**: Notify you when there are changes or conversations in the repo.
+- **Watch**: Notify you via email when there are changes or conversations in the repo.
 - **Star**: Add this repo to a list of repos that appear in your feed. Think of this as "favoriting" a repo.
 - **Fork**: Make a copy of this repository in your own account. This is useful if you are not directly involved with a project but want to build on top of someone else's code.
 
 GitHub can be a great resource because it provides access to the world's largest collection of source code, and it hosts many open source projects. Depending on your field, there may already be lots of repositories available that are worth exploring. Try to do the following steps:
 
-1. Find the search bar in the top left.
-2. Search for repositories based on some key words that are common for your field. For example, try searching "public health" or "economics."
+1. Find the search bar in the top right.
+2. Search for repositories based on some key words that are common for your field. For example, try searching "health determinants", "economics", or "sociology".
 3. Star and/or fork a repository that you find.
 
-You can also follow specific users to see all of the repositories associated with them. This is a great way to see what others are working on and keep up to date with new developments. For example, try navigating to [Kasey's homepage page](https://github.com/kaseyzapatka) and following it. 
+You can also follow specific users to see all of the repositories associated with them. This is a great way to see what others are working on and keep up to date with new developments. For example, try navigating to [Kasey's homepage page](https://github.com/kaseyzapatka) and following it. Or chose another repo that interests you.
 
 ## Create Your Own Repo
 
