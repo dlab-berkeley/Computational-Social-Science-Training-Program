@@ -10,15 +10,15 @@ At some point in your career, you have probably found yourself in a situation li
 
 ![Final.doc](../images/finaldoc.jpeg)
 
-GitHub is a useful tool because it removes a lot of the obstacles that we usually face when we are collaborating with others. Instead of saving multiple versions of the same document, **GitHub lets us iterate on the same document while recording how it has changed over time. Rather than sending collaborators messily named documents, everyone can work from the same GitHub repository.** GitHub also has tools for resolving editing conflicts between collaborators and creating a clear workflow.
+GitHub is a useful tool because it removes a lot of the obstacles that we usually face when we are collaborating with others. Instead of saving multiple versions of the same document, GitHub lets us iterate on the same document while recording how it has changed over time. Rather than sending collaborators messily named documents, everyone can work from the same GitHub repository. GitHub also has tools for resolving editing conflicts between collaborators and creating a clear workflow.
 
-# Getting Started
+# Creating a Profile
 
-First, let's get started by making GitHub accounts. Navigate to GitHub's [homepage](https://github.com). Navigate to "Sign Up" in the top right hand side of the page. Follow the prompts, they should be self explanatory.
+First, let's get started by making GitHub accounts. Navigate to GitHub's [homepage](https://github.com). Navigate to "Sign Up" in the top right hand side of the page and follow the prompts.
 
 ![Sign Up](../images/github_sign_up.png)
 
-I recommend you create an account using your berkeley.edu account. I'd also reccomend using an easily idenitfiable and memorable name as your username. For example, I used a concatenation of my name: `kaseyzapatka`. You'll need to verify your account by playing a game. Let's take a few mins to create accounts.
+I recommend you create an account using your berkeley.edu account. I'd also reccomend using an easily idenitfiable and memorable name as your username. You'll need to verify your account by playing a game. Let's take a few mins to create accounts.
 
 After today's lab, I recommend you head over to GitHub Education and follow the instructions for activating your [free student developer pack](https://education.github.com/pack/offers). The student developer pack is free for as long as you are a student, and offers a lot of [great benefits](https://education.github.com/students). You might also consider exploring some of the other benefits like access to cloud services like Amazon Web Services or Microsoft Azure. 
 
@@ -64,15 +64,11 @@ The process should look something like this:
 
 ## Generating a Personal Access Token (PAT)
 
-In the next step, we will pull down (clone) an repo from GitHub to our local computer via the command line. There are two main ways to do this: using either an `https` or `ssh` protocol. A `https` protocol is a simple way to clone a repo by directing Git to the online GitHub web address and then pulling the contents of the repo down to your local machine. A `ssh` (secure shell protocol) is a more secure method because it uses a more complicated encription process. For now, `https` is sufficent for our purposes; however, you might need to use `ssh` in the future if you work on a project with secure data. Feel free to set up `ssh` on your local at a later time. The process involves two steps:  
-
-- [Generating new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
-- [Adding SSH Key to your account ](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) 
+In the next step, we will pull down (clone) an repo from GitHub to our local computer via the command line. There are two main ways to do this: using either an `https` or `ssh` protocol. A `https` (web address) protocol is a simple way to clone a repo by directing Git to the online GitHub web address and then pulling the contents of the repo down to your local machine. A `ssh` (secure shell protocol) is a more secure method because it uses a more complicated encription process. For now, `https` is sufficent for our purposes; however, you might need to use `ssh` in the future if you work on a project with secure data. See the resource section below for more on how to do this. 
 
 For class today, let's focus on using a `https` protocol. In the past, the `https` protocol has relied on users using their GitHub passwords to authenticate their individual computer to the GitHub repo. However, as of 2021, that process was superseeded by the use of a Personal Access Token (PAT) instead of your user password. Essentiallly, PATs are encripted tokens that are more secure than a user-generated password that essentially authenticates the compupter or user with GitHub.
 
-Now there are two types of PATs of August 2023. The first is a classic PAT. **This is what we will be using**. The second is called a fine-grained PAT. The main difference is that you can set limits on the fine-grained PAT to specify which or which type of repos you can access. You can also set an expiration date. These two characteristics make fine-grained PATs more secure, and in the event of a security breach or if a key or password is accidently shared, it will be easy to secure your account and your repos. Although GitHub reccomends using fine-grained PATs, they are still in beta and are prohibitively secure for our purposes in the course. So, we'll stick with the classic version, but feel free to update this at a later date. Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs. 
-
+As of August 2023, there are two types of PATs. Although GitHub reccomends using fine-grained PATs, they are still in beta and are prohibitively secure for our purposes in the course. So, we'll stick with the classic PATs, but feel free to update this at a later date. You can find more information in the resource section below. 
 
 ### Generating a Classic PAT
 
@@ -241,18 +237,6 @@ git switch main
 
 ```
 
-#### Default Branch Name in Github
-
-In 2020, GitHub announced it would be changing the default branch name for new repositories created on GitHub from "master" to "main." This decision was made in the context of a broader industry conversation about the use of language with racial undertones. The terms "master" and "slave" have been commonly used in programming to describe one process/system that controls another, and the decision to change "master" to "main" is a step away from such potentially harmful terminology.
-
-The change is particularly significant for those in social sciences and humanities, fields which are deeply invested in the critical examination of language, culture, society, and systems of power. The move towards more inclusive language in technology acknowledges and addresses the often-unexamined biases and power structures embedded in our language. This change illustrates that our technological practices are not separate from our social, cultural, and political contexts, but rather, they are deeply intertwined and have a reciprocal influence. For scholars in these fields, this shift helps reinforce the significance of their work in challenging and changing harmful or exclusionary norms, not just in overtly social spaces, but in technological ones as well.
-
-In our tutorials and guidance, we've updated any reference to 'master' with 'main'. However, please bear in mind that in the midst of these changes, there may be instances where 'master' might still appear unintentionally.
-
-When exploring other resources and tutorials on the internet, especially those written before this change was implemented by GitHub in 2020, you'll likely encounter 'master' used frequently. It's important to remember that in these contexts, 'master' is often synonymous with what we now refer to as 'main'.
-
-If you encounter an error message such as "pathspec 'master' did not match any file(s) known to Git," it's quite likely that you're trying to interact with a branch named 'master' that doesn't exist in your repository. In most cases, you should replace 'master' with 'main' in your command and try again. 
-
 ## Merging
 
 Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the GitHub repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into main. If so, merge the changes and see if they updated on the main branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
@@ -337,13 +321,7 @@ Inevitably, especially as you get started, you are likely to run into errors. Us
 
 # Resource Summary
 
-Below is a summary of resources mentioned above or additional resources you might find helpful. 
-
-## Git Credential Essentials  
-
-Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs.
-
-This is a helpful tutorial for [managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). This will help you create fine-grained or classic personal access tokens.
+Below is a summary of additional resources or notes you might find helpful. 
 
 ## Git Installation Issues for macOS
 
@@ -360,7 +338,27 @@ then you will need to install command line tools. Try to run the following comma
 xcode-select --install
 ```
 
-Here's the [apple thread](https://developer.apple.com/forums/thread/673827) outlining the solution and a[YouTube video](https://www.youtube.com/watch?v=QMQ77RsKDHU) on how to install command line tools. It should be pretty straight-forward. 
+Here's the [apple thread](https://developer.apple.com/forums/thread/673827) outlining the solution and a [YouTube video](https://www.youtube.com/watch?v=QMQ77RsKDHU) on how to install command line tools. It should be pretty straight-forward. 
+
+## Git Credential Essentials  
+
+- Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs.
+
+- This is a helpful tutorial for [managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). This will help you create fine-grained or classic personal access tokens.
+
+## Setting up a SSH key
+
+A `ssh` (secure shell protocol) is a more secure method than `https` protocol. When working with secure data, you may need to use this protcol instead. The process involves two steps:  
+
+- [Generating new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+- [Adding SSH Key to your account ](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) 
+
+You can then use the `ssh` protocol to clone a repo instead of `https`.
+
+
+## Fine-grained PATs
+
+In the lab, we used a classic PAT. The other type of PAT is called a fine-grained PAT. The main difference is that you can set limits on the fine-grained PAT to specify which or which type of repos you can access and you can set an expiration date for the token. These two characteristics make fine-grained PATs more secure, and in the event of a security breach or if a key or password is accidently shared, it will be easy to secure your account and your repos. Although GitHub reccomends using fine-grained PATs, they are still in beta and are prohibitively secure for our purposes in the course. So, we'll stick with the classic version, but feel free to update this at a later date. Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs. 
 
 ## Git GUIs
 
@@ -378,6 +376,18 @@ Finally, you can connect RStudio projects directly to your GitHub account and po
 
 - [RStudio (recently rebranded as Posit)](https://happygitwithr.com/rstudio-git-github.html) is a great idea if you're using Rstudio projects for your workflow.
 
+
+## Default Branch Name in Github
+
+In 2020, GitHub announced it would be changing the default branch name for new repositories created on GitHub from "master" to "main." This decision was made in the context of a broader industry conversation about the use of language with racial undertones. The terms "master" and "slave" have been commonly used in programming to describe one process/system that controls another, and the decision to change "master" to "main" is a step away from such potentially harmful terminology.
+
+The change is particularly significant for those in social sciences and humanities, fields which are deeply invested in the critical examination of language, culture, society, and systems of power. The move towards more inclusive language in technology acknowledges and addresses the often-unexamined biases and power structures embedded in our language. This change illustrates that our technological practices are not separate from our social, cultural, and political contexts, but rather, they are deeply intertwined and have a reciprocal influence. For scholars in these fields, this shift helps reinforce the significance of their work in challenging and changing harmful or exclusionary norms, not just in overtly social spaces, but in technological ones as well.
+
+In our tutorials and guidance, we've updated any reference to 'master' with 'main'. However, please bear in mind that in the midst of these changes, there may be instances where 'master' might still appear unintentionally.
+
+When exploring other resources and tutorials on the internet, especially those written before this change was implemented by GitHub in 2020, you'll likely encounter 'master' used frequently. It's important to remember that in these contexts, 'master' is often synonymous with what we now refer to as 'main'.
+
+If you encounter an error message such as "pathspec 'master' did not match any file(s) known to Git," it's quite likely that you're trying to interact with a branch named 'master' that doesn't exist in your repository. In most cases, you should replace 'master' with 'main' in your command and try again. 
 
 ## Git Tutorials
 
