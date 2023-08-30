@@ -67,16 +67,16 @@ The process should look something like this:
 In the next step, we will pull down (clone) an repo from GitHub to our local computer via the command line. There are two main ways to do this: using either an `https` or `ssh` protocol. A `https` protocol is a simple way to clone a repo by directing Git to the online GitHub web address and then pulling the contents of the repo down to your local machine. A `ssh` (secure shell protocol) is a more secure method because it uses a more complicated encription process. For now, `https` is sufficent for our purposes; however, you might need to use `ssh` in the future if you work on a project with secure data. Feel free to set up `ssh` on your local at a later time. The process involves two steps:  
 
 - [Generating new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
-- [Adding SSH Key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) to your account. 
+- [Adding SSH Key to your account ](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) 
 
 For class today, let's focus on using a `https` protocol. In the past, the `https` protocol has relied on users using their GitHub passwords to authenticate their individual computer to the GitHub repo. However, as of 2021, that process was superseeded by the use of a Personal Access Token (PAT) instead of your user password. Essentiallly, PATs are encripted tokens that are more secure than a user-generated password that essentially authenticates the compupter or user with GitHub.
 
-Now there are two types of PATs of August 2023. The first is a classic PAT. **This is what we will be using**. The second is called a fine-grained PAT. The main difference is that you can set limits on the fine-grained PAT to specify which or which type of repos you can access and you can set an expiration date. This is helpful in that if there is a security breach or key is accidently shared, it will be easy to secure your account and your repos. GitHub reccomends using the fine-grained PAT for these reasons. However, it is still in beta and is prohibitively secure for our purposes in the course. So, we'll stick with the classic version, but feel free to update this at a later date. Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs. 
+Now there are two types of PATs of August 2023. The first is a classic PAT. **This is what we will be using**. The second is called a fine-grained PAT. The main difference is that you can set limits on the fine-grained PAT to specify which or which type of repos you can access. You can also set an expiration date. These two characteristics make fine-grained PATs more secure, and in the event of a security breach or if a key or password is accidently shared, it will be easy to secure your account and your repos. Although GitHub reccomends using fine-grained PATs, they are still in beta and are prohibitively secure for our purposes in the course. So, we'll stick with the classic version, but feel free to update this at a later date. Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs. 
 
 
 ### Generating a Classic PAT
 
-Let's go ahead and generate a classic PAT. Here a helpful tutorial for [managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). Make sure that you: 
+Let's go ahead and generate a classic PAT. Make sure that you: 
 
 - Create a classic PAT, not a fine-grained PAT
 - Make sure to set no expiration date. GitHub recommends against this, but you can change these settings latter. While I normally advocate for best practices, I don't want to create any headaches for us later. 
@@ -87,7 +87,7 @@ Let's go ahead and generate a classic PAT. Here a helpful tutorial for [managing
 	- “delete_repo”
 - Finally, **be sure to copy the token because we will use that as our new password in a few steps and you will not be able to see this again**. If you make a mistake, you will need to delete the PAT and start over. 
 
-Let's follow these steps carefully: 
+Let's follow [these steps carefully:](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
 
 
 ![GitHub Generating a PAT_1](../images/pat_1.png) 
@@ -105,14 +105,14 @@ Now that we have created a GitHub reposoitory online, we want to pull it down to
 
 ## Configure Credentials
 
-Now we will see how to use some of git's core functions to work with repos and use version control. Before we start that, let's make sure to configure our global options for GitHub so that we don't have to login every time you want to do something. Open a bash terminal and run each line of code separately, substituting the GitHub handle and username you just created:
+Before we start to use some of Git's core functions, let's make sure to configure our global options for GitHub so that we don't have to login every time you want to push something to GitHub. Open a bash terminal and run each line of code separately, substituting in the GitHub handle and username you just created. These lines will save our username and email globally. 
 
 ```
 git config --global user.name "Your Username"
 git config --global user.email "your.email@berkeley.edu"
 ```
 
-Then to make sure you only need to type in your password once, run the following:
+This line will cache them so we only need to enter them once. Run the following:
 
 ```
 git config --global credential.helper cache
@@ -120,7 +120,7 @@ git config --global credential.helper cache
 
 ## Basic Workflow
 
-First, we'll go through working with your own repository on your own. Some key terms:
+Great. Let's cover some key terms so we can start making changes and to our own repository, tracking them with Git, and pushing those changes to GitHub.
 
 - **Clone**: Download and copy a remote directory to a newly created folder on your machine. 
 - **Status**: This is a reccomended step that shows you the status of tracked and untracked files. 
@@ -138,12 +138,12 @@ Let's start by cloning the repository that you just created. Navigate to your re
 
 ![Initialize New Repo](../images/clone_button.png) 
 
-Click the button, and then copy the HTML link that is displayed. Make sure the `HTTPS` tab is highlighted. Now, we'll want to clone this repo to a specific location on our local computer. Remember as we talked about last week, file organiztion is really important and will save you headaches later. My suggestion is that you navigate to your home directory (simply open the terminal or GitBash) and create a directory named `git` to house all of the directories you will push to GitHub. 
+Click the button, and then copy the HTML link that is displayed. Make sure the `HTTPS` tab is highlighted. Now, we'll want to clone this repo to a specific location on our local computer. Remember as we talked about last week, file organiztion is really important and will save you headaches later. My suggestion is that you navigate to your home directory (simply open the terminal or GitBash) and create a directory named `git` to house all of the directories you will track with GitHub. 
 
 - The advantage to this organizational approach is that it will be easy to access GitHub directories from the command line since they will be located in a sub-directory of your home folder. For the course, it will also make it easy to start up `jupyter notebooks` if you clone the course repo here (I strongly advocate for this). 
-- The disadvantage to this is that the folder will likely not be tracked by iCloud, Dropbox, Google Drive, etc. This is fine for this semester, and remember GitHub functions as a sort of cloud storage. 
+- The disadvantage to this is that the folder will likely not be tracked by iCloud, Dropbox, Google Drive, etc. Remember GitHub functions as a sort of cloud storage. 
 
-My own protocol is to locate all GitHub tracked projects as described above but locate repos for academic papers and projects in my iCloud folder so that I can switch back and forth between computers and so they are always tracked by iCloud. So, take a minute to choose where you will locate your repo and then run the following code in your terminal (substitute your link for the one here):
+My own protocol is to locate all GitHub tracked projects as described above but locate repos for academic papers and projects in my iCloud folder so that I can switch back and forth between computers and so they are always tracked by iCloud. So, take a minute to choose where you will locate your repo and then run the following code in your terminal (substitute the link to your first repo here):
 
 ```
 git clone https://github.com/your-repo-name-here.git
@@ -151,7 +151,9 @@ git clone https://github.com/your-repo-name-here.git
 
 ### Git Add
 
-Running this command in your terminal should create a folder in your current directory with the contents of your repo. Now let's practice adding content and updating the repo. Open the README.md file and add a short description of the repo (you can do this either from command line or your favorite text editor). Save the changes in the file. Now we can tell Git to tract those changes and then push them to the repository. First, enter the following command:
+Running this command in your terminal should create a folder in your current directory with the contents of your repo. Now let's practice adding content and updating the repo. Open the README.md file and add a short description of the repo (you can do this either from command line or your favorite text editor). Save the changes in the file. 
+
+Now we can tell Git to tract those changes and then push them to the repository. First, enter the following command to check the status of the changes you just made:
 
 ```
 git status
@@ -189,11 +191,11 @@ git commit -m "My first git commit message"
 
 ```
 
-Now we're ready to make our final changes! 
+Now we're ready to push our final changes to GitHub! 
 
 ### Git Push
 
-Git has added the file and the changes have been committed. There is now a local record of these on your local computer. At this point, Git is tracking your changes and even has commit message attached to those changes, but the online repo does not. If you never intended to share your changes with anyone else or wanted to push them to the online repo you could stop here. I have done this before in air-gapped environments when I wanted to track changes but didn't have internet access to push the changes to GitHub.  
+Git has added the file and the changes have been committed. There is now a local record of these on our local computer. At this point, Git is tracking our changes and even has a commit message attached to those changes, but the online repo does not. If you never intended to share your changes with anyone else or wanted to push them to the online repo you could stop here. I have done this before in air-gapped environments when I wanted to track changes but didn't have internet access to push the changes to GitHub.  
 
 The next step is where we push those recorded changes to GitHub, where others can see them from the online repository. Run the following code to push your changes up to GitHub:
 
@@ -201,7 +203,7 @@ The next step is where we push those recorded changes to GitHub, where others ca
 git push
 ```
 
-This is where you will be prompted to enter the PAT credentials we created earlier. Enter your username and then the PAT you copied in place of the password. Once you set this up, you shouldn't have to enter your credentials every time you want to push. Now, navigate back to your online repository and you should see the changes reflected there. 
+This is where you will be prompted to enter the PAT credentials we created earlier. Enter your username and then the PAT you copied in place of the password. Once you set this up, you shouldn't have to enter your credentials every time you want to push. Navigate back to your online repository and you should see the changes reflected there. 
 
 ## Collaborative Tools
 
@@ -257,7 +259,7 @@ Now, try switching back to new_branch, make a change to the README file, and pus
 
 ### Project Management Tools
 
-Besides the command line interface, GitHub also provides some other useful collaboration tools. Creating **issues** are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. 
+Besides the command line interface, GitHub also provides some other useful collaboration tools. Creating **issues** are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. Here's an example from a repo I follow: 
 
 ![Project Management](../images/issues.png) 
 
@@ -342,6 +344,7 @@ Below is a summary of resources mentioned above or additional resources you migh
 Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs.
 
 This is a helpful tutorial for [managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). This will help you create fine-grained or classic personal access tokens.
+
 
 ## Git GUIs
 
