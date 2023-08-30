@@ -345,7 +345,11 @@ Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fi
 
 This is a helpful tutorial for [managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). This will help you create fine-grained or classic personal access tokens.
 
+## Git Installation issues 
 
+Some macOS users with older operating systems might be asked to install command line developer tools. Here is a list of helpful links: 
+    -  a useful [StackExchange link](https://apple.stackexchange.com/questions/415563/repeatedly-being-asked-to-install-command-line-tools) that might be useful. 
+    -  A [YouTube video](https://www.youtube.com/watch?v=QMQ77RsKDHU) on how to install command line tools
 ## Git GUIs
 
 There are tons of free Git visualization editors (Graphical User Interfaces) that will help you visually keep tract of the Git process. These are particuarlly helpful when you are manageing large projects with many commits or when many people are working on several branches simultaneously. However, I would highly recommend using the command line first to understand the basic workflow and then use one of these resources when your workflow gets more complicated and you've mastered the basics.
