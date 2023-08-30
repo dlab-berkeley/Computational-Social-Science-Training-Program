@@ -243,9 +243,9 @@ Now, try switching back to new_branch, make a change to the README file, and pus
 
 ## Forking 
 
-If you want to add the repo to your GitHub repository so that you have the repo for the future, you can fork the repo. This is good idea and you can always update the forked repo whenever changes are made to the original repo. Here are some [instructions on forking](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
+If you want to add the repo to your GitHub repository so that you have the repo for the future, you can fork the repo. This is a good idea and you can always update the forked repo whenever changes are made to the original repo. Here are some [instructions on forking](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
 
-### Project Management Tools
+## Project Management Tools
 
 Besides the command line interface, GitHub also provides some other useful collaboration tools. Creating **issues** are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. Here's an example from a repo I follow: 
 
