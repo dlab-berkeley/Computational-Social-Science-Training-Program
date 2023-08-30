@@ -64,25 +64,30 @@ The process should look something like this:
 
 ## Generating a Personal Access Token (PAT)
 
-In the next step, we will pull down (clone) an repo from GitHub to our local computer via the command line. There are two main ways to do this: using either an `https` or `ssh` protocol. A `https` protocol is a simple way to clone a repo by directing Git to the online GitHub web address and then pulling the contents of the repo down to your local machine. A `ssh` (secure shell protocol) is a more secure method because it uses a more complicated encription process. For now, `https` is sufficent for our purposes; however, you might need to use `ssh` in the future if you work on a project with secure data. Feel free to set up `ssh` on your local at a later time. The process involves [Generating new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) and then [Adding SSH Key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) to your account. 
+In the next step, we will pull down (clone) an repo from GitHub to our local computer via the command line. There are two main ways to do this: using either an `https` or `ssh` protocol. A `https` protocol is a simple way to clone a repo by directing Git to the online GitHub web address and then pulling the contents of the repo down to your local machine. A `ssh` (secure shell protocol) is a more secure method because it uses a more complicated encription process. For now, `https` is sufficent for our purposes; however, you might need to use `ssh` in the future if you work on a project with secure data. Feel free to set up `ssh` on your local at a later time. The process involves two steps:  
 
-For class today, let's focus on using a `https`  protocol. In the past, the `https` protocol has relied on users using their GitHub passwords to authenticate their individual computer to the GitHub repo. However, as of 2021, that process was superseeded by the use of a Personal Access Token (PAT) instead of your user password. Essentiallly, PATs are encripted tokens that are more secure than a user-generated password that essentially authenticates the compupter or user with GitHub.
+- [Generating new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+- [Adding SSH Key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) to your account. 
 
-Now there are two types of PATs of August 2023. The first is a classic PAT. **This is what we will be using**. The second is called a fine-grained PAT. The main difference is that you can set limits on the fine-grained PAT to specify which or which type of repos you can access and you can set an expiration date. This is helpful in that if there is a security breach or key is accidently shared, it will be easy to secure your account and your repos. GitHub reccomends using the fine-grained PAT for these reasons. However, it is still in beta and is prohibitively secure for our purposes in the course. So, we'll stick with the classic versio, but feel free to update this at a latter date. Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs. 
+For class today, let's focus on using a `https` protocol. In the past, the `https` protocol has relied on users using their GitHub passwords to authenticate their individual computer to the GitHub repo. However, as of 2021, that process was superseeded by the use of a Personal Access Token (PAT) instead of your user password. Essentiallly, PATs are encripted tokens that are more secure than a user-generated password that essentially authenticates the compupter or user with GitHub.
+
+Now there are two types of PATs of August 2023. The first is a classic PAT. **This is what we will be using**. The second is called a fine-grained PAT. The main difference is that you can set limits on the fine-grained PAT to specify which or which type of repos you can access and you can set an expiration date. This is helpful in that if there is a security breach or key is accidently shared, it will be easy to secure your account and your repos. GitHub reccomends using the fine-grained PAT for these reasons. However, it is still in beta and is prohibitively secure for our purposes in the course. So, we'll stick with the classic version, but feel free to update this at a later date. Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs. 
 
 
 ### Generating a Classic PAT
 
-Let's go ahead and generate a classic PAT. Here a helpful tutorial for [managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). The steps are below. Make sure that you : 
+Let's go ahead and generate a classic PAT. Here a helpful tutorial for [managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). Make sure that you: 
 
-- Create a classic PAT and not a fine-grained PAT
+- Create a classic PAT, not a fine-grained PAT
 - Make sure to set no expiration date. GitHub recommends against this, but you can change these settings latter. While I normally advocate for best practices, I don't want to create any headaches for us later. 
-- Under "Select scope" step, make sure to select the following so that you won't have any problems in the course: 
+- When you reach the "Select scope" step, make sure to select all of the following so that you won't have any problems in the course: 
 	- “Repo”
 	- “Workflow”
 	- “User”
 	- “delete_repo”
-- Also, **be sure to copy the token because we will use that as our new password in a few steps and you will not be able to see this again**. If you make a mistake, you will need to delete the PAT and start over. 
+- Finally, **be sure to copy the token because we will use that as our new password in a few steps and you will not be able to see this again**. If you make a mistake, you will need to delete the PAT and start over. 
+
+Let's follow these steps carefully: 
 
 
 ![GitHub Generating a PAT_1](../images/pat_1.png) 
@@ -100,7 +105,7 @@ Now that we have created a GitHub reposoitory online, we want to pull it down to
 
 ## Configure Credentials
 
-Now we will see how to use some of git's core functions to work with repos and use version control. First, let's make sure to configure your global options for GitHub so that you don't have to login every time you want to do something. Open a bash terminal and do the following (substitute the GitHub handle and username you just created):
+Now we will see how to use some of git's core functions to work with repos and use version control. Before we start that, let's make sure to configure our global options for GitHub so that we don't have to login every time you want to do something. Open a bash terminal and run each line of code separately, substituting the GitHub handle and username you just created:
 
 ```
 git config --global user.name "Your Username"
@@ -118,11 +123,12 @@ git config --global credential.helper cache
 First, we'll go through working with your own repository on your own. Some key terms:
 
 - **Clone**: Download and copy a remote directory to a newly created folder on your machine. 
+- **Status**: This is a reccomended step that shows you the status of tracked and untracked files. 
 - **Add**: Stage changes you made to different files to get them ready to be uploaded back to the remote repository.
 - **Commit**: Add a message to describe the changes that you have made.
 - **Push**: Upload your changes.
 
-You only clone a repo once. After that, add, commit, and push are the key steps. Here is a visualization of the process: 
+You only clone a repo once. After that, add, commit, and push are the key steps, checking your status as necessary. Here is a visualization of the process: 
 
 ![Visualization of git process](../images/git_process.png) 
 
@@ -168,7 +174,7 @@ git add *
 
 You can either add individual files, or add all of the files that you have changed at once with the "\*". When working with others or on complex projects, it is generally good practice to not add all files at once unless they all have similar changes. 
 
-Run `git status` again to check that the changes were added.
+Run `git status` again to check that the changes are being tracked by Git.
 
 ### Git Commit 
 
@@ -283,7 +289,7 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 3. The maintainer creates a repository with a README.md file so that it can immediately be cloned. 
 
-4. Maintainer adds contributors A and B as collaborators on the project (click "Settings" --> "Collaborators" --> "Add collaborator") 
+4. The maintainer adds contributors A and B as collaborators on the project (click "Settings" --> "Collaborators" --> "Add collaborator") 
 
 5. The maintainer creates a file named animals.txt using the command line, adds their favorite animal to this file and pushes these changes to the repo.
 
@@ -303,9 +309,9 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 ## Git Challenge 3
 
-All of the code you will need for the semester is contained in the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program). You will want to clone this repo to your local computer using the `git clone [url]` described above. Be sure to clone it in a location that is easy to access from your home directory via the command line, since we will be accessing it frequently. It is best practice NOT to store it on your Desktop. 
+All of the code you will need for the semester is contained in the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program). You will want to clone this repo to your local computer using the `git clone [url]` described above. Be sure to clone it in a location that is easy to access from your home directory via the command line, since we will be accessing it frequently. **I highly recommend cloning this repo with the `git` directory we created earlier. It is best practice NOT to store it on your Desktop. 
 
-The work flow for each lab will look like the following: 
+Keep in mind that the work flow for each lab will look like the following: 
 - At the beginning of each class, we will activate a virtual anaconda environment.
 - Navigate to the directory where we cloned the class repo.
 - Fire up a `jupyter notebook` to run our lab scripts. 
@@ -329,12 +335,13 @@ Inevitably, especially as you get started, you are likely to run into errors. Us
 
 # Resource Summary
 
+Below is a summary of resources mentioned above or additional resources you might find helpful. 
 
 ## Git Credential Essentials  
 
 Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs.
 
-This is a helpful tutorial for [managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+This is a helpful tutorial for [managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). This will help you create fine-grained or classic personal access tokens.
 
 ## Git GUIs
 
