@@ -82,7 +82,7 @@ Let's go ahead and generate a classic PAT. Here a helpful tutorial for [managing
 	- “Workflow”
 	- “User”
 	- “delete_repo”
-- Also, **be sure to copy the token because we will use that as our new password  in a few steps and you will not be able to see this again**. If you make a mistake, you will need to delete the PAT and start over. 
+- Also, **be sure to copy the token because we will use that as our new password in a few steps and you will not be able to see this again**. If you make a mistake, you will need to delete the PAT and start over. 
 
 
 ![GitHub Generating a PAT_1](../images/pat_1.png) 
@@ -100,7 +100,7 @@ Now that we have created a GitHub reposoitory online, we want to pull it down to
 
 ## Configure Credentials
 
-Now we will see how to use some of git's core functions to work with repos and use version control. First, let's make sure to configure your global options for GitHub so that you don't have to login every time you want to do something.  Open a bash terminal and do the following (substitute your GitHub handle and username):
+Now we will see how to use some of git's core functions to work with repos and use version control. First, let's make sure to configure your global options for GitHub so that you don't have to login every time you want to do something. Open a bash terminal and do the following (substitute the GitHub handle and username you just created):
 
 ```
 git config --global user.name "Your Username"
@@ -112,8 +112,6 @@ Then to make sure you only need to type in your password once, run the following
 ```
 git config --global credential.helper cache
 ```
-
-The next time you try to interact with a git repo from the command line (as we'll do momentarily), you'll be asked to type in your username and password. If you are prompted to set up a Personal Access Token (PAT), follow [these steps](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) to create one and enter the PAT instead of your password. Make sure you check off at least "repo" in step 8. Once you set this up, you shouldn't have to go through this process again. 
 
 ## Basic Workflow
 
@@ -134,7 +132,12 @@ Let's start by cloning the repository that you just created. Navigate to your re
 
 ![Initialize New Repo](../images/clone_button.png) 
 
-Click the button, and then copy the HTML link that is displayed. Then run the following code in your terminal (substitute your link for the one here):
+Click the button, and then copy the HTML link that is displayed. Make sure the `HTTPS` tab is highlighted. Now, we'll want to clone this repo to a specific location on our local computer. Remember as we talked about last week, file organiztion is really important and will save you headaches later. My suggestion is that you navigate to your home directory (simply open the terminal or GitBash) and create a directory named `git` to house all of the directories you will push to GitHub. 
+
+- The advantage to this organizational approach is that it will be easy to access GitHub directories from the command line since they will be located in a sub-directory of your home folder. For the course, it will also make it easy to start up `jupyter notebooks` if you clone the course repo here (I strongly advocate for this). 
+- The disadvantage to this is that the folder will likely not be tracked by iCloud, Dropbox, Google Drive, etc. This is fine for this semester, and remember GitHub functions as a sort of cloud storage. 
+
+My own protocol is to locate all GitHub tracked projects as described above but locate repos for academic papers and projects in my iCloud folder so that I can switch back and forth between computers and so they are always tracked by iCloud. So, take a minute to choose where you will locate your repo and then run the following code in your terminal (substitute your link for the one here):
 
 ```
 git clone https://github.com/your-repo-name-here.git
@@ -142,10 +145,19 @@ git clone https://github.com/your-repo-name-here.git
 
 ### Git Add
 
-Running this command in your terminal should create a folder in your current directory with the contents of your repo. Now let's practice adding content and updating the repo. Open the README.md file and add a short description of the repo (you can do this either from command line or your favorite text editor). Save the changes in the file, and then get ready to make the changes in the repository. First enter the following command:
+Running this command in your terminal should create a folder in your current directory with the contents of your repo. Now let's practice adding content and updating the repo. Open the README.md file and add a short description of the repo (you can do this either from command line or your favorite text editor). Save the changes in the file. Now we can tell Git to tract those changes and then push them to the repository. First, enter the following command:
+
+```
+git status
+
+```
+
+What do you see? Now run the following command to add the changes to Git. 
+
 
 ```
 git add README.md
+
 ```
 
 OR
@@ -156,9 +168,11 @@ git add *
 
 You can either add individual files, or add all of the files that you have changed at once with the "\*". When working with others or on complex projects, it is generally good practice to not add all files at once unless they all have similar changes. 
 
+Run `git status` again to check that the changes were added.
+
 ### Git Commit 
 
-Next add a commit message describing the changes that you made. Try to make these descriptions as meaningful as possible. Every programmer is guilt of doing something like this:
+Next, add a commit message describing the changes that you made. Try to make these descriptions as meaningful as possible. Every programmer is guilty of doing something like this:
 
 ![Commit Messages](../images/git_commit.png) 
 
@@ -166,33 +180,36 @@ But in general, the more meaningful your commit messages and documentation, the 
 
 ```
 git commit -m "My first git commit message"
+
 ```
 
 Now we're ready to make our final changes! 
 
 ### Git Push
 
-Git has added the file and the changes have been committed. There is now a local record of these on your local computer. The next step is where we push those recorded changes to GitHub, where others can see them from the online repository. Run the following code to push your changes up to GitHub:
+Git has added the file and the changes have been committed. There is now a local record of these on your local computer. At this point, Git is tracking your changes and even has commit message attached to those changes, but the online repo does not. If you never intended to share your changes with anyone else or wanted to push them to the online repo you could stop here. I have done this before in air-gapped environments when I wanted to track changes but didn't have internet access to push the changes to GitHub.  
+
+The next step is where we push those recorded changes to GitHub, where others can see them from the online repository. Run the following code to push your changes up to GitHub:
 
 ```
 git push
 ```
 
-This will upload your changes, and if you navigate back to your online repository, you should see the changes reflected there. Go head and check it out.
+This is where you will be prompted to enter the PAT credentials we created earlier. Enter your username and then the PAT you copied in place of the password. Once you set this up, you shouldn't have to enter your credentials every time you want to push. Now, navigate back to your online repository and you should see the changes reflected there. 
 
 ## Collaborative Tools
 
-We've covered the basic workflow for working with GitHub. You will follow these general steps for all projects for which you use git. However, the real power of GitHub is how it can be leveraged in collaboration. Let's dig into some of those tools.
+We've covered the basic workflow for working with GitHub. You will follow these general steps for all projects for which you use Git. However, the real power of GitHub is how it can be leveraged in collaboration. Let's dig into some of those tools.
 
 ### Pulling
 
-One of the best parts about using git for managing code is that it allows you to easily collaborate on code with others. To sync your local copy of a repository with the most current version of what is on GitHub, run the following code:
+One of the best parts about using Git for managing code is that it allows you to easily collaborate on code with others. To sync your local copy of a repository with the most current version of what is on GitHub, run the following code:
 
 ```
 git pull
 ```	
 
-Always be sure to pull down the latest changes from a repo before you add, commit, and push your own changes. **THIS IS A VERY IMPORTANT STEP AND WILL PREVENT YOU A LOT OF HEADACHE LATER.** If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo. Merge conflicts will happen, of course, but following each step in the process carefully will help prevent that.
+Likely, it will say that everything is up to date with the main branch since we just pushed some changes. Always be sure to pull down the latest changes from a repo before you add, commit, and push your own changes. **THIS IS A VERY IMPORTANT STEP AND WILL PREVENT YOU A LOT OF HEADACHE LATER. I do this after every pull out of habit.** If you don't, you could run into a merge conflict, which will prevent you from making changes to the repo. Merge conflicts will happen, of course, but following each step in the process carefully will help prevent that.
 
 ### Branching 
 
@@ -206,12 +223,14 @@ To create and switch to a new branch, do the following:
 
 ```
 git checkout -b new_branch
+
 ```
 
 This code will create a new branch called "new_branch". To switch back to the main branch, you can run the following:
 
 ```
 git switch main
+
 ```
 
 #### Default Branch Name in Github
@@ -224,15 +243,19 @@ In our tutorials and guidance, we've updated any reference to 'master' with 'mai
 
 When exploring other resources and tutorials on the internet, especially those written before this change was implemented by GitHub in 2020, you'll likely encounter 'master' used frequently. It's important to remember that in these contexts, 'master' is often synonymous with what we now refer to as 'main'.
 
-If you encounter an error message such as "pathspec 'master' did not match any file(s) known to git," it's quite likely that you're trying to interact with a branch named 'master' that doesn't exist in your repository. In most cases, you should replace 'master' with 'main' in your command and try again. 
+If you encounter an error message such as "pathspec 'master' did not match any file(s) known to Git," it's quite likely that you're trying to interact with a branch named 'master' that doesn't exist in your repository. In most cases, you should replace 'master' with 'main' in your command and try again. 
 
 ## Merging
 
-Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the github repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into main. If so, merge the changes and see if they updated on the main branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
+Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the GitHub repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into main. If so, merge the changes and see if they updated on the main branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
 
 ### Project Management Tools
 
-Besides the command line interface, GitHub also provides some other useful collaboration tools. Creating **issues** are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. In your groupwork, you might consider using Issues with Projects to create a board that allows you to manage various issues. Each time you create an issue, you can describe the problem, assign it to a team member, and then track its progress with the project dashboard.
+Besides the command line interface, GitHub also provides some other useful collaboration tools. Creating **issues** are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. 
+
+![Project Management](../images/issues.png) 
+
+In your groupwork, you might consider using Issues with Projects to create a board that allows you to manage various issues. Each time you create an issue, you can describe the problem, assign it to a team member, and then track its progress with the project dashboard.
 
 ![Project Management](../images/projects.png) 
 
@@ -325,14 +348,14 @@ There are also a lot of text editors that have GitHub GUI integration as well. T
 - [Sublime Merge](https://www.sublimemerge.com) is a great option.
 - [Visual Studio's Git Lens](https://visualstudio.microsoft.com/) is one of my favorites. It's free and lightweight.
 
-Finally, you can connect RStudio projects directly to your GitHub account and point and click to add, commit, and push your changes. This is a great option if you want code editing, analysis, and git all in one. 
+Finally, you can connect RStudio projects directly to your GitHub account and point and click to add, commit, and push your changes. This is a great option if you want code editing, analysis, and Git all in one. 
 
 - [RStudio (recently rebranded as Posit)](https://happygitwithr.com/rstudio-git-github.html) is a great idea if you're using Rstudio projects for your workflow.
 
 
 ## Git Tutorials
 
-The above lab is sufficient for what you will need to know this semester for git. However, if you are interested in really developing your skills, this workshop from [Software Carpentry: Version Control with Git](https://swcarpentry.github.io/git-novice/index.html) is a really great, free resource.
+The above lab is sufficient for what you will need to know this semester for Git. However, if you are interested in really developing your skills, this workshop from [Software Carpentry: Version Control with Git](https://swcarpentry.github.io/git-novice/index.html) is a really great, free resource.
 
 ---
 Note: Some images were borrowed from the [Software Carpentry: Version Control with Git](https://swcarpentry.github.io/git-novice/index.html) online workshop.
