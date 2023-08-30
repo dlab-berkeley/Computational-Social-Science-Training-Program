@@ -61,6 +61,39 @@ The process should look something like this:
 
 ![Initialize New Repo](../images/github_create_repo.png) 
 
+
+## Generating a Personal Access Token (PAT)
+
+In the next step, we will pull down (clone) an repo from GitHub to our local computer via the command line. There are two main ways to do this: using either an `https` or `ssh` protocol. A `https` protocol is a simple way to clone a repo by directing Git to the online GitHub web address and then pulling the contents of the repo down to your local machine. A `ssh` (secure shell protocol) is a more secure method because it uses a more complicated encription process. For now, `https` is sufficent for our purposes; however, you might need to use `ssh` in the future if you work on a project with secure data. Feel free to set up `ssh` on your local at a later time. The process involves [Generating new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) and then [Adding SSH Key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) to your account. 
+
+For class today, let's focus on using a `https`  protocol. In the past, the `https` protocol has relied on users using their GitHub passwords to authenticate their individual computer to the GitHub repo. However, as of 2021, that process was superseeded by the use of a Personal Access Token (PAT) instead of your user password. Essentiallly, PATs are encripted tokens that are more secure than a user-generated password. The PAT authenticates the the compupter/user with GitHub and is a form of security. 
+
+Now there are two types of PATs of August 2023. The first is a classic PAT. **This is what we will be using**. The second is called a fine-grained PAT. The main difference is that you can set limits on the fine-grained PAT to specify which or which type of repos you can access and you can set an expiration date. This is helpful in that if there is a security breach or key is accidently shared, it will be easy to secure your account and your repos. GitHub reccomends using the fine-grained PAT for these reasons. However, it is still in beta and is prohibitively secure for our purposes in the course. So, we'll stick with the classic versio, but feel free to update this at a latter date. Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs. 
+
+
+### Generating a Classic PAT
+
+Let's go ahead and generate a classic PAT. Here a helpful tutorial for [managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). The steps are below. Make sure that you : 
+
+- Create a classic PAT and not a fine-grained PAT
+- Make sure to set no expiration date. GitHub recommends against this, but you can change these settings latter. While I normally advocate for best practices, I don't want to create any headaches for us later. 
+- Under "Select scope" step, make sure to select the following so that you won't have any problems in the course: 
+	- “Repo”
+	- “Workflow”
+	- “User”
+	- “delete_repo”
+- Also, **be sure to copy the token because we will use that as our new password  in a few steps and you will not be able to see this again**. If you make a mistake, you will need to delete the PAT and start over. 
+
+
+![GitHub Generating a PAT_1](../images/pat_1.png) 
+
+
+![GitHub Generating a PAT_2](../images/pat_2.png) 
+
+
+![GitHub Generating a PAT_3](../images/pat_3.png) 
+
+
 # Git from Command Line
 
 Now that we have created a GitHub reposoitory online, we want to pull it down to our local computer so that we can work with it. This is the most common workflow. However, sometimes you might have already created a repo on your folder that you want to tract with git and store the code on GitHub. Here is a [link outline the steps](https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github), which is basically the reverse of what we are doing now. 
@@ -104,7 +137,7 @@ Let's start by cloning the repository that you just created. Navigate to your re
 Click the button, and then copy the HTML link that is displayed. Then run the following code in your terminal (substitute your link for the one here):
 
 ```
-git clone https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program.git
+git clone https://github.com/your-repo-name-here.git
 ```
 
 ### Git Add
@@ -273,6 +306,12 @@ Inevitably, especially as you get started, you are likely to run into errors. Us
 
 # Resource Summary
 
+
+## Git Credential Essentials  
+
+Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs.
+
+This is a helpful tutorial for [managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
 
 ## Git GUIs
 
