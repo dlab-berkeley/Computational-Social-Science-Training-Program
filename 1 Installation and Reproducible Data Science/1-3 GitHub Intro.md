@@ -347,7 +347,7 @@ This is a helpful tutorial for [managing your personal access tokens](https://do
 
 ## Git Installation Issues for macOS
 
-Some macOS users with older operating systems might be asked to install command line developer tools. If you have an older mac you can run `git --version` to see if git is installed on your computer. If you encounter the following error or something substantive
+Some macOS users with older operating systems might be asked to install command line developer tools. If you have an older mac you can run `git --version` to see if Git is installed on your computer. If you encounter the following error or something substantively similar
 
 ```
 xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools), missing xcrun at: /Library/Developer/CommandLineTools/usr/bin/xcrun
@@ -356,11 +356,8 @@ xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools
 
 then you will need to install command line tools. Try to run the following command and follow the resulting prompts. The installation could take a few mins and require significant storage space on your computer (up to 20GB).
 
-
 ```
-
 xcode-select --install
-
 ```
 
 Here's the [apple thread](https://developer.apple.com/forums/thread/673827) outlining the solution and a[YouTube video](https://www.youtube.com/watch?v=QMQ77RsKDHU) on how to install command line tools. It should be pretty straight-forward. 
