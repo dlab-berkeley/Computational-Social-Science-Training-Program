@@ -64,7 +64,7 @@ The process should look something like this:
 
 ## Generating a Personal Access Token (PAT)
 
-In the next step, we will pull down (clone) an repo from GitHub to our local computer via the command line. There are two main ways to do this: using either an `https` or `ssh` protocol. We'll be using a `https` (web address) protocol, which is a simple way to clone a repo by directing Git to the online GitHub web address and then pulling the contents of the repo down to your local machine. See the resource section belwo to learn how to use the other protocol (`ssh` (secure shell protocol)), which is more secure. 
+In the next step, we will pull down (clone) an repo from GitHub to our local computer via the command line. There are two main ways to do this: using either an `https` or `ssh` protocol. We'll be using a `https` (web address) protocol, which is a simple way to clone a repo by directing Git to the online GitHub web address and then pulling the contents of the repo down to your local machine. See the resource section belwo to learn how to use the`ssh` (secure shell protocol), which is more secure. 
 
 In the past, the `https` protocol has relied on users using their GitHub passwords to authenticate their individual computer to the GitHub repo. However, as of 2021, that process was superseeded by the use of a Personal Access Token (PAT) instead of your user password. Essentiallly, PATs are encripted tokens that are more secure than a user-generated password that essentially authenticates the compupter or user with GitHub.
 
@@ -241,6 +241,10 @@ git switch main
 
 Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the GitHub repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into main. If so, merge the changes and see if they updated on the main branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
 
+## Forking 
+
+If you want to add the repo to your GitHub repository so that you have the repo for the future, you can fork the repo. This is good idea and you can always update the forked repo whenever changes are made to the original repo. Here are some [instructions on forking](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
+
 ### Project Management Tools
 
 Besides the command line interface, GitHub also provides some other useful collaboration tools. Creating **issues** are useful for flagging problems with code, or requesting features that you would like the repo's maintainers to implement. They can also be used to keep track of ongoing tasks. Here's an example from a repo I follow: 
@@ -303,10 +307,6 @@ Keep in mind that the work flow for each lab will look like the following:
 - Fire up a `jupyter notebook` to run our lab scripts. 
  
 Before we do any work, be sure to run `git pull` in your command line to pull any changes I have made. This is very important--don't forget to `git pull`. 
-
-### Forking 
-
-If you want to add the repo to your GitHub repository so that you have the repo for the future, you can fork the repo. This is good idea and you can always update the forked repo whenever changes are made to the original repo. Here are some [instructions on forking](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
 
 # What if something goes wrong?
 
