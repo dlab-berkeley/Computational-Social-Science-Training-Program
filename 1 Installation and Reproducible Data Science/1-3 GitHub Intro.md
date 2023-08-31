@@ -299,7 +299,7 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 ## Git Challenge 3
 
-All of the code you will need for the semester is contained in the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program). You will want to clone this repo to your local computer using the `git clone [url]` described above. Be sure to clone it in a location that is easy to access from your home directory via the command line, since we will be accessing it frequently. **I highly recommend cloning this repo with the `git` directory we created earlier. It is best practice NOT to store it on your Desktop. 
+All of the code you will need for the semester is contained in the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program). You will want to either fork or clone this repo to your local computer using the `git clone [url]` described above. Be sure to clone it to your local machine in a location that is easy to access from your home directory via the command line, since we will be accessing it frequently. **I highly recommend cloning this repo with the `git` directory we created earlier. It is best practice NOT to store it on your Desktop. 
 
 Keep in mind that the work flow for each lab will look like the following: 
 - At the beginning of each class, we will activate a virtual anaconda environment.
