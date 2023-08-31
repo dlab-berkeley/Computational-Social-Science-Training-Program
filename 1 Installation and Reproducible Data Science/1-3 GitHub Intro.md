@@ -237,6 +237,8 @@ git switch main
 
 ```
 
+Be aware that when you create a new branch on your local machine, Git does not know where to send those tracked changes because that branch is only on your local machine. So, when you make changes and then `git push` those changes, you will encounter an error like the following: `fatal: The current branch new_branch has no upstream branch.` Fortunately, Git will suggest the solution: ` git push --set-upstream origin new_branch`, where "new_branch" is the name of the new branch you just created. Essentially, this command pushes your changes but the option `--set-upstream` tells git to push those changes to the origin (the original repo from which your local is operating) via a new branch you just created, "new_branch", which is then added to the GitHub repo. Be sure you use the name of the new branch you just created and not "new_branch" every time. A shortcut code to use instead is the following: `git push -u origin new_branch`, where "new_branch" refers to the name of the new branch you just created and `-u` option is short for `--set-upstream`.
+
 ## Merging
 
 Now, try switching back to new_branch, make a change to the README file, and push your changes to your GitHub repo. Navigate to the GitHub repo's webpage, click on pull requests, and check to see if you can successfully merge the changes into main. If so, merge the changes and see if they updated on the main branch! When working with teammates, it is good practice to work on separate branches, and use pull requests to merge code into a clean codebase.
@@ -345,6 +347,8 @@ Here's the [apple thread](https://developer.apple.com/forums/thread/673827) outl
 - Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs.
 
 - This is a helpful tutorial for [managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). This will help you create fine-grained or classic personal access tokens.
+
+- For Windows users who have older operating systems, however, the Git Credentials steps we followed above my actually prevent you from pushing your changes to GitHub because Windows does not have Unix socket support. So, you will want to un-cache your creditials using the following code  `git config --global --unset credential.helper`. You should not have to enter in your credtentials every time. 
 
 ## Setting up a SSH key
 
