@@ -18,7 +18,7 @@ First, let's get started by making GitHub accounts. Navigate to GitHub's [homepa
 
 ![Sign Up](../images/github_sign_up.png)
 
-I recommend you create an account using your berkeley.edu account. I'd also reccomend using an easily idenitfiable and memorable name as your username. You'll need to verify your account by playing a game. Let's take a few mins to create accounts.
+I recommend you create an account using your berkeley.edu email account. I'd also reccomend using an easily idenitfiable and memorable name as your username. You'll need to verify your account by playing a game. Let's take a few mins to create accounts.
 
 After today's lab, I recommend you head over to GitHub Education and follow the instructions for activating your [free student developer pack](https://education.github.com/pack/offers). The student developer pack is free for as long as you are a student, and offers a lot of [great benefits](https://education.github.com/students). You might also consider exploring some of the other benefits like access to cloud services like Amazon Web Services or Microsoft Azure. 
 
@@ -64,7 +64,7 @@ The process should look something like this:
 
 ## Generating a Personal Access Token (PAT)
 
-In the next step, we will pull down (clone) an repo from GitHub to our local computer via the command line. There are two main ways to do this: using either an `https` or `ssh` protocol. We'll be using a `https` (web address) protocol, which is a simple way to clone a repo by directing Git to the online GitHub web address and then pulling the contents of the repo down to your local machine. See the resource section belwo to learn how to use the`ssh` (secure shell protocol), which is more secure. 
+In the next step, we will pull down (clone) an repo from GitHub to our local computer via the command line. There are two main ways to do this: using either an `https` or `ssh` protocol. We'll be using a `https` (web address) protocol, which is a simple way to clone a repo by directing Git to the online GitHub web address and then pulling the contents of the repo down to your local machine. See the resource section belwo to learn how to use the `ssh` (secure shell protocol), which is more secure. 
 
 In the past, the `https` protocol has relied on users using their GitHub passwords to authenticate their individual computer to the GitHub repo. However, as of 2021, that process was superseeded by the use of a Personal Access Token (PAT) instead of your user password. Essentiallly, PATs are encripted tokens that are more secure than a user-generated password that essentially authenticates the compupter or user with GitHub.
 
@@ -118,7 +118,7 @@ git config --global credential.helper cache
 
 Great. Let's cover some key terms so we can start making changes and to our own repository, tracking them with Git, and pushing those changes to GitHub.
 
-- **Clone**: Download and copy a remote directory to a newly created folder on your machine. 
+- **Clone**: Download and copy a remote directory to your local machine. 
 - **Status**: This is a reccomended step that shows you the status of tracked and untracked files. 
 - **Add**: Stage changes you made to different files to get them ready to be uploaded back to the remote repository.
 - **Commit**: Add a message to describe the changes that you have made.
@@ -291,7 +291,7 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 ### Did it work!?
 
-9. If there are no conflicts, the issue is "resolved" as long as the headers <<<< ==== and >>>> are deleted. 
+9. If there are no conflicts, the issue is "resolved" as long as the headers <<<< ==== and >>>> are deleted. If there is a conflict, the maintainer will have to manually address the changes, often by erasing the lines that are in conflict and rewriting.
 
 10. All people in each group should add an issue using the "Issues" tab. Did you each receive emails about the creation of these issues? 
 
@@ -299,7 +299,7 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 ## Git Challenge 3
 
-All of the code you will need for the semester is contained in the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program). You will want to clone this repo to your local computer using the `git clone [url]` described above. Be sure to clone it in a location that is easy to access from your home directory via the command line, since we will be accessing it frequently. **I highly recommend cloning this repo with the `git` directory we created earlier. It is best practice NOT to store it on your Desktop. 
+All of the code you will need for the semester is contained in the [D-Lab Computational Social Science Training Program repo](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program). You will want to either fork or clone this repo to your local computer using the `git clone [url]` described above. Be sure to clone it to your local machine in a location that is easy to access from your home directory via the command line, since we will be accessing it frequently. **I highly recommend cloning this repo with the `git` directory we created earlier.** It is best practice NOT to store it on your Desktop. 
 
 Keep in mind that the work flow for each lab will look like the following: 
 - At the beginning of each class, we will activate a virtual anaconda environment.
@@ -355,7 +355,6 @@ A `ssh` (secure shell protocol) is a more secure method than `https` protocol. W
 
 You can then use the `ssh` protocol to clone a repo instead of `https`.
 
-
 ## Fine-grained PATs
 
 In the lab, we used a classic PAT. The other type of PAT is called a fine-grained PAT. The main difference is that you can set limits on the fine-grained PAT to specify which or which type of repos you can access and you can set an expiration date for the token. These two characteristics make fine-grained PATs more secure, and in the event of a security breach or if a key or password is accidently shared, it will be easy to secure your account and your repos. Although GitHub reccomends using fine-grained PATs, they are still in beta and are prohibitively secure for our purposes in the course. So, we'll stick with the classic version, but feel free to update this at a later date. Here is a [blog-entry from GitHub](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/) about the differences between these two types of PATs. 
@@ -389,6 +388,9 @@ When exploring other resources and tutorials on the internet, especially those w
 
 If you encounter an error message such as "pathspec 'master' did not match any file(s) known to Git," it's quite likely that you're trying to interact with a branch named 'master' that doesn't exist in your repository. In most cases, you should replace 'master' with 'main' in your command and try again. 
 
+## Git Cheatsheet
+
+There are a lot of Git commands and many commands have different options. Here is a link to a [list of commonly used Git commands](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/kz_module1/1%20Installation%20and%20Reproducible%20Data%20Science/git%20cheatsheet.md).
 ## Git Tutorials
 
 The above lab is sufficient for what you will need to know this semester for Git. However, if you are interested in really developing your skills, this workshop from [Software Carpentry: Version Control with Git](https://swcarpentry.github.io/git-novice/index.html) is a really great, free resource.
