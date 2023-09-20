@@ -1,5 +1,6 @@
 # .ipynb_checkpoints
 **/*.ipynb_checkpoints/
+.Rhistory
 
 # google news vector
 GoogleNews-vectors-negative300.bin.gz
