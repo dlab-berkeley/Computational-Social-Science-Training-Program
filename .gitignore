@@ -11,3 +11,5 @@ GoogleNews-vectors-negative300.bin.gz
 # add file names with appropriate folder references here
 
 .DS_Store
+.Rproj.user
+.Rproj
