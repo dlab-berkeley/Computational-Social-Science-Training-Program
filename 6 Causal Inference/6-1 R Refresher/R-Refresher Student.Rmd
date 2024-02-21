@@ -329,7 +329,9 @@ Find the average strength at the last time point in each group (hint, use filter
 
 ```{r}
 
-...
+tidy_df %>% 
+  #...
+  glimpse()
 
 
 ```
@@ -433,7 +435,8 @@ Try making some of your own plots! Plot the mean_strength by treatment based on 
 ```{r ggplot practice}
 
 tidy_df %>% 
-  ...
+  #...
+  glimpse()
 
 ```
 
