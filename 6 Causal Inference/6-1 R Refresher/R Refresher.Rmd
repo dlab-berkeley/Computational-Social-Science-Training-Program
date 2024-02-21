@@ -1,7 +1,7 @@
 ---
 title: 'R Refresher: Notebooks, Notation and Visualization'
 subtitle: 'UC Berkeley Social 273M: Computational Social Science, Part B'
-date: "Spring 2021"
+date: " `r format(Sys.time(), '%B %d, %Y')`"
 output:
   html_document:
     df_print: paged
@@ -10,6 +10,26 @@ output:
 toc: yes
 header_includes: \usepackage{graphicx} \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
 ---
+
+
+```{r intialize, echo=FALSE, include=FALSE}
+
+#
+# if you want to load all the packages at once
+# --------------------------------------------------
+
+# I prefer the xfun::pcg_attach2 because it will download any packages in the list that are not already downloaded
+# ----------
+xfun::pkg_attach2(c("tidyverse", 
+                    "here"))
+
+# pacman also works the same way
+# ----------
+# pacman::p_load(c(tidyverse, 
+#                  here, 
+#                  haven))
+```
+
 
 # Learning Objectives
 1. Basic R commands and useful functions in tidyverse
@@ -27,21 +47,33 @@ R shares many similarities to Python. Both are object oriented programming langu
 Let's start with variable assignment. Here you'll notice that this looks basically the same as what we did with Python, but in R it's more standard to use the carrot "<-" operator to do variable assignment instead of "=", but both work. We can also check booleans exactly the same way:
 
 ```{r basic_r}
-#Assignment using <- or =
+
+# Assignment using <- or =
+# ----------
 x <- 1
 x
 
 y = 2
 y
 
-#Check equality using ==
+# Check equality using ==
+# ----------
 x == y
 x != y
+
 ```
 
 In Python, we mainly worked organized data in dataframes, lists, and dictionaries, and data was usually something like an integer, float, or string. R has similar concepts, but introduces a few new data types that are common as well. In particular, R introduces the notion of a `vector` which is a special data type that contains elements of the same type. We can concatenate a vector by using the `c()` function.
 
 ```{r data_types}
+
+#
+# illustrate differences between different object classes
+# --------------------------------------------------
+
+# specify different types of vectors
+# ----------
+
 pets_vector <- c('dog', 'cat', 'parrot')
 
 pets_list <- list('dog', 'cat', 'parrot') 
@@ -52,32 +84,60 @@ mixed_data <- c(1, 'dog', 2, 'cat')
 
 dog <- 'dog'
 
+
+# print class of each data type
+# ----------
 class(pets_vector)
 class(pets_list)
 class(num_vector)
 class(mixed_data)
 class(dog)
+
 ```
 Notice how when we checked the class of both `pets_vector` and `dog` it returned a character, but a list when we explicitly called list. We got "numeric" with our vector of numbers, but then "character" again when we mixed strings and numbers - R converted these all to characters! Vectors have important consequences for computation because many methods in R are vectorized - meaning they operate on all items in a vector simultaneously. This makes vectorized methods a powerful alternative to for loops. Before we see how this works, let's see how we construct for loops:
 
 ```{r basic_r_for_loop}
+
+# loop over pet vector
+# ----------
 for (pet in pets_vector) {
   print(pet)
 }
+
 ```
+
 The syntax is a little different from Python but otherwise looks and feels pretty similar! Now let's check out the difference between vectorized methods and for loops by finding the log of numbers 1 to 1,000,000.
 
 ```{r vector_v_for}
 
+#
+# comparing vector operations and loops 1
+# --------------------------------------------------
+
+# create vector of numbers
+# ----------
 numbers <- 1:1000000
 
+# vectorization
+# ----------
+ 
+# print the log of each number in the vector
 print(system.time(numbers_log_vec <- log(numbers)))
 
+# loops
+# ----------
+
+# initialize empty list
 numbers_for_loop <- list()
 
+# find log by looping over each number
 print(system.time(for (number in numbers) {
   numbers_for_loop[number] <- log(number)
 }))
+
+
+# !!! NOTE THESE TIMES WILL VARY ON BASED ON YOUR COMPUTER'S SPECS !!!
+
 ```
 
 This is a huge difference! This particular example is a bit straightforward and the difference between a fraction of a second and three seconds doesn't seem like a big deal - but this can make a huge difference with big data! 
@@ -85,18 +145,40 @@ This is a huge difference! This particular example is a bit straightforward and 
 We'll introduce two more concepts here to show you the power of vectorization. First, we'll define a function that takes a number, subtracts 1, and then returns the result. Again, notice the slight differences in syntax between R and Python. Now what if we wanted to "apply" this function to every element in our vector - or say every row in a dataframe? We can use an `apply` method (in this case `sapply` which returns a vector) to apply the function to every element in the vector. Again notice how quickly this goes!
 
 ```{r func}
+
+#
+# comparing vector operations and loops 2
+# --------------------------------------------------
+
+# define a function
+# ----------
 minus_one <- function(num) {
   nums_minus_one <- num - 1
   return(nums_minus_one)
 }
 
+# using vectorization 
+# ----------
+system.time(apply_minus_one <- sapply(numbers, minus_one))
+
+
+# Using map familiy instead of apply family
+# ----------
+#install.packages("purrr")
+library(purrr)    # functional programming  "purrr" package from Tidyverse
+
+system.time(apply_minus_one <- map_int(numbers, minus_one))
+
+# using a loop -- sapply
+# ----------
 minus_one_list <- list()
 system.time(for (num in numbers) {
   minus_one_list[num] <- minus_one(num)
 })
 
-system.time(apply_minus_one <- sapply(numbers, minus_one))
-apply_minus_one[1]
+
+
+
 ```
 
 These examples seem straightforward, but vectorization is a powerful concept that makes R a versatile tool for computational social science. Mastering the use of vectors, functions, and apply methods can dramatically speed up your computations.
@@ -108,161 +190,276 @@ Now let's move to data frames. These work basically the same way they do in Pyth
 Before we start looking at the data though, we'll need to deal with some issues with how R handles working directories. While Jupyter recognizes your current working directory as the one where your .ipynb notebook lives, R does not do this by default. One way to make this work is to go to Session -> Set Working Directory -> To Source File Location. This is a bit cumbersome and not always reproducible though. Luckily, the `here` library should be able to help us out:
 
 ```{r here}
-#install.packages('here')
-here::i_am('R Refresher.Rmd')
-library(here)
-setwd(here())
+
+#
+# setting working directories 
+# --------------------------------------------------
+
+# install libraries 
+# ----------
+#install.packages('here')     # might need to install 
+here::i_am('R Refresher.Rmd') # declare where you are -- "library:function"  allows you to run a function without loading it
+library(here)                 # loading the library  - don't use require
+
+# install libraries 
+# ----------
+here()                        # setting working directory as the relative file path
+setwd(here())                 # if you work in other environment, you may need to set the working directory this way
+
+
 ```
 
-Now that we have our working directory set, let's read in our dataframe. In addition to the head() function, investigate the output of the names() and dim() functions.
+
+Now that we have our working directory set, let's read in our dataframe. In addition to the `head()` function, investigate the output of the names() and dim() functions. Note that this code chunks requires installing the `readr` library. In later scripts we will install a family of libraries called the `tidyverse` in one step instead of having to load them individually. See the documentation on the [tidyverse](https://tidyverse.tidyverse.org) to learn more about what is included.
 
 ```{r import}
-#Tidyverse Import
+
+# installing libraries 
+# ----------
 library(readr)
-df <- read_csv("../../data/strength.csv")
+
+
+# load dataa
+# ----------
+df <- read_csv(here("../../data/strength.csv")) # here() essentially is the working directory
 head(df)
-names(df)
+names(df)  # shows you the column names 
 dim(df)
+
+#?read_csv  #check documentation 
 ```
 
-We can also manipulate data using functions from the tidyverse package. For example we can add a column using the mutate() function. We can select (or deselect) a subset of columns using select(). Note that in the example of the select function below there is a negative sign preceding y_2, meaning we are selecting everything except y_2.
+We can also manipulate data using functions from the `tidyverse` library.  Check out the [documentation here](https://tidyverse.tidyverse.org). A quick note about the `tidyvere`. R is a relatively only programming language used for statistical analysis but has undergone a revitalization and retooling over the the last 10-15 years. This was largely led by the development of the `tidyverse`, which is a movement to create a consistent and harmonized approach to working with data. Specifically, the goal is for new packages and libraries to use consistent approaches of working with data so that if you come to a new package, you have a general sense of the default settings and how thigns work. This is largely based on the principal of working with tidy (long) data, where each row is an observation and each column in a feature. 
+
+It has been widely adopted in the R environment, so much so that it there are two different ways of coding in R: base R, which will look much more like `python`, and the `tidyverse`, which is easier to read and more intuitive. You can [read more about the reasoning and philosophy here](https://rviews.rstudio.com/2017/06/08/what-is-the-tidyverse/). It's fine not to adopt this approach, but know it is the dominant way of working with data in the open-source R world. 
+
+A whole module could be taught on the `tidyvere`, but let's learn using a few example. Frist, one example of working with data using the `tidyverse` approach is to add a column using the `mutate()` function. We can select (or deselect) a subset of columns using `select()`. Note that in the example of the select function below there is a negative sign preceding `y_2`, meaning we are selecting everything except `y_2.` The goal of the verbs is to be descriptive in the action that you are taking when you manipulate data.
 
 ```{r mutate}
-#Add a column that creates a new variable y_2 as y times 2 using tidyverse tools
-#install.packages("dplyr")
-#library(tidyverse)
-library(dplyr)
-df = mutate(df, y_2 = y*2)
-head(df)
-#Note this is equivalent to the base R command: df$y_2 = (df$y)*2
 
-#Select or drop columns using the select() function
-df = select(df, -y_2)
+#
+# processing data - adding columns 
+# --------------------------------------------------
+
+
+# installing libraries 
+# ----------
+#install.packages("dplyr")  
+
+# load library for data manipulation
+# ----------
+library(dplyr)  # note this would already be loaded if load tidyverse at the beginning 
+
+# create new column
+# ----------
+df <- mutate(df,           # specify data (always the first argument)
+             y_2 = y*2)    # note this is equivalent to the base R command: df$y_2 = (df$y)*2
+
+# view - note we can use glimpse() in the future
+head(df)  # view first 5 lines
+
+
+# drop columns using the select() function
+# ----------
+df <- select(df,   # specify data
+             -y_2) # select everything but y_2
+
+# view
 head(df)
 ```
 
-tidyverse also provides the pipe operator. This operator (%>%) can be used to pass the output from one function to another, such as when you are performing a series of operations. This is probably the most powerful and intuitive functionality provided by the tidyverse - basically the output of the last step becomes the input to the next step.
+The `tidyverse` also provides the pipe operator, which is the most important implementation that the `tidyverse` uses that makes it so easy to use. This operator (%>%) can be used to pass the output from one function to another, such as when you are performing a series of operations. This is probably the most powerful and intuitive functionality provided by the `tidyverse` - basically the output of the last step becomes the input to the next step.
 
 ```{r pipe}
-#piping
-tidy_df <- df %>% 
+
+# piping
+# ----------
+tidy_df <- 
+  df %>% 
+  # rename a variable 
   rename(treatment = tx) %>%
+  # mutate
   mutate(rescale_y = y * 1000) 
+
+# view 
 head(tidy_df)
 ```
 
 The filter() function is used to select a subset of rows.
 
 ```{r filter}
-#filtering
-df_id1 <- filter(df, id == 1)
-dim(df_id1)
 
-#Note: to achieve the same result in base R we could do:
-#df_id1 <- df[df$id == 1, ]
+# filtering
+# ----------
+df_id1 <-              # save what the following steps as this object name 
+  df %>%               # pipe the dataframe instead, following L --> R flow
+  filter(id == 1) %>%  # filter only where ID == 1
+  glimpse()            # glimpse previews the dataframe
 
-#We can also filter by more than one condition
-filter(df, id == 1, time == 1)
+dim(df_id1) # returns dimensions of dataframe
 
-#Or using an OR statement
+# Note: to achieve the same result in base R we could do:
+# df_id1 <- df[df$id == 1, ]
+
+# using an "," or "&" statement to filter on more than one condition
+df %>% 
+  filter(id == 1, 
+         time == 1) %>% 
+  glimpse()
+
+# using an OR statement
 filter(df, time == 1 | time == 7)
 ```
 
 We can also summarize data within groups using the group_by() and summarize() functions.
 
 ```{r summarize}
-#summarizing
+# summarizing
+# ----------
 tidy_df %>% 
-  group_by(time) %>% 
+  group_by(time) %>%  # group by to perform calculations by the grouping variable 
   summarize(mean_strength = mean(y, na.rm=TRUE),
             standard_deviation_y = sd(y, na.rm=TRUE))
+
 ```
 
-Challenge 1: 
+## Challenge 1
 
-Find the average strength at the last time point  in each group (hint, use filter, group_by and summarize)
+Find the average strength at the last time point in each group (hint, use filter, group_by and summarize).
+
 ```{r}
+
+# find the average strength by group at last point in time
+# ----------
 tidy_df %>% 
+  # filter
   filter(time == 7) %>%
+  # group by 
   group_by(treatment) %>% 
-  summarize(mean_strength = mean(y, na.rm=TRUE))
+    # summarize  
+    summarize(mean_strength = mean(y, na.rm=TRUE))
+
 ```
 
 
 # A note on data.table vs data.frame and dplyr
 
-The *data.table* package is a package that is useful for manipulating large datasets. You can store data as a *data.table* object, and manipulate it using syntax similar to base R syntax, and using additional functions including *subset*, and read/write functions like *fread* and *fwrite*. The *data.table* objects are more-or-less enhanced *data.frame* objects.
+The [`data.table` package](https://rdatatable.gitlab.io/data.table/) is a package that is useful for manipulating large datasets. You can store data as a *data.table* object, manipulate it using syntax similar to base R syntax, and using additional functions including *subset*, and read/write functions like *fread* and *fwrite*. The *data.table* objects are more-or-less enhanced *data.frame* objects that use different and more efficent underlying code to enable calculations to run faster.
 
-*dplyr* is a package in the *tidyverse* collection of packages that contains the functions I emphasized in labs 1-3, such as *filter*, *select*, and *rename*. The functions in *dplyr* are really useful for operating on data stored in *data.frame* objects.
+`dplyr` is a package in the `tidyverse` collection of packages that uses functions emphasized in labs 1-3, such as *filter*, *select*, and *rename*. The functions in `dplyr` are really useful for operating on data stored in *data.frame* objects, but can't be used to manipulate `data.table` objects.
+
+Until recently, however. The new `dtplyr` package was developed to allow you to use tidyverse consistent code on data.table objects. Here is [blog post](https://www.tidyverse.org/blog/2019/11/dtplyr-1-0-0/) explaining how this works. Essentially, convert the data.table object to lazy dataframe (using the `lazy_dt()`), which records all the manipulations you want to do to the dataset, and then translates those manipulations under the hood to data.frame object.
 
 # Generating Random Numbers
 
 Sometimes we want to generate random numbers from probability distributions. This will be useful later when we assess the performance of estimators on a sample from a known data-generating process.
 
 ```{r, message=FALSE, warning=FALSE}
-#library("tidyverse")
-#X1 and X2 are independently generated normal random variables
+
+#
+# processing data - adding columns 
+# --------------------------------------------------
+
+# set seed for reproducibility 
+set.seed(1921)
+
+# X1 and X2 are independently generated normal random variables
+# ----------
 X1 <- rnorm(n = 100, mean = 5, sd = 1)
 X2 <- rnorm(n = 100, mean = 5, sd = 10)
-#And they don't appear to be related
+
+# plot to show they do not appear to be related
 plot(x = X1, y = X2)
 cor(X1, X2)
 
-#Here X3 depends on X1
+# Here X3 depends on X1
+# ----------
 X3 <- rnorm(n = 100, mean = X1, sd = 1)
-#And from a visual inspection they appear to be associated
+
+# plot to show they appear to be associated
 plot(x = X1, y = X3)
 cor(X1, X3)
 
-#We can put these three random variables together in a data frame
-rand_nums = tibble(X1, X2, X3) #Similar to data.frame() function
+# combine these three random variables together in a dataframe
+# ----------
+rand_nums <- tibble(X1, X2, X3) # tibble is tidyverse dataframe
 head(rand_nums)
 
-#We could now work with these randomly generated numbers in this data frame, e.g., to fit a model or estimate a parameter of interest (later).
+# We could now work with these randomly generated numbers in this data frame, e.g., to fit a model or estimate a parameter of interest (later).
 ```
+
 # ggplot
 
-Aside from dplyr and tidyr, another pillar of the tidyverse is ggplot. R has base plotting functions that are good for visualizing data quickly (as we saw above), but ggplot offers a of more customization and aesthetically pleasing options.
+Aside from `dplyr` and `tidyr`, another pillar of the tidyverse is `ggplot.` R has base plotting functions that are good for visualizing data quickly (as we saw above), but ggplot offers a of more customization and aesthetically pleasing options.
+
+However, the base syntax takes a bit of getting used to. It follows the [grammar of graphics logic](https://ggplot2.tidyverse.org) where you provide data and tell it how to map those variables to aesthetics. Specifically, instead of using the "%>%" you use the "+" add different layers to the plot. While it takes a bit of getting used to, it is a powerful framework for making figures or even maps.  
 
 ```{r ggplot}
-tidy_df %>%
+
+# library loads in tidyverse
+#library(ggplot2)
+
+# create a figure
+# ----------
+tidy_df %>%  # pipe the data into the ggplot
+  
+  # initialize a ggplot object -- WILL NEED TO DO THIS WHENEVER YOU WANT TO APPLY GGPLOT  
   ggplot() +
+  # specify the geom point function to make a scatter plot
   geom_point(aes(x = time, y = rescale_y)) +
+  # add a title 
   ggtitle("Tidy DF Plot") +
+  # specify labels
   xlab("Time") +
   ylab("Rescaled Y")
+
 ```
 
-I also like the `ggthemes` library that lets you style your ggplot. FOr example, you might use the fivethirtyeight theme:
+The `ggthemes` library lets you style your ggplot using pre-established settings. For example, you might use the fivethirtyeight theme:
 
-```{r fivethirtyeight}
+```{r fivethirtyeight, warning=FALSE}
+
+# apply the 538 theme
+# ----------
 tidy_df %>%
   ggplot() +
   geom_point(aes(x = time, y = rescale_y)) +
-  ggthemes::theme_fivethirtyeight() +
-  theme(axis.title = element_text()) +
-  ggtitle("Tidy DF Plot") +
-  xlab("Time") +
-  ylab("Rescaled Y") 
+  # apply the present parameters for the 538 theme
+  ggthemes::theme_fivethirtyeight() +    # "::" allows you to call a function without loading it
+  theme(axis.title = element_text()) +   # adjusts theme to allow for axis titles
+  ggtitle("Tidy DF Plot") +              # title
+  xlab("Time") +                         # x-axis label
+  ylab("Rescaled Y")                     # y-axis label
+
 ```
 
-Challenge 2:
+## Challenge 2
 
-Try making some of your own plots! Plot the mean_strength by treatment based on the dataframe we created earlier in challenge 1, and then another plot of your choice! Hint: You may want to look up the documentation for a method like geom_bar() to plot this one.
+Try making some of your own plots! Plot the mean_strength by treatment based on the dataframe we created earlier in challenge 1, and then another plot of your choice! Hint: You may want to look up the documentation for a method like geom_bar() to plot this one. Here is a [bit about the difference](https://ggplot2.tidyverse.org/reference/geom_bar.html) between `geom_bar` and `geom_col`. 
 
 ```{r ggplot practice}
+
+# use the 538 theme
+# ----------
 tidy_df %>% 
+  # filter out the last time obs, time == 7
   filter(time == 7) %>%
+  # group_by  to make calculations by group
   group_by(treatment) %>% 
-  summarize(mean_strength = mean(y, na.rm=TRUE)) %>%
+  # summarize using mean
+  summarize(mean_strength = mean(y, na.rm=TRUE)) %>% # don't forget to set missing to true so they are not used in mean calculation
+  
+  # plot 
+  # ----------
   ggplot() +
+  # geom_bar gives you bar plots
   geom_bar(aes(x = treatment, y = mean_strength, fill = treatment),
            stat = 'identity') +
   ggthemes::theme_fivethirtyeight() +
-  theme(axis.title = element_text()) +
-  ggtitle("Mean Strength by Treatment") +
-  xlab("Treatment") +
-  ylab("Mean Strength") 
+  theme(axis.title = element_text()) +      # adjusts theme to allow for axis titles
+  ggtitle("Mean Strength by Treatment") +   # title
+  xlab("Treatment") +                       # x-axis label
+  ylab("Mean Strength")                     # x-axis label
 
 
 ```
@@ -278,16 +475,20 @@ The first lines of the .Rmd file include information about the file that will be
 In this white space you can write in English; the compiler will not interpret things in white space as \texttt{R} code. 
 
 ```{r}
+
 # Anything in gray space is interpreted as R code 
 #(which is why these words are commented out using the # symbol). 
 # Use ```{r} to start gray space and ``` to end it.
 # The gray space is called a code chunk
 2+7
+
 ```
 
 ```{r, echo = FALSE}
+
 # You can change the parameters of the brackets that start code chunks (see line 19) for different formatting options. echo = FALSE makes it so that the code chunk does not appear in your knitted document. 
 4+8
+
 ```
 
 You can also make lists
@@ -306,19 +507,24 @@ Take a look at this RMD cheatsheet for other useful formatting information:
 
 https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+[Rmarkdown cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/)
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. Note that quarto files are becoming increaingly common and are a useful extension of Rmarkdown since they can handle multiple types of code (e.g., R and python code in the same file)
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. For Macs, just *Cmd+Enter*  will run one line at at time and will automatically move to the next line if you hit it again. 
 
 ```{r}
+
 # Note that the "cars" dataset is already loaded into R 
 # and only has two columns, one for speed and one for distance (dist).
 plot(cars)
+
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to knit the file together and preview the HTML file). 
 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
@@ -329,13 +535,23 @@ We can also create PDF files from .Rmd files by changing the output option in th
 We can suppress code, output, warnings, messages, or errors using chunk options, e.g. echo=FALSE will hide this code chunk.
 
 ```{r echo=FALSE}
-plot(x = X1, y = X3)
+
+# example plot using the base plotting function 
+# ----------
+plot(x = X1,  
+     y = X3) 
+
 ```
 
-Set a chunk to not evaluate using eval=FALSE.
+Set a chunk to not evaluate using `eval=FALSE` and it will not evaluate it when you run the entire script from start to finish.
 
 ```{r eval = FALSE}
-plot(x = X1, y = X3)
+
+# example plot using the base plotting function 
+# ----------
+plot(x = X1, 
+     y = X3)
+
 ```
 
 There are similar options to suppress messages, warnings, and errors, which may be useful for homework.
@@ -346,7 +562,7 @@ There are similar options to suppress messages, warnings, and errors, which may 
 If you're working on RStudio Cloud and would like to download your files:
 
 1. Check the file you'd like to export and the click More > Export in the File viewer. It will download to your computer's downloads folder.
-2. You may want to Export slides as a PDF or MS Word document. To do that, you first need to change "slidy_presentation" to "pdf_document" or "word_document" in the file header (line 5 of the file, under output:).
+2. You may want to Export slides as a PDF or MS Word document. To do that, you first need to change "slidy_presentation" to "pdf_document" or "word_document" in the file header (line 5 of the file, under output:). Note that you might also have to change some of the file structure to ensure correct formatting.
 3. Word documents then automatically download when you Knit them. PDF documents can be exported from the File viewer by following step 1.
 
 # Latex symbols and useful math equations for Causal Inference
@@ -368,7 +584,7 @@ $$
 E_{U,X}(Y_a) = m(a | \beta) 
 $$
 
-You can also align equations within the dollar signs using the "aligned" environment and an ampersand, and double backslashes for line breaks.
+You can also align equations within the dollar signs using the "aligned" environment and an ampersand, and double backslashes for line breaks using LaTex code. Note this will aligns equations by the "=" sign. 
 
 $$
 \begin{aligned}
@@ -402,7 +618,7 @@ a & \in \mathcal{A} \\
 \end{aligned}
 $$
 
-We can use the mathcal operator to render symbols for the Causal Model $\mathcal{M}^F$ or the Causal Model augmented with additional assumptions required for identifiability $\mathcal{M}^{F*}$.
+We can use the `mathcal` operator to render symbols for the Causal Model $\mathcal{M}^F$ or the Causal Model augmented with additional assumptions required for identifiability $\mathcal{M}^{F*}$.
 
 To denote that the observed data is drawn according to the observed data distribution $P_0$:
 
@@ -453,11 +669,13 @@ $$
 ## Variance and Covariance - Review
 
 For a random variable $Y \sim P_Y$, the variance is defined as:
+
 $$
 Var(Y) = E[(Y-E[Y])^2] = E[Y^2] - (E[Y])^2 
 $$
 
 And for two random variables $Y \sim P_Y$ and $X \sim P_X$, the covariance is defined as:
+
 $$
 Cov(X, Y) = E[(X - E[X])(Y - E[Y])] = E[XY] - E[X]E[Y] 
 $$
@@ -509,6 +727,7 @@ O_i &= (Y_{ij}, \mathbf{X}_{ij}, T_{ij})\ j=1,...,6 \\
 \end{aligned}
 $$
 
+## Notation Exercise 3
 
 Provide Notation for the Following Additional Variance-Covariance structures for the outcome conditional on covariates:
 
