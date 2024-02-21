@@ -80,7 +80,7 @@ $$
 
 - Introduced to statistics from machine learning
 - Procedure for k-fold:
-    -Partition the data into a number of folds
+    - Partition the data into a number of folds
     - Train the data on k-1 folds
     - Test on the last fold
     - Rotate so that each fold acts as the test set once
