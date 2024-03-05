@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2024-02-20" />
+<meta name="date" content="2024-03-05" />
 
 <title>R Refresher: Notebooks, Notation and Visualization</title>
 
@@ -1624,7 +1624,7 @@ display: none;
 Visualization</h1>
 <h3 class="subtitle">UC Berkeley Social 273M: Computational Social
 Science, Part B</h3>
-<h4 class="date">February 20, 2024</h4>
+<h4 class="date">March 05, 2024</h4>
 
 </div>
 
@@ -1762,7 +1762,7 @@ print(system.time(for (number in numbers) {
   numbers_for_loop[number] &lt;- log(number)
 }))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.920   0.025   0.945</code></pre>
+##   0.918   0.061   0.981</code></pre>
 <pre class="r"><code># !!! NOTE THESE TIMES WILL VARY ON BASED ON YOUR COMPUTER&#39;S SPECS !!!</code></pre>
 <p>This is a huge difference! This particular example is a bit
 straightforward and the difference between a fraction of a second and
@@ -1791,7 +1791,7 @@ minus_one &lt;- function(num) {
 # ----------
 system.time(apply_minus_one &lt;- sapply(numbers, minus_one))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.494   0.009   0.503</code></pre>
+##   0.495   0.018   0.514</code></pre>
 <pre class="r"><code># Using map familiy instead of apply family
 # ----------
 #install.packages(&quot;purrr&quot;)
@@ -1799,7 +1799,7 @@ library(purrr)    # functional programming  &quot;purrr&quot; package from Tidyv
 
 system.time(apply_minus_one &lt;- map_int(numbers, minus_one))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.281   0.003   0.283</code></pre>
+##   0.282   0.013   0.294</code></pre>
 <pre class="r"><code># using a loop -- sapply
 # ----------
 minus_one_list &lt;- list()
@@ -1807,7 +1807,7 @@ system.time(for (num in numbers) {
   minus_one_list[num] &lt;- minus_one(num)
 })</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.365   0.018   1.383</code></pre>
+##   1.387   0.065   1.452</code></pre>
 <p>These examples seem straightforward, but vectorization is a powerful
 concept that makes R a versatile tool for computational social science.
 Mastering the use of vectors, functions, and apply methods can
@@ -1881,7 +1881,7 @@ df &lt;- read_csv(here(&quot;../../data/strength.csv&quot;)) # here() essentiall
 <pre class="r"><code>#?read_csv  #check documentation </code></pre>
 <p>We can also manipulate data using functions from the
 <code>tidyverse</code> library. Check out the <a href="https://tidyverse.tidyverse.org">documentation here</a>. A quick
-note about the <code>tidyvere</code>. R is a relatively only programming
+note about the <code>tidyvere</code>. R is a relatively old programming
 language used for statistical analysis but has undergone a
 revitalization and retooling over the the last 10-15 years. This was
 largely led by the development of the <code>tidyverse</code>, which is a
@@ -1898,8 +1898,8 @@ which is easier to read and more intuitive. You can <a href="https://rviews.rstu
 more about the reasoning and philosophy here</a>. It’s fine not to adopt
 this approach, but know it is the dominant way of working with data in
 the open-source R world.</p>
-<p>A whole module could be taught on the <code>tidyvere</code>, but
-let’s learn using a few example. Frist, one example of working with data
+<p>A whole module could be taught on the <code>tidyverse</code>, but
+let’s learn using a few example. First, one example of working with data
 using the <code>tidyverse</code> approach is to add a column using the
 <code>mutate()</code> function. We can select (or deselect) a subset of
 columns using <code>select()</code>. Note that in the example of the
@@ -2341,7 +2341,7 @@ be made during the “Idenfitication” part of the course.</p>
 \]</span></p>
 <p>To write that two random variables are independent or conditionally
 independent, use the perp operator, as in: <span class="math inline">\(X
-\perp Z\)</span> to indicate that the random variable is indepent of
+\perp Z\)</span> to indicate that the random variable is independent of
 Z.</p>
 </div>
 <div id="review-of-notation" class="section level1">

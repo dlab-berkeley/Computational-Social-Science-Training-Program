@@ -233,7 +233,7 @@ We can also manipulate data using functions from the `tidyverse` library.  Check
 
 It has been widely adopted in the R environment, so much so that it there are two different ways of coding in R: base R, which will look much more like `python`, and the `tidyverse`, which is easier to read and more intuitive. You can [read more about the reasoning and philosophy here](https://rviews.rstudio.com/2017/06/08/what-is-the-tidyverse/). It's fine not to adopt this approach, but know it is the dominant way of working with data in the open-source R world. 
 
-A whole module could be taught on the `tidyvere`, but let's learn using a few example. First, one example of working with data using the `tidyverse` approach is to add a column using the `mutate()` function. We can select (or deselect) a subset of columns using `select()`. Note that in the example of the select function below there is a negative sign preceding `y_2`, meaning we are selecting everything except `y_2.` The goal of the verbs is to be descriptive in the action that you are taking when you manipulate data.
+A whole module could be taught on the `tidyverse`, but let's learn using a few example. First, one example of working with data using the `tidyverse` approach is to add a column using the `mutate()` function. We can select (or deselect) a subset of columns using `select()`. Note that in the example of the select function below there is a negative sign preceding `y_2`, meaning we are selecting everything except `y_2.` The goal of the verbs is to be descriptive in the action that you are taking when you manipulate data.
 
 ```{r mutate}
 
