@@ -229,11 +229,11 @@ dim(df)
 #?read_csv  #check documentation 
 ```
 
-We can also manipulate data using functions from the `tidyverse` library.  Check out the [documentation here](https://tidyverse.tidyverse.org). A quick note about the `tidyvere`. R is a relatively only programming language used for statistical analysis but has undergone a revitalization and retooling over the the last 10-15 years. This was largely led by the development of the `tidyverse`, which is a movement to create a consistent and harmonized approach to working with data. Specifically, the goal is for new packages and libraries to use consistent approaches of working with data so that if you come to a new package, you have a general sense of the default settings and how thigns work. This is largely based on the principal of working with tidy (long) data, where each row is an observation and each column in a feature. 
+We can also manipulate data using functions from the `tidyverse` library.  Check out the [documentation here](https://tidyverse.tidyverse.org). A quick note about the `tidyvere`. R is a relatively old programming language used for statistical analysis but has undergone a revitalization and retooling over the the last 10-15 years. This was largely led by the development of the `tidyverse`, which is a movement to create a consistent and harmonized approach to working with data. Specifically, the goal is for new packages and libraries to use consistent approaches of working with data so that if you come to a new package, you have a general sense of the default settings and how thigns work. This is largely based on the principal of working with tidy (long) data, where each row is an observation and each column in a feature. 
 
 It has been widely adopted in the R environment, so much so that it there are two different ways of coding in R: base R, which will look much more like `python`, and the `tidyverse`, which is easier to read and more intuitive. You can [read more about the reasoning and philosophy here](https://rviews.rstudio.com/2017/06/08/what-is-the-tidyverse/). It's fine not to adopt this approach, but know it is the dominant way of working with data in the open-source R world. 
 
-A whole module could be taught on the `tidyvere`, but let's learn using a few example. Frist, one example of working with data using the `tidyverse` approach is to add a column using the `mutate()` function. We can select (or deselect) a subset of columns using `select()`. Note that in the example of the select function below there is a negative sign preceding `y_2`, meaning we are selecting everything except `y_2.` The goal of the verbs is to be descriptive in the action that you are taking when you manipulate data.
+A whole module could be taught on the `tidyvere`, but let's learn using a few example. First, one example of working with data using the `tidyverse` approach is to add a column using the `mutate()` function. We can select (or deselect) a subset of columns using `select()`. Note that in the example of the select function below there is a negative sign preceding `y_2`, meaning we are selecting everything except `y_2.` The goal of the verbs is to be descriptive in the action that you are taking when you manipulate data.
 
 ```{r mutate}
 
@@ -618,7 +618,7 @@ $$
 \end{aligned}
 $$
 
-To write that two random variables are independent or conditionally independent, use the perp operator, as in: $X \perp Z$ to indicate that the random variable is indepent of Z.
+To write that two random variables are independent or conditionally independent, use the perp operator, as in: $X \perp Z$ to indicate that the random variable is independent of Z.
 
 
 # Review of Notation
