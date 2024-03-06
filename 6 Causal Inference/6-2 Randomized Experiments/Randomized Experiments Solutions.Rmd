@@ -1,5 +1,5 @@
 ---
-title: '6-1 Randomized Experiments - Solutions'
+title: '6-2 Randomized Experiments - Solutions'
 author: ""
 date: " `r format(Sys.time(), '%B %d, %Y')`"
 output:
@@ -57,7 +57,7 @@ knitr::opts_chunk$set(
 
 ```
 
-In this lab, we are going to discuss Randomized Experiments. Causal inference methods can be used for observational data, but it is easier to first consider them in the context of randomized experiments. To begin we are going to created simulated data that we'd be unlikely to encounter in the real world where we give the same individual the treatment and then NOT give them a treatment. We'll then calculate the "true" ***A**verage **T**reatement **E**ffect (**ATE**) and then show how different techniques of applying randomization will give us very close. 
+In this lab, we are going to discuss Randomized Experiments. Causal inference methods can be used for observational data, but it is easier to first consider them in the context of randomized experiments. To begin we are going to created simulated data that we'd be unlikely to encounter in the real world where we give the same individual the treatment and then NOT give them a treatment. We'll then calculate the "true" ***A**verage **T**reatment **E**ffect (**ATE**) and then show how different techniques of applying randomization will give us very close. 
 
 We will be leaning heavily on the `dplyr` library, so I'd encourage you to refer the [dplyr cheat sheet](https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf) to refresh your memory and push your knowledge of how to use the library.
 
@@ -134,14 +134,16 @@ summary(df)
 
 ## Causal Types
 
-To better understand the potential types that result from taking the treatment or not, let's take a look at a frequency table of the two potential output columns $Y_{0}$ and $Y_{1}$:
+To better understand the potential types that result from taking the treatment or not, let's take a look at a frequency table of the two potential output columns $Y_{0}$ and $Y_{1}$: 
+
+Note that this code chunk uses code from the [kable](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html#HTML_Only_Features) package. This is one common way to make tables that play nice with HTML documents, but there are many others (two other common table creation packages are: [gt](https://gt.rstudio.com) and [modelsummary](https://modelsummary.com))
 
 ```{r}
 
 #
 # create simulated data
 # --------------------------------------------------
-
+# kable documentation : https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html#HTML_Only_Features
 
 # add a column indicating the causal type of each individual
 # ----------
@@ -236,6 +238,8 @@ Notice that, since the expected value is a linear operator:
 $$\text{ATE} = E[Y_{i1} - Y_{i0}] =  E[Y_{i1}] - E[Y_{i0}]$$
 **<span style="color:blue;">QUESTION 3:</span>** So, with a bit of math, the ATE is simply $E[Y_{i1}] - E[Y_{i0}]$. Confirm this using `R`.
 
+**<span style="color:blue;">ANSWER 3:</span>** 
+
 ```{r}
 
 # check by subtracting the mean of each potential outcome 
@@ -264,6 +268,8 @@ Therefore, the average treatment effect can be re-written as follows:
 Or rather, the average treatment effect is equivalent to the difference between the proportions of the "causal" and "preventive" groups.
 
 **<span style="color:blue;">QUESTION 4:</span>** Again, confirm this using `R`.
+
+**<span style="color:blue;">ANSWER 4:</span>** 
 
 
 ```{r}
@@ -299,7 +305,7 @@ ATT <-
   
 ```
 
-You should have gotten a result around $\text{ATT} \approx -0.45$. This means that among those actually treated, AspiTyleCedrin decreases migraines by about 45% on average. Note this is a bit higher than the ATE (`r ATE`), but that is in part because the population for which you are calculating the treatment effect is slightly different. What you are interested in and your research question will determine if you use $ATT$ or $ATE$. 
+**<span style="color:blue;">ANSWER 5:</span>** You should have gotten a result around $\text{ATT} \approx -0.45$. This means that among those actually treated, AspiTyleCedrin decreases migraines by about 45% on average. Note this is a bit higher than the ATE (`r ATE`), but that is in part because the population for which you are calculating the treatment effect is slightly different. What you are interested in and your research question will determine if you use $ATT$ or $ATE$. 
 
 ## Heterogeneous Treatment Effects
 
@@ -342,7 +348,7 @@ df_group %>%
 
 ```
 
-We see a clear difference in the average treatment effect for White individuals than other racial groups. The average treatment effect of AspiTyleCedrin among White people is an approximately 53% decrease in migraine incidence, whereas for people of color it is only an approximately 28% decrease in migraine incidence. AspiTyleCedrin appears to be less effective for people of color than it is for White people.
+**<span style="color:blue;">ANSWER 6:</span>** We see a clear difference in the average treatment effect for White individuals than other racial groups. The average treatment effect of AspiTyleCedrin among White people is an approximately 53% decrease in migraine incidence, whereas for people of color it is only an approximately 28% decrease in migraine incidence. AspiTyleCedrin appears to be less effective for people of color than it is for White people.
 
 # Experimental Designs
 
@@ -471,7 +477,7 @@ Unfortunately, we've seen that these assumptions do not hold for our observed da
 **<span style="color:blue;">ANSWER 8:</span>** If `A` and `type` are independent, then by definition, $P(\text{type}|A = 0) = P(\text{type}|A = 1)$. As we saw in `df_freq_obs_type`, each causal type is split into two groups, one for $A = 0$ and one for $A = 1$. Therefore, if $P(\text{type}|A = 0) = P(\text{type}|A = 1)$, then both of these probabilities must be $0.5$. This applies to all four causal types, so:
 
 \begin{align*}
-\frac{(?n_1 + ?n_2)}{(?n_1 + ?n_2 + ?n_3 + ?n_4)} - \frac{(?n_1 + ?n_3)}{(?n_1 + ?n_2 + ?n_3 + ?n_4)} &= \frac{(0.5n_1 + 0.5n_2)}{(0.5n_1 + 0.5n_2 + 0.5n_3 + 0.5n_4)} - \frac{(0.5n_1 + 0.5n_3)}{(0.5n_1 + 0.5n_2 + 0.5n_3 + 0.5n_4)} \\
+&=\frac{(?n_1 + ?n_2)}{(?n_1 + ?n_2 + ?n_3 + ?n_4)} - \frac{(?n_1 + ?n_3)}{(?n_1 + ?n_2 + ?n_3 + ?n_4)} \\ &= \frac{(0.5n_1 + 0.5n_2)}{(0.5n_1 + 0.5n_2 + 0.5n_3 + 0.5n_4)} - \frac{(0.5n_1 + 0.5n_3)}{(0.5n_1 + 0.5n_2 + 0.5n_3 + 0.5n_4)} \\
 \\
 \\
 &=  p_2 - p_3 \\
@@ -482,7 +488,7 @@ Unfortunately, we've seen that these assumptions do not hold for our observed da
 
 **<span style="color:blue;">ANSWER 9:</span>** If our intervention variable `A` (taking AspiTyleCedrin) is randomly assigned, then members of each causal group have an equal chance of being assigned to take AspiTyleCedrin. Mathematically, the probabilities will cancel out and therefore the liklihood of being selected into treatment across type is equal: 
 
-$$P(A_i|\text{Type 1}_i) = P(A_i|\text{Type 2}_i) = P(A_i|\text{Type 3}_i) = P(A_i|\text{Type 4}_i)$$, 
+$$P(A_i|\text{Type 1}_i) = P(A_i|\text{Type 2}_i) = P(A_i|\text{Type 3}_i) = P(A_i|\text{Type 4}_i)$$ 
 
 This means they are by definition of independent and $A \perp \text{Type}$ holds. 
 
@@ -545,7 +551,7 @@ ATE_comp
 
 ```
 
-Our ATE calculated using complete randomization (`r ATE_comp`) is much closer to the true `ATE` (`r ATE`).
+**<span style="color:blue;">ANSWER 10:</span>** Our ATE calculated using complete randomization (`r ATE_comp`) is much closer to the true `ATE` (`r ATE`).
 
 
 ## Cluster Randomized Designs
@@ -612,7 +618,7 @@ ATE_clus
 
 ```
 
-The ATE based on cluster assignment (`r ATE_clus`) is also very close to the true `ATE` (`r ATE`), closer than the observed estimate.
+**<span style="color:blue;">ANSWER 11:</span>** The ATE based on cluster assignment (`r ATE_clus`) is also very close to the true `ATE` (`r ATE`), closer than the observed estimate.
 
 Note that this example is simply clustering individuals by location in our dataframe, and thus individuals in a given cluster are not statistically more similar to each other than they are to individuals in other clusters. In reality, clusters usually are statistically more similar to each other than to individuals in other clusters (for example, perhaps each cluster represents patients of a particular hospital). This is in fact a common reason *why* a cluster randomized design is used.
 
@@ -679,7 +685,7 @@ ATE_bloc
 
 ```
 
-Yet again, the ATE obtained via block assignment (`r ATE_bloc`) is much closer to the true `ATE`(`r ATE`) than the observed estimate.
+**<span style="color:blue;">ANSWER 12:</span>** Yet again, the ATE obtained via block assignment (`r ATE_bloc`) is much closer to the true `ATE`(`r ATE`) than the observed estimate.
 
 Note again that this example is simply blocking individuals by location in our dataframe, and thus individuals in a given block are not statistically more similar to each other than they are to individuals in other blocks. In reality, blocks usually are statistically more similar to each other than to individuals in other blocks (for example, perhaps each block represents a geographical region).
 
@@ -689,18 +695,12 @@ A common statistical question (in fact, often the actual research question of in
 
 There are many different statistical tests to try to answer such questions, and choosing among these tests depends on the context. In particular, choosing a test depends upon the types of variables you are comparing, and the assumptions you are able to make about the underlying distributions of the continuous variables. The following table is a quick guide for a few different scenarios. The first column lists tests that can be used when assuming Normality of any continuous variables, the second column lists non-paramtric tests that do not make distributional assumptions.
 
-\begin{table}[h]
-\centering
-\caption{Tests for Different Types of Variables}
-\begin{tabular}{|p{40mm}|l|l|}
-\hline
-\textbf{Variable Types} & \textbf{Normal} & \textbf{Non-Parametric} \\ \hline 
-2 Categorical & $\chi^2$ Test & $\chi^2$ Test \\ \hline
-1 Categorical (2 levels), \newline 1 Continuous  & $t$-Test (means) & Rank-Sum Test (medians) \\ \hline
-1 Categorical (>2 levels), \newline 1 Continuous \newline OR \newline >1 Categorical, \newline 1 Continuous & ANOVA a.k.a. $F$-Test (means) & Kruskal-Wallis Test (medians) \\ \hline
-2 Continuous & Pearson Correlation & Spearman Correlation \\ \hline
-\end{tabular}
-\end{table}
+| Variable Types                                           | Normal                         | Non-Parametric               |
+|----------------------------------------------------------|--------------------------------|------------------------------|
+| 2 Categorical                                           | χ² Test                        | χ² Test                       |
+| 1 Categorical (2 levels), 1 Continuous                  | t-Test (means)                 | Rank-Sum Test (medians)       |
+| 1 Categorical (>2 levels), 1 Continuous OR >1 Categorical, 1 Continuous | ANOVA a.k.a. F-Test (means) | Kruskal-Wallis Test (medians)|
+| 2 Continuous                                            | Pearson Correlation            | Spearman Correlation          |
 
 For our dataset, if we want to explore whether the experience of migraines varies among those who took AspiTyleCedrin or not, or among simplified racial groups or sex assigned at birth, we could use either $\chi^2$ or ANOVA, since these are all categorical variables, some with more than two levels. Let's take a look at both methods using the completely randomized dataset.
 
@@ -728,7 +728,7 @@ Yet again we see a very small p-value, meaning that we do indeed have evidence o
 chisq.test(table(df$Y_comp, df$W2))
 ```
 
-Yet again we see a very small p-value, meaning that we do indeed have evidence of a difference in migraine experience among these groups.
+**<span style="color:blue;">ANSWER 13:</span>** Yet again we see a very small p-value, meaning that we do indeed have evidence of a difference in migraine experience among these groups.
 
 ## Analysis of Variance (ANOVA) a.k.a. $F$-Test
 
@@ -766,4 +766,4 @@ summary(aov(Y_obs ~ W2, data = df))
 summary(aov(Y_obs ~ W1*W2, data = df)) 
 ```
 
-We see in the observed data the same results, that there is evidence of a difference in migraine experience among the different groups, but no evidence of an interaction between sex assigned at birth and simplified racial group. The p-values for sex assigned at birth are slightly different here than they were for the completely randomized data though.
+**<span style="color:blue;">ANSWER 14:</span>** We see in the observed data the same results, that there is evidence of a difference in migraine experience among the different groups, but no evidence of an interaction between sex assigned at birth and simplified racial group. The p-values for sex assigned at birth are slightly different here than they were for the completely randomized data though.

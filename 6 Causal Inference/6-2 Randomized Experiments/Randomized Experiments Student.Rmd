@@ -57,7 +57,7 @@ knitr::opts_chunk$set(
 
 ```
 
-In this lab, we are going to discuss Randomized Experiments. Causal inference methods can be used for observational data, but it is easier to first consider them in the context of randomized experiments. To begin we are going to created simulated data that we'd be unlikely to encounter in the real world where we give the same individual the treatment and then NOT give them a treatment. We'll then calculate the "true" ***A**verage **T**reatement **E**ffect (**ATE**) and then show how different techniques of applying randomization will give us very close. 
+In this lab, we are going to discuss Randomized Experiments. Causal inference methods can be used for observational data, but it is easier to first consider them in the context of randomized experiments. To begin we are going to created simulated data that we'd be unlikely to encounter in the real world where we give the same individual the treatment and then NOT give them a treatment. We'll then calculate the "true" ***A**verage **T**reatment **E**ffect (**ATE**) and then show how different techniques of applying randomization will give us very close. 
 
 We will be leaning heavily on the `dplyr` library, so I'd encourage you to refer the [dplyr cheat sheet](https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf) to refresh your memory and push your knowledge of how to use the library.
 
@@ -134,14 +134,16 @@ summary(df)
 
 ## Causal Types
 
-To better understand the potential types that result from taking the treatment or not, let's take a look at a frequency table of the two potential output columns $Y_{0}$ and $Y_{1}$:
+To better understand the potential types that result from taking the treatment or not, let's take a look at a frequency table of the two potential output columns $Y_{0}$ and $Y_{1}$: 
+
+Note that this code chunk uses code from the [kable](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html#HTML_Only_Features) package. This is one common way to make tables that play nice with HTML documents, but there are many others (two other common table creation packages are: [gt](https://gt.rstudio.com) and [modelsummary](https://modelsummary.com))
 
 ```{r}
 
 #
 # create simulated data
 # --------------------------------------------------
-
+# kable documentation : https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html#HTML_Only_Features
 
 # add a column indicating the causal type of each individual
 # ----------
@@ -195,6 +197,8 @@ The Individual-level Treatment Effect is simply the difference between the poten
 $$\text{ITE}_i = Y_{i1} - Y_{i0}$$
 **<span style="color:blue;">QUESTION 1:</span>** Use the `mutate()` function to add a column to `df` named `ITE` which contains the individual-level treatment effect for each row.
 
+**WRITE YOUR ANSWER HERE ...**
+
 ```{r}
 
 ```
@@ -207,6 +211,8 @@ So, a common causal parameter of interest is the ***A**verage **T**reatement **E
 $$\text{ATE} = E[Y_{i1} - Y_{i0}]$$
 **<span style="color:blue;">QUESTION 2:</span>** Use the `ITE` column you just added to `df` to find the average treatment effect of AspiTyleCedrin on migraines in this population and assign it to the variable name `ATE`.
 
+**WRITE YOUR ANSWER HERE ...**
+
 ```{r}
 
 ```
@@ -217,6 +223,8 @@ Notice that, since the expected value is a linear operator:
 
 $$\text{ATE} = E[Y_{i1} - Y_{i0}] =  E[Y_{i1}] - E[Y_{i0}]$$
 **<span style="color:blue;">QUESTION 3:</span>** So, with a bit of math, the ATE is simply $E[Y_{i1}] - E[Y_{i0}]$. Confirm this using `R`.
+
+**WRITE YOUR ANSWER HERE ...**
 
 ```{r}
 
@@ -243,6 +251,8 @@ Or rather, the average treatment effect is equivalent to the difference between 
 
 **<span style="color:blue;">QUESTION 4:</span>** Again, confirm this using `R`.
 
+**WRITE YOUR ANSWER HERE ...**
+
 ```{r}
 
 ```
@@ -253,7 +263,7 @@ Another common causal parameter that we may be interested in is the **A**verage 
 
 **<span style="color:blue;">QUESTION 5:</span>**  Use the `filter()` function to create a new data frame `df_treat` which is a subset of `df` containing only those who receive the treatment. Then find the average treatment effect on the treated of AspiTyleCedrin on migraines in this population and assign it to the variable name `ATT`.
 
-**YOUR ANSWER HERE ... **
+**WRITE YOUR ANSWER HERE ...**
 
 ```{r}
 
@@ -265,6 +275,8 @@ Another common causal parameter that we may be interested in is the **A**verage 
 In many cases, treatment effects may look very different among different groups, so it may be worth considering whether there are heterogeneous treatment effects within your population of interest. For example, say we have reason to suspect AspiTyleCedrin is more or less effective among different racial groups.
 
 **<span style="color:blue;">QUESTION 6:</span>** Use the `group_by()` and `summarize()` functions to calculate separate average treatment effects for each race category. Discuss your results.
+
+**WRITE YOUR ANSWER HERE ...**
 
 ```{r}
 
@@ -348,7 +360,7 @@ In reality, for each of these categories **we have no way of knowing which is wh
 $$\hat{\text{ATE}} = E[Y_i |A_i = 1] - E[Y_i|A_i = 0]$$
 **<span style="color:blue;">QUESTION 7:</span>** Use the `group_by()` and `summarize()` functions to find the estimated average treatment effect using the `A` and `Y_obs` columns. Compare this result to the actual ATE calculated earlier.
 
-**YOUR ANSWER HERE ... **
+**WRITE YOUR ANSWER HERE ...**
 
 ```{r}
 
@@ -380,12 +392,12 @@ Unfortunately, we've seen that these assumptions do not hold for our observed da
 
 **<span style="color:blue;">QUESTION 8:</span>** Explain why this is true. That is, show mathematically that if `A` and `type` are independent, then all of the question marks above are equivalent.
 
-*WRITE YOUR ANSWER HERE**
+**WRITE YOUR ANSWER HERE ...**
 
 
 **<span style="color:blue;">QUESTION 9:</span>** Briefly explain why we can ensure this independence assumption by randomly assigning individuals to take AspiTyleCedrin.
 
-*WRITE YOUR ANSWER HERE**
+**WRITE YOUR ANSWER HERE ...**
 
 
 ## Completely Randomized Designs
@@ -405,14 +417,13 @@ df <-                                                           # save object
 
 ```
 
-**<span style="color:blue;">QUESTION 10:</span>** Create a new frequency table for `A_comp` and `Y_comp` (of whichever layout you prefer) and then assign the new estimated average treatment effect to the variable `ATE_comp`. Then briefly compare your result to the true parameter `ATE`.hen briefly compare your result to the true parameter `ATE`.
+**<span style="color:blue;">QUESTION 10:</span>** Create a new frequency table for `A_comp` and `Y_comp` (of whichever layout you prefer from above) and then assign the new estimated average treatment effect to the variable `ATE_comp`. Then, compare your result to the true parameter `ATE`.
+
+**WRITE YOUR ANSWER HERE ...**
 
 ```{r}
 
 ```
-
-*WRITE YOUR ANSWER HERE**
-
 
 ## Cluster Randomized Designs
 
@@ -433,6 +444,7 @@ df <-
 
 **<span style="color:blue;">QUESTION 11:</span>** Create a new assignment variable `A_clus`, and a new outcome variable `Y_clus`, making sure that all members of a given cluster have the same value for `A_clus`. Then, create a new frequency table for `A_clus` and `Y_clus`, assign the new estimated average treatment effect to the variable `ATE_clus`, and briefly compare your result to the true parameter `ATE`.
 
+
 ```{r}
 
 # calculate treatment status from cluster randomization assignment
@@ -444,7 +456,7 @@ df <-
 
 ```
 
-*WRITE YOUR ANSWER HERE**
+**WRITE YOUR ANSWER HERE ...**
 
 ```{r}
 
@@ -471,6 +483,8 @@ df <-
 
 **<span style="color:blue;">QUESTION 12:</span>** Create a new assignment variable `A_bloc`, and a new outcome variable `Y_bloc`. Then, create a new frequency table for `A_bloc` and `Y_bloc`, assign the new estimated average treatment effect to the variable `ATE_bloc`, and briefly compare your result to the true parameter `ATE`. Hint: Before creating `A_bloc`, take a look at the help page for the `replicate()` function.
 
+**WRITE YOUR ANSWER HERE ...**
+
 ```{r}
 
 ```
@@ -484,18 +498,12 @@ A common statistical question (in fact, often the actual research question of in
 
 There are many different statistical tests to try to answer such questions, and choosing among these tests depends on the context. In particular, choosing a test depends upon the types of variables you are comparing, and the assumptions you are able to make about the underlying distributions of the continuous variables. The following table is a quick guide for a few different scenarios. The first column lists tests that can be used when assuming Normality of any continuous variables, the second column lists non-paramtric tests that do not make distributional assumptions.
 
-\begin{table}[h]
-\centering
-\caption{Tests for Different Types of Variables}
-\begin{tabular}{|p{40mm}|l|l|}
-\hline
-\textbf{Variable Types} & \textbf{Normal} & \textbf{Non-Parametric} \\ \hline 
-2 Categorical & $\chi^2$ Test & $\chi^2$ Test \\ \hline
-1 Categorical (2 levels), \newline 1 Continuous  & $t$-Test (means) & Rank-Sum Test (medians) \\ \hline
-1 Categorical (>2 levels), \newline 1 Continuous \newline OR \newline >1 Categorical, \newline 1 Continuous & ANOVA a.k.a. $F$-Test (means) & Kruskal-Wallis Test (medians) \\ \hline
-2 Continuous & Pearson Correlation & Spearman Correlation \\ \hline
-\end{tabular}
-\end{table}
+| Variable Types                                           | Normal                         | Non-Parametric               |
+|----------------------------------------------------------|--------------------------------|------------------------------|
+| 2 Categorical                                           | χ² Test                        | χ² Test                       |
+| 1 Categorical (2 levels), 1 Continuous                  | t-Test (means)                 | Rank-Sum Test (medians)       |
+| 1 Categorical (>2 levels), 1 Continuous OR >1 Categorical, 1 Continuous | ANOVA a.k.a. F-Test (means) | Kruskal-Wallis Test (medians)|
+| 2 Continuous                                            | Pearson Correlation            | Spearman Correlation          |
 
 For our dataset, if we want to explore whether the experience of migraines varies among those who took AspiTyleCedrin or not, or among simplified racial groups or sex assigned at birth, we could use either $\chi^2$ or ANOVA, since these are all categorical variables, some with more than two levels. Let's take a look at both methods using the completely randomized dataset.
 
@@ -519,7 +527,7 @@ Yet again we see a very small p-value, meaning that we do indeed have evidence o
 
 **<span style="color:blue;">QUESTION 13:</span>** Run a $\chi^2$ test to see if there is a difference in migraine experience among simplified racial groups. Briefly discuss your results.
 
-*WRITE YOUR ANSWER HERE**
+**WRITE YOUR ANSWER HERE ...**
 
 ```{r}
 
@@ -558,7 +566,7 @@ Note that we again found significant p-values for each of the two variables sex 
 **<span style="color:blue;">QUESTION 14:</span>** Repeat the one-way and two-way ANOVA tests using the observed data (`A` and `Y_obs`) instead of the completely randomized data (`A_comp` and `Y_comp`). Briefly discuss your results.
 
 
-*WRITE YOUR ANSWER HERE**
+**WRITE YOUR ANSWER HERE ...**
 
 ```{r}
 
