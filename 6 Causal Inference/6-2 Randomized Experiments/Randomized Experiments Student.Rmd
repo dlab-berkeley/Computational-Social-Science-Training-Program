@@ -185,10 +185,10 @@ p_4 <- df_freq$prop[4] # immune
 
 This table shows us how many individuals in our population of interest had each of four possible sets of outcomes with and without the use of AspiTyleCedrin, which we may refer to as four different causal "types":
 
-* **Type 1 or "doomed":** These individuals experience a migraine regardless of whether they take AspiTyleCedrin. In our population of interest there are `r df_freq$n[4]` such individuals. The proportion of these individuals out of the entire population of interest is $p_1 \approx$ `r round(p_1, 3)`.
-* **Type 2 or "causal":** These individuals experience a migraine if and only if they take AspiTyleCedrin. In our population of interest there are `r df_freq$n[3]` such individuals. The proportion of these individuals out of the entire population of interest is $p_2 \approx$ `r round(p_2, 3)`.
-* **Type 3 or "preventive":** These individuals experience a migraine if and only if they do not take AspiTyleCedrin. In our population of interest there are `r df_freq$n[2]` such individuals. The proportion of these individuals out of the entire population of interest is $p_3 \approx$ `r round(p_3, 3)`.
-* **Type 4 or "immune":**  These individuals do not experience a migraine regardless of whether they take AspiTyleCedrin. In our population of interest there are `r df_freq$n[1]` such individuals. The proportion of these individuals out of the entire population of interest is $p_4 \approx$ `r round(p_4, 3)`.
+* **Type 1 or "doomed":** These individuals experience a migraine regardless of whether they take AspiTyleCedrin. In our population of interest there are `r df_freq$n[1]` such individuals. The proportion of these individuals out of the entire population of interest is $p_1 \approx$ `r round(p_1, 3)`.
+* **Type 2 or "causal":** These individuals experience a migraine if and only if they take AspiTyleCedrin. In our population of interest there are `r df_freq$n[2]` such individuals. The proportion of these individuals out of the entire population of interest is $p_2 \approx$ `r round(p_2, 3)`.
+* **Type 3 or "preventive":** These individuals experience a migraine if and only if they do not take AspiTyleCedrin. In our population of interest there are `r df_freq$n[3]` such individuals. The proportion of these individuals out of the entire population of interest is $p_3 \approx$ `r round(p_3, 3)`.
+* **Type 4 or "immune":**  These individuals do not experience a migraine regardless of whether they take AspiTyleCedrin. In our population of interest there are `r df_freq$n[4]` such individuals. The proportion of these individuals out of the entire population of interest is $p_4 \approx$ `r round(p_4, 3)`.
 
 
 # Causal Parameters
@@ -209,7 +209,7 @@ $$\text{ITE}_i = Y_{i1} - Y_{i0}$$
 
 ## Average Treatment Effect (ATE)
 
-So, a common causal parameter of interest is the ***A**verage **T**reatement **E**ffect (**ATE**), which is the average difference in the pair of potential outcomes averaged over the entire population of interest (at a particular moment in time). In other words, it is just the average (or expected value) of the individual-level treatment effect.
+So, a common causal parameter of interest is the ***A**verage **T**reatment **E**ffect (**ATE**), which is the average difference in the pair of potential outcomes averaged over the entire population of interest (at a particular moment in time). In other words, it is just the average (or expected value) of the individual-level treatment effect.
 
 $$\text{ATE} = E[Y_{i1} - Y_{i0}]$$
 **<span style="color:blue;">QUESTION 2:</span>** Use the `ITE` column you just added to `df` to find the average treatment effect of AspiTyleCedrin on migraines in this population and assign it to the variable name `ATE`.
