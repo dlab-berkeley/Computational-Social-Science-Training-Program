@@ -23,7 +23,7 @@
 <meta name="author" content />
 
 
-<meta name="date" content="2024-03-06" />
+<meta name="date" content="2024-03-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -3026,7 +3026,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 <div id="header">
 <h1 class="title">6-2 Randomized Experiments - Solutions</h1>
 <p class="author"><em></em></p>
-<p class="date"><em>March 06, 2024</em></p>
+<p class="date"><em>March 07, 2024</em></p>
 </div>
 <p>In this lab, we are going to discuss Randomized Experiments. Causal inference methods can be used for observational data, but it is easier to first consider them in the context of randomized experiments. To begin we are going to created simulated data that we’d be unlikely to encounter in the real world where we give the same individual the treatment and then NOT give them a treatment. We’ll then calculate the “true” *<strong>A</strong>verage <strong>T</strong>reatment <strong>E</strong>ffect (<strong>ATE</strong>) and then show how different techniques of applying randomization will give us very close.</p>
 <p>We will be leaning heavily on the <code>dplyr</code> library, so I’d encourage you to refer the <a href="https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf">dplyr cheat sheet</a> to refresh your memory and push your knowledge of how to use the library.</p>
@@ -3495,22 +3495,27 @@ White
 <span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="co"># ----------</span></span>
 <span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>df_freq_obs_type <span class="ot">&lt;-</span> </span>
 <span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>  df <span class="sc">%&gt;%</span>                       <span class="co"># pass data</span></span>
-<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>  <span class="fu">group_by</span>(A, Y_obs, type) <span class="sc">%&gt;%</span> <span class="co"># group by the three variable we want</span></span>
-<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a>  <span class="fu">count</span>()                      <span class="co"># count</span></span>
-<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a></span>
-<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a>df_freq_obs_type</span></code></pre></div>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="fu">case_when</span>(type <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">&quot;doomed&quot;</span>, </span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a>                          type <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">&quot;causal&quot;</span>, </span>
+<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a>                          type <span class="sc">==</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">&quot;preventive&quot;</span>, </span>
+<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a>                          type <span class="sc">==</span> <span class="dv">4</span> <span class="sc">~</span> <span class="st">&quot;immune&quot;</span>, </span>
+<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a>                          )) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a>  <span class="fu">group_by</span>(A, Y_obs, type) <span class="sc">%&gt;%</span> <span class="co"># group by the three variable we want</span></span>
+<span id="cb28-11"><a href="#cb28-11" tabindex="-1"></a>  <span class="fu">count</span>()                      <span class="co"># count</span></span>
+<span id="cb28-12"><a href="#cb28-12" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" tabindex="-1"></a>df_freq_obs_type</span></code></pre></div>
 <pre><code>## # A tibble: 8 × 4
 ## # Groups:   A, Y_obs, type [8]
-##       A Y_obs type       n
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;  &lt;int&gt;
-## 1     0     0 2      13861
-## 2     0     0 4      15210
-## 3     0     1 1     162327
-## 4     0     1 3     147119
-## 5     1     0 3     323909
-## 6     1     0 4      36299
-## 7     1     1 1     275031
-## 8     1     1 2      26244</code></pre>
+##       A Y_obs type            n
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;int&gt;
+## 1     0     0 causal      13861
+## 2     0     0 immune      15210
+## 3     0     1 doomed     162327
+## 4     0     1 preventive 147119
+## 5     1     0 immune      36299
+## 6     1     0 preventive 323909
+## 7     1     1 causal      26244
+## 8     1     1 doomed     275031</code></pre>
 <p>Thus, we can see that each of the cells in the original table is actually composed of a mixture of two different causal types each. Conversely, each causal type makes up part of the cell count for two different arrangements of <code>A</code> and <code>Y_obs</code>. In other words:</p>
 <ul>
 <li>Those that DID NOT take AspiTyleCedrin and DID NOT experience a migraine could be either <em>“causal”</em> or <em>“immune”</em>.</li>
@@ -3721,8 +3726,9 @@ White
 <span id="cb55-9"><a href="#cb55-9" tabindex="-1"></a>ATE_bloc <span class="ot">&lt;-</span> est_bloc<span class="sc">$</span>mean[<span class="dv">2</span>] <span class="sc">-</span> est_bloc<span class="sc">$</span>mean[<span class="dv">1</span>]</span>
 <span id="cb55-10"><a href="#cb55-10" tabindex="-1"></a>ATE_bloc</span></code></pre></div>
 <pre><code>## [1] -0.431206</code></pre>
-<p><strong><span style="color:blue;">ANSWER 12:</span></strong> Yet again, the ATE obtained via block assignment (-0.431206) is much closer to the true <code>ATE</code>(-0.430923) than the observed estimate.</p>
+<p><strong><span style="color:blue;">ANSWER 12:</span></strong> Yet again, the ATE obtained via block assignment (-0.431206) is much closer to the true <code>ATE</code>(-0.430923) than the observed estimate (-0.4586686).</p>
 <p>Note again that this example is simply blocking individuals by location in our dataframe, and thus individuals in a given block are not statistically more similar to each other than they are to individuals in other blocks. In reality, blocks usually are statistically more similar to each other than to individuals in other blocks (for example, perhaps each block represents a geographical region).</p>
+<p>So to summarize, our true ATE is <strong>-0.430923,</strong> to which we arrive under a hypothetical situation where we know effects under both treatment and non-treatment. However, we can closely approximate that effect with complete randomization <strong>-0.4318155,</strong> with cluster randomization is <strong>-0.4312927,</strong> and with block randomization is <strong>-0.431206.</strong> Importantly, all three of these randomization methods are closer than when we simply taken an average by treatment status in the absence of randomization: <strong>-0.4586686.</strong></p>
 </div>
 </div>
 <div id="statistical-tests-of-difference" class="section level1 hasAnchor" number="4">
