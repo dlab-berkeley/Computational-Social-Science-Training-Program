@@ -693,7 +693,7 @@ ATE_bloc
 
 ```
 
-**<span style="color:blue;">ANSWER 12:</span>** Yet again, the ATE obtained via block assignment (`r ATE_bloc`) is much closer to the true `ATE`(`r ATE`) than the observed estimate (`r ATE_obs`).
+**<span style="color:blue;">ANSWER 12:</span>** Yet again, the ATE obtained via block assignment (`r ATE_bloc`) is much closer to the true `ATE`(`r ATE`) than the observed estimate(`r ATE_obs`).
 
 Note again that this example is simply blocking individuals by location in our dataframe, and thus individuals in a given block are not statistically more similar to each other than they are to individuals in other blocks. In reality, blocks usually are statistically more similar to each other than to individuals in other blocks (for example, perhaps each block represents a geographical region).
 
