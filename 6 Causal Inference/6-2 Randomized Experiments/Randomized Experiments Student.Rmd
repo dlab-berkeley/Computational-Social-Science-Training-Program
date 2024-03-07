@@ -344,6 +344,11 @@ How does this table relate to the different causal types? Let's consider this sa
 # ----------
 df_freq_obs_type <- 
   df %>%                       # pass data
+  mutate(type = case_when(type == 1 ~ "doomed", 
+                          type == 2 ~ "causal", 
+                          type == 3 ~ "preventive", 
+                          type == 4 ~ "immune", 
+                          )) %>% 
   group_by(A, Y_obs, type) %>% # group by the three variable we want
   count()                      # count
 
