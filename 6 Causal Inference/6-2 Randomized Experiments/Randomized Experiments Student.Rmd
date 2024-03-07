@@ -54,6 +54,9 @@ knitr::opts_chunk$set(
   results = "markup"           # hide results
 )
 
+# prevent scientific notation
+# ----------
+options(scipen = 999)
 
 ```
 
@@ -408,7 +411,7 @@ We will simulate this by creating a new assignment variable `A_comp`, and a new 
 
 ```{r}
 
-# randomize treatment
+# completely randomize treatment
 # ----------
 df <-                                                           # save object
   df %>%                                                        # pass data
@@ -433,7 +436,7 @@ To simulate this, we will create a new `cluster` column which contains a number 
 
 ```{r}
 
-# calculate treatment status from cluster randomization assignment
+# create cluster for randomization 
 # ----------
 df <- 
   df %>%                                     # pass data 
@@ -447,7 +450,7 @@ df <-
 
 ```{r}
 
-# calculate treatment status from cluster randomization assignment
+# cluster randomization assignment
 # ----------
 df <- 
   df %>%                                                                   # pass data
@@ -473,7 +476,7 @@ To simulate this so we can see how this works, we will create a new `block` colu
 
 ```{r}
 
-# calculate treatment status from block randomization assignment
+# create block for randomization 
 # ----------
 df <- 
   df %>%      

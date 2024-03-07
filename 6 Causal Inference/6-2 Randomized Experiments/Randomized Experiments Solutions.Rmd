@@ -43,7 +43,7 @@ xfun::pkg_attach2(c("tidyverse",
                     "knitr",       # for kniting together tables 
                     "kableExtra")) # for styling
 
-# set seed
+# set filepath with here()
 # ----------
 here()
 
@@ -54,6 +54,9 @@ knitr::opts_chunk$set(
   results = "markup"           # hide results
 )
 
+# prevent scientific notation
+# ----------
+options(scipen = 999)
 
 ```
 
@@ -501,7 +504,7 @@ We will simulate this by creating a new assignment variable `A_comp`, and a new 
 
 ```{r}
 
-# randomize treatment
+# completely randomize treatment
 # ----------
 df <-                                                           # save object
   df %>%                                                        # pass data
@@ -562,7 +565,7 @@ To simulate this, we will create a new `cluster` column which contains a number 
 
 ```{r}
 
-# calculate treatment status from cluster randomization assignment
+# create cluster for randomization 
 # ----------
 df <- 
   df %>%                                     # pass data 
@@ -574,7 +577,7 @@ df <-
 
 ```{r}
 
-# calculate treatment status from cluster randomization assignment
+# cluster randomization assignment
 # ----------
 df <- 
   df %>%                                                                   # pass data
@@ -630,7 +633,7 @@ To simulate this so we can see how this works, we will create a new `block` colu
 
 ```{r}
 
-# calculate treatment status from block randomization assignment
+# create block for randomization 
 # ----------
 df <- 
   df %>%      
@@ -642,7 +645,7 @@ df <-
 
 ```{r}
 
-# calculate treatment status from block randomization assignment
+# block randomization assignment
 # ----------
 df <- 
   df %>%                                                               # pass data
@@ -766,4 +769,4 @@ summary(aov(Y_obs ~ W2, data = df))
 summary(aov(Y_obs ~ W1*W2, data = df)) 
 ```
 
-**<span style="color:blue;">ANSWER 14:</span>** We see in the observed data the same results, that there is evidence of a difference in migraine experience among the different groups, but no evidence of an interaction between sex assigned at birth and simplified racial group. The p-values for sex assigned at birth are slightly different here than they were for the completely randomized data though.
+**<span style="color:blue;">ANSWER 14:</span>** We see in the observed data the same results, that there is evidence of a difference in migraine experience among the different groups, as well as evidence of an interaction between sex assigned at birth and simplified racial group. The p-values for sex assigned at birth are slightly different here than they were for the completely randomized data though.

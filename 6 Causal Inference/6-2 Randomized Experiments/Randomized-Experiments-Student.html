@@ -23,7 +23,7 @@
 <meta name="author" content />
 
 
-<meta name="date" content="2024-03-05" />
+<meta name="date" content="2024-03-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -3026,7 +3026,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 <div id="header">
 <h1 class="title">6-1 Randomized Experiments - Student</h1>
 <p class="author"><em></em></p>
-<p class="date"><em>March 05, 2024</em></p>
+<p class="date"><em>March 06, 2024</em></p>
 </div>
 <p>In this lab, we are going to discuss Randomized Experiments. Causal inference methods can be used for observational data, but it is easier to first consider them in the context of randomized experiments. To begin we are going to created simulated data that we’d be unlikely to encounter in the real world where we give the same individual the treatment and then NOT give them a treatment. We’ll then calculate the “true” *<strong>A</strong>verage <strong>T</strong>reatment <strong>E</strong>ffect (<strong>ATE</strong>) and then show how different techniques of applying randomization will give us very close.</p>
 <p>We will be leaning heavily on the <code>dplyr</code> library, so I’d encourage you to refer the <a href="https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf">dplyr cheat sheet</a> to refresh your memory and push your knowledge of how to use the library.</p>
@@ -3412,7 +3412,7 @@ Therefore, the average treatment effect can be re-written as follows:</p>
 <h2><span class="header-section-number">3.2</span> Completely Randomized Designs<a href="#completely-randomized-designs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>There are different methods of randomization. The most conceptually simple is complete randomization. That is, randomly assigning the intervention for the entire sample.</p>
 <p>We will simulate this by creating a new assignment variable <code>A_comp</code>, and a new outcome variable <code>Y_comp</code>:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># randomize treatment</span></span>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># completely randomize treatment</span></span>
 <span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="co"># ----------</span></span>
 <span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>df <span class="ot">&lt;-</span>                                                           <span class="co"># save object</span></span>
 <span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>  df <span class="sc">%&gt;%</span>                                                        <span class="co"># pass data</span></span>
@@ -3425,13 +3425,13 @@ Therefore, the average treatment effect can be re-written as follows:</p>
 <h2><span class="header-section-number">3.3</span> Cluster Randomized Designs<a href="#cluster-randomized-designs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Another method of randomization is cluster randomization. In this method, individuals are broken up into cluster, in which all members of the same cluster are assigned the same treatment (i.e. all <span class="math inline">\(A = 0\)</span> or all <span class="math inline">\(A = 1\)</span>) but <em>clusters</em> are randomized, such that each cluster has an equal chance of being assigned to the intervention.</p>
 <p>To simulate this, we will create a new <code>cluster</code> column which contains a number 1 through 100 to indicate which of 100 clusters each individual belongs to.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># calculate treatment status from cluster randomization assignment</span></span>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># create cluster for randomization </span></span>
 <span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="co"># ----------</span></span>
 <span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>df <span class="ot">&lt;-</span> </span>
 <span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>  df <span class="sc">%&gt;%</span>                                     <span class="co"># pass data </span></span>
 <span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cluster =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="at">each =</span> n<span class="sc">/</span><span class="dv">100</span>)) <span class="co"># assign individuals to clusters</span></span></code></pre></div>
 <p><strong><span style="color:blue;">QUESTION 11:</span></strong> Create a new assignment variable <code>A_clus</code>, and a new outcome variable <code>Y_clus</code>, making sure that all members of a given cluster have the same value for <code>A_clus</code>. Then, create a new frequency table for <code>A_clus</code> and <code>Y_clus</code>, assign the new estimated average treatment effect to the variable <code>ATE_clus</code>, and briefly compare your result to the true parameter <code>ATE</code>.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># calculate treatment status from cluster randomization assignment</span></span>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># cluster randomization assignment</span></span>
 <span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="co"># ----------</span></span>
 <span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>df <span class="ot">&lt;-</span> </span>
 <span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>  df <span class="sc">%&gt;%</span>                                                                   <span class="co"># pass data</span></span>
@@ -3444,7 +3444,7 @@ Therefore, the average treatment effect can be re-written as follows:</p>
 <h2><span class="header-section-number">3.4</span> Block Randomized Designs<a href="#block-randomized-designs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Block randomized designs can be thought of as the reverse of cluster designs. That is, individuals are broken up into blocks, and then randomization occurs <em>within each block</em>. One example of this might be in a study where individuals are interviewed and then randomized in chunks at different points in time. This is common in longitudinal studies where you interview a few people at a time but need to assign them to treatment or control so they can proceed with the study.</p>
 <p>To simulate this so we can see how this works, we will create a new <code>block</code> column which contains a number 1 through 20 to indicate which of 20 blocks each individual belongs to.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="co"># calculate treatment status from block randomization assignment</span></span>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="co"># create block for randomization </span></span>
 <span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="co"># ----------</span></span>
 <span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>df <span class="ot">&lt;-</span> </span>
 <span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  df <span class="sc">%&gt;%</span>      </span>
@@ -3503,7 +3503,7 @@ Therefore, the average treatment effect can be re-written as follows:</p>
 ##  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 ## 
 ## data:  table(df$Y_comp, df$A_comp)
-## X-squared = 218776, df = 1, p-value &lt; 2.2e-16</code></pre>
+## X-squared = 218776, df = 1, p-value &lt; 0.00000000000000022</code></pre>
 <p>Since the p-value from this test is so small, we see that there is evidence that migraine incidence is indeed different between these two groups.</p>
 <p>Now let’s see if migraine experience is different among different sexes assigned at birth.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(df<span class="sc">$</span>Y_comp, df<span class="sc">$</span>W1))</span></code></pre></div>
@@ -3511,7 +3511,7 @@ Therefore, the average treatment effect can be re-written as follows:</p>
 ##  Pearson&#39;s Chi-squared test
 ## 
 ## data:  table(df$Y_comp, df$W1)
-## X-squared = 1406.1, df = 2, p-value &lt; 2.2e-16</code></pre>
+## X-squared = 1406.1, df = 2, p-value &lt; 0.00000000000000022</code></pre>
 <p>Yet again we see a very small p-value, meaning that we do indeed have evidence of a difference in migraine experience among these groups.</p>
 <p><strong><span style="color:blue;">QUESTION 13:</span></strong> Run a <span class="math inline">\(\chi^2\)</span> test to see if there is a difference in migraine experience among simplified racial groups. Briefly discuss your results.</p>
 <p><strong>WRITE YOUR ANSWER HERE …</strong></p>
@@ -3522,33 +3522,33 @@ Therefore, the average treatment effect can be re-written as follows:</p>
 <p>Our outcome of migraine experience is categorical, but we can still use methods like ANOVA which can handle continuous outcomes. This is especially useful if we wish to use two-way ANOVA, which we will in a moment. First, let’s replicate the <span class="math inline">\(\chi^2\)</span> tests we just performed using one-way ANOVA.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="co"># Migraine difference between AspiTyleCedrin use and not</span></span>
 <span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(Y_comp <span class="sc">~</span> A_comp, <span class="at">data =</span> df)) </span></code></pre></div>
-<pre><code>##                Df Sum Sq Mean Sq F value Pr(&gt;F)    
-## A_comp      1e+00  46616   46616  280046 &lt;2e-16 ***
-## Residuals   1e+06 166459       0                   
+<pre><code>##                 Df Sum Sq Mean Sq F value              Pr(&gt;F)    
+## A_comp           1  46616   46616  280046 &lt;0.0000000000000002 ***
+## Residuals   999998 166459       0                                
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="co"># Migraine difference among sexes assigned at birth</span></span>
 <span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(Y_comp <span class="sc">~</span> W1, <span class="at">data =</span> df)) </span></code></pre></div>
-<pre><code>##                Df Sum Sq Mean Sq F value Pr(&gt;F)    
-## W1          1e+00    288  287.65    1352 &lt;2e-16 ***
-## Residuals   1e+06 212787    0.21                   
+<pre><code>##                 Df Sum Sq Mean Sq F value              Pr(&gt;F)    
+## W1               1    288  287.65    1352 &lt;0.0000000000000002 ***
+## Residuals   999998 212787    0.21                                
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="co"># Migraine difference among simplified racial groups</span></span>
 <span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(Y_comp <span class="sc">~</span> W2, <span class="at">data =</span> df)) </span></code></pre></div>
-<pre><code>##                Df Sum Sq Mean Sq F value Pr(&gt;F)    
-## W2          1e+00   5552    5552   26754 &lt;2e-16 ***
-## Residuals   1e+06 207523       0                   
+<pre><code>##                 Df Sum Sq Mean Sq F value              Pr(&gt;F)    
+## W2               1   5552    5552   26754 &lt;0.0000000000000002 ***
+## Residuals   999998 207523       0                                
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Note that each of these p-values are again quite small, indicating evidence for a difference in migraine experience among the different groups.</p>
 <p>Two-way ANOVA allows us to test for a difference in the dependent (outcome) variable among multiple independent variables, including interaction terms. For example, if we want to test for a difference in migraine experience among both sex assigned at birth and simplified racial group, we can do the following.</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(Y_comp <span class="sc">~</span> W1<span class="sc">*</span>W2, <span class="at">data =</span> df)) </span></code></pre></div>
-<pre><code>##                Df Sum Sq Mean Sq   F value Pr(&gt;F)    
-## W1          1e+00    288     288  1388.037 &lt;2e-16 ***
-## W2          1e+00   5552    5552 26791.690 &lt;2e-16 ***
-## W1:W2       1e+00      1       1     2.611  0.106    
-## Residuals   1e+06 207235       0                     
+<pre><code>##                 Df Sum Sq Mean Sq   F value              Pr(&gt;F)    
+## W1               1    288     288  1388.037 &lt;0.0000000000000002 ***
+## W2               1   5552    5552 26791.690 &lt;0.0000000000000002 ***
+## W1:W2            1      1       1     2.611               0.106    
+## Residuals   999996 207235       0                                  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Note that we again found significant p-values for each of the two variables sex assigned at birth and simplified racial group, but we did not find a significant p-value for the interaction term. Note that this does not give us evidence that there is no interaction, it just does not give us evidence that there is interaction.</p>
