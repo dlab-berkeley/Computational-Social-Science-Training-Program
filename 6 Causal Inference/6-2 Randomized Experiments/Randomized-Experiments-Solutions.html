@@ -23,7 +23,7 @@
 <meta name="author" content />
 
 
-<meta name="date" content="2024-03-07" />
+<meta name="date" content="2024-03-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -3026,7 +3026,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 <div id="header">
 <h1 class="title">6-2 Randomized Experiments - Solutions</h1>
 <p class="author"><em></em></p>
-<p class="date"><em>March 07, 2024</em></p>
+<p class="date"><em>March 12, 2024</em></p>
 </div>
 <p>In this lab, we are going to discuss Randomized Experiments. Causal inference methods can be used for observational data, but it is easier to first consider them in the context of randomized experiments. To begin we are going to created simulated data that we’d be unlikely to encounter in the real world where we give the same individual the treatment and then NOT give them a treatment. We’ll then calculate the “true” *<strong>A</strong>verage <strong>T</strong>reatment <strong>E</strong>ffect (<strong>ATE</strong>) and then show how different techniques of applying randomization will give us very close.</p>
 <p>We will be leaning heavily on the <code>dplyr</code> library, so I’d encourage you to refer the <a href="https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf">dplyr cheat sheet</a> to refresh your memory and push your knowledge of how to use the library.</p>
@@ -3257,10 +3257,10 @@ prop
 <span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>p_4 <span class="ot">&lt;-</span> df_freq<span class="sc">$</span>prop[<span class="dv">4</span>] <span class="co"># immune</span></span></code></pre></div>
 <p>This table shows us how many individuals in our population of interest had each of four possible sets of outcomes with and without the use of AspiTyleCedrin, which we may refer to as four different causal “types”:</p>
 <ul>
-<li><strong>Type 1 or “doomed”:</strong> These individuals experience a migraine regardless of whether they take AspiTyleCedrin. In our population of interest there are 51509 such individuals. The proportion of these individuals out of the entire population of interest is <span class="math inline">\(p_1 \approx\)</span> 0.437.</li>
-<li><strong>Type 2 or “causal”:</strong> These individuals experience a migraine if and only if they take AspiTyleCedrin. In our population of interest there are 471028 such individuals. The proportion of these individuals out of the entire population of interest is <span class="math inline">\(p_2 \approx\)</span> 0.04.</li>
-<li><strong>Type 3 or “preventive”:</strong> These individuals experience a migraine if and only if they do not take AspiTyleCedrin. In our population of interest there are 40105 such individuals. The proportion of these individuals out of the entire population of interest is <span class="math inline">\(p_3 \approx\)</span> 0.471.</li>
-<li><strong>Type 4 or “immune”:</strong> These individuals do not experience a migraine regardless of whether they take AspiTyleCedrin. In our population of interest there are 437358 such individuals. The proportion of these individuals out of the entire population of interest is <span class="math inline">\(p_4 \approx\)</span> 0.052.</li>
+<li><strong>Type 1 or “doomed”:</strong> These individuals experience a migraine regardless of whether they take AspiTyleCedrin. In our population of interest there are 437358 such individuals. The proportion of these individuals out of the entire population of interest is <span class="math inline">\(p_1 \approx\)</span> 0.437.</li>
+<li><strong>Type 2 or “causal”:</strong> These individuals experience a migraine if and only if they take AspiTyleCedrin. In our population of interest there are 40105 such individuals. The proportion of these individuals out of the entire population of interest is <span class="math inline">\(p_2 \approx\)</span> 0.04.</li>
+<li><strong>Type 3 or “preventive”:</strong> These individuals experience a migraine if and only if they do not take AspiTyleCedrin. In our population of interest there are 471028 such individuals. The proportion of these individuals out of the entire population of interest is <span class="math inline">\(p_3 \approx\)</span> 0.471.</li>
+<li><strong>Type 4 or “immune”:</strong> These individuals do not experience a migraine regardless of whether they take AspiTyleCedrin. In our population of interest there are 51509 such individuals. The proportion of these individuals out of the entire population of interest is <span class="math inline">\(p_4 \approx\)</span> 0.052.</li>
 </ul>
 </div>
 </div>
@@ -3291,7 +3291,7 @@ prop
 </div>
 <div id="average-treatment-effect-ate" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Average Treatment Effect (ATE)<a href="#average-treatment-effect-ate" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>So, a common causal parameter of interest is the *<strong>A</strong>verage <strong>T</strong>reatement <strong>E</strong>ffect (<strong>ATE</strong>), which is the average difference in the pair of potential outcomes averaged over the entire population of interest (at a particular moment in time). In other words, it is just the average (or expected value) of the individual-level treatment effect.</p>
+<p>So, a common causal parameter of interest is the *<strong>A</strong>verage <strong>T</strong>reatment <strong>E</strong>ffect (<strong>ATE</strong>), which is the average difference in the pair of potential outcomes averaged over the entire population of interest (at a particular moment in time). In other words, it is just the average (or expected value) of the individual-level treatment effect.</p>
 <p><span class="math display">\[\text{ATE} = E[Y_{i1} - Y_{i0}]\]</span>
 <strong><span style="color:blue;">QUESTION 2:</span></strong> Use the <code>ITE</code> column you just added to <code>df</code> to find the average treatment effect of AspiTyleCedrin on migraines in this population and assign it to the variable name <code>ATE</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># calculate average treatment effect for across our sample </span></span>
