@@ -1,19 +1,31 @@
 ---
-title: 'Computational Social Science: Matching Methods'
-author: "Your Name Here"
-date: "MM/DD/YYYY"
+title: '6-3 Matching Methods - Solutions'
+author: ""
+date: " `r format(Sys.time(), '%B %d, %Y')`"
 output: pdf_document
 header-includes:
    - \usepackage{amsmath}
 ---
 
 ```{r message=FALSE}
-set.seed(13)
-library(tidyverse)  #contains dplyr, ggplot2, and purr 
-library(MatchIt)
 
-#install.packages("optmatch", repos = "https://mran.microsoft.com/snapshot/2022-02-01")
-library(optmatch)
+# libraries
+xfun::pkg_attach2(c("tidyverse", # load all tidyverse packages
+                    "here",      # set file path
+                    "MatchIt",   # for matching
+                    "optmatch",  # for matching
+                    "cobalt"))   # for matching assessment
+
+
+# chunk options ----------------------------------------------------------------
+knitr::opts_chunk$set(
+  warning = FALSE            # prevents warning from appearing after code chunk
+)
+
+# prevent scientific notation
+# ----------
+options(scipen = 999)
+
 ```
 
 As we saw in last week's lab, an important advantage of randomized experiments are that they allow researchers to ensure independence between the exposure variable and other covariates, or rather that treatment and control groups have similar covariate distributions and differ only randomly. 
@@ -22,20 +34,41 @@ The same cannot be said of observational studies, *no matter how large the sampl
 
 In this lab we will consider some of these matching methods. Note that these methods are all implemented in the analysis stage (i.e. after the study has already been completed), and are distinct from (though may be similar to) methods of conducting studies which are matched from the outset.
 
-Furthermore, matching should not be seen as an alternative to modeling adjustments such as regression, but instead are often used together.
+Furthermore, matching should **not** be seen as an alternative to modeling adjustments such as regression, but instead are often used together.
 
 # Simulation 
 
 We will again use the simulated example from last week assessing the effectiveness of AspiTyleCedrin at treating migraines. As a reminder, this dataset contained the following variables:
 
-* `A`: Treatment variable indicating whether the individual $i$ took AspiTyleCedrin ($A_i = 1$) or not ($A_i = 0$).
-* `Y_obs`: Outcome variable indicating whether the individual experienced a migraine ($Y_{i_{obs}} = 1$) or not ($Y_{i_{obs}} = 0$).
-* `W1`: Variable representing sex assigned at birth, with $W1 = 0$ indicating AMAB (assigned male at birth), $W1 = 1$ indicating AFAB (assigned female at birth), and $W1 = 2$ indicating an X on the birth certificate, possibly representing an intersex individual or left blank.
-* `W2`: Variable representing simplified racial category, with $W2 = 0$ indicating White, $W2 = 1$ indicating Black or African American, $W2 = 2$ indicating Non-White Hispanic or Latinx, $W2 = 3$ indicating American Indian or Alaska Native,  $W2 = 4$ indicating Asian, and $W2 = 5$ indicating Native Hawaiian or Other Pacific Islander.
-
+* `A`: Treatment variable indicating whether individual $i$: 
+  - **DID** take AspiTyleCedrin ($A_i = 1$) 
+  - **DID NOT** take AspiTyleCedrin ($A_i = 0$)
+* `Y_obs`: Outcome variable indicating whether individual $i$:
+  -  **DID** experienced a migraine ($Y_{i_{obs}} = 1$) 
+  - **DID NOT** experience a migraine ($Y_{i_{obs}} = 0$)
+* `W1`: Variable representing sex assigned at birth: 
+  - $W1 = 0$ indicating AMAB (assigned male at birth)
+  - $W1 = 1$ indicating AFAB (assigned female at birth)
+  - $W1 = 2$ indicating an X on the birth certificate, intersex individual, or left blank
+* `W2`: Variable representing simplified racial category: 
+  - $W2 = 0$ indicating White 
+  - $W2 = 1$ indicating Black or African American
+  - $W2 = 2$ indicating Non-White Hispanic or Latinx
+  - $W2 = 3$ indicating American Indian or Alaska Native
+  - $W2 = 4$ indicating Asian
+  - $W2 = 5$ indicating Native Hawaiian or Other Pacific Islander
+  
 Say that there is concern among providers that AspiTyleCedrin may be less effective among individuals with a higher Body Mass Index (BMI). To simulate this, we will modify the code we used to create the original AspiTyleCedrin dataset to also include the variable `W3` representing an individual's BMI. (We'll also modify the treatment and observed outcomes to be confounded by this variable.)
 
+
 ```{r}
+
+# set seed
+# ----------
+set.seed(42) # set so that random process of generating data is reproducible 
+
+# set the number of individuals for simulated dataset
+# ----------
 n = 1e4 # Number of individuals (smaller than last time)
 
 # NOTE: Again, don't worry too much about how we're creating this dataset, 
@@ -86,35 +119,141 @@ Let's take a look at the covariate distributions, comparing those that did and d
 
 ## Sex Assigned at Birth (SAAB)
 
-```{r}
-ggplot(df, aes(x = W1, fill = factor(A))) + 
-  geom_bar() +
-  facet_grid(A~.) + 
-  labs(title = "Distribution of Sex Assigned at Birth among Treated and Untreated", fill = "A\n")
+For this chunk, there is extra `ggplot` code that illustrates how you might customize a figure for publication. There is a lot more you can do, so be sure to delve into the `ggplot` [documentation](https://ggplot2.tidyverse.org/reference/index.html) to see all that is possible. 
 
+```{r}
+
+#
+# treatment status by sex 
+# --------------------------------------------------
+df %>% 
+  
+  # processing 
+  # ----------
+  mutate(sex = case_when(W1 == 0 ~ "Male",        # assigned male at birth 
+                         W1 == 1 ~ "Female",      # assigned female at birth 
+                         W1 == 2 ~ "X/intersex"), # an X on the birth certificate,representing an intersex individual or left blank
+         sex = fct_relevel(sex, "Male", "Female", "X/intersex"),
+         treatment = case_when(A == 0 ~ "Control", 
+                               A == 1 ~ "Treatment")
+         ) %>% 
+
+  # plot 
+  # ----------
+  ggplot(aes(x = sex, fill = treatment)) + 
+    # create a bar plot using geom_bar()
+    geom_bar() +
+    geom_text(stat = "count", aes(label = ..count..), # calculate count and pass to label parameter using ".."
+              vjust = -0.5) +                         # vjust to add space between bar and text
+    
+    # facet grid controls number of panels - prefer this to facet_wrap
+    facet_grid(
+               #rows= vars(treatment), # facet variable in the rows
+               cols = vars(treatment)  # facets variable in the column
+               ) + 
+   # theme 
+   theme_bw() +                        # set base black and white theme
+   theme(legend.position = "bottom") + # theme functions manipulate different elements of the plots appearance
+
+  
+   # scales 
+   scale_fill_manual(values=c("#800000","#027148")) +               # assign colors using hex code
+   scale_y_continuous(breaks=seq(0, 4000, 1000),                    # y axis floor, ceiling, step
+                      labels = scales::label_number(scale = 1,      # scale the variable 
+                                                    accuracy = 1,   # decimal points
+                                                    big.mark = ",", # add "," or "."
+                                                    prefix = "",    # add "$" 
+                                                    suffix = ""),   # add suffix, e.g., "%" or "k"
+                      limits = c(0, 4000)) +                        # set floor and ceiling
+    # labels
+    labs(x = "Sex Assigned at Birth ",  # x-axis label
+     	   y = "Count",                   # y-axis label
+     	   fill = "Treatment status",     # legend label
+         caption = "Note: ",            # add a caption
+         title = "Distribution of Sex Assigned at Birth Treatment Status") # title 
+
+
+# chi-squared to test difference 
+# ----------
 chisq.test(table(df$A, df$W1))
 ```
 
 The bar plot above clearly shows a difference in the distribution of SAAB among the two groups, and this is confirmed by the very small p-value from the $\chi^2$ test.
 
 ```{r}
-ggplot(df, aes(x = W2, fill = factor(A))) + 
-  geom_bar() +
-  facet_grid(A~.) + 
-  labs(title = "Distribution of Racial Category among Treated and Untreated", fill = "A\n")
 
+#
+# treatment status by race
+# --------------------------------------------------
+df %>% 
+  
+  # processing 
+  # ----------
+  mutate(race = case_when(W2 == 0 ~ "White",    # non-Hispanic White
+                          W2 == 1 ~ "Black",    # non-Hispanic Black
+                          W2 == 2 ~ "Hispanic", # Latinx
+                          W2 == 3 ~ "AIAN",     # American Indian or Alaska Native
+                          W2 == 4 ~ "Asian",    # Asian 
+                          W2 == 5 ~ "NH/OPI"),  # Native Hawaiian or Other Pacific Islander
+         race = fct_relevel(race, "White", "Black", "Hispanic", "AIAN", "Asian", "NH/OPI"), # relevel factor to order them the way we want
+         treatment = case_when(A == 0 ~ "Control",   
+                               A == 1 ~ "Treatment")
+         ) %>% 
+  
+  # plot 
+  # ----------
+  ggplot(aes(x = race, fill = treatment)) + 
+  geom_bar() +
+  facet_grid(cols = vars(treatment)) +  # facets variable in the column
+
+  # theme 
+   theme_bw() +                        # set base black and white theme
+   theme(legend.position = "bottom") + # theme functions manipulate different elements of the plots appearance
+  
+  # labels
+    labs(title = "Distribution of Racial Category by Treatment Status", 
+         fill = "") 
+
+
+# chi-squared to test difference  
+# ----------
 chisq.test(table(df$A, df$W2))
 ```
 
 The bar plot above again shows a difference in the distribution of simplified racial category among the two groups, and this is again confirmed by the very small p-value from the $\chi^2$ test. You can find more documentation for the plotting parameters [here](https://r-charts.com/distribution/histogram-density-ggplot2/).
 
-```{r}
-ggplot(df, aes(x = W3, fill = factor(A))) + 
-  geom_histogram(binwidth = 1, aes(y = ..density..)) +
-  facet_grid(A~.) + 
-  labs(title = "Distribution of BMI among Treated and Untreated", fill = "A\n")
+Finally, we can use `geom_hist` to view the distribution of BMI by treatment status, which is a continuious variable.
 
+```{r}
+
+#
+# treatment status by BMI
+# --------------------------------------------------
+df %>% 
+  
+  # processing 
+  # ----------
+  mutate(treatment = case_when(A == 0 ~ "Control", 
+                               A == 1 ~ "Treatment")
+         ) %>% 
+  # plot 
+  # ----------
+  ggplot(aes(x = W3, fill = treatment)) + 
+  geom_histogram(binwidth = 1, aes(y = ..density..)) +
+  facet_grid(rows = vars(treatment)) +  # facets variable in the column
+  
+  # theme 
+   theme_bw() +                        # set base black and white theme
+   theme(legend.position = "bottom") + # theme functions manipulate different elements of the plots appearance
+  
+  labs(title = "Distribution of BMI among Treated and Untreated", 
+       x = "BMI",
+       fill = "")
+
+# t-test 
+# ---------
 t.test(W3 ~ A, data = df)
+
 ```
 
 While it may be difficult to determine from the histogram above how the distribution of BMI differs among the two groups, the very small p-value from the t-test shows evidence of a clear difference.
@@ -134,7 +273,7 @@ There are a number of factors to consider when choosing a matching method, inclu
 
 ## Distance Metric
 
-The goal of matching is to match together each treatment unit (in our case, each individual who took AspiTyleCedrin, `A == 1`) to one or more "control" unit (in our case, individuals who did not take AspiTyleCedrin, `A == 0`) based on baseline covariates (in our case, `W1, W2, W3`). Note that conceptually, this means we are trying to find the control unit(s) that most closely resemble the counterfactual for each treatment unit.
+The goal of matching is to match together each treatment unit (in our case, each individual who took AspiTyleCedrin, `A == 1`) to one or more "control" unit (in our case, individuals who did not take AspiTyleCedrin, `A == 0`) based on baseline covariates (in our case, `W1, W2, W3`). **Conceptually, this means we are trying to find the control unit(s) that most closely resemble the counterfactual for each treatment unit.**
 
 ### Exact Matching
 
@@ -155,14 +294,25 @@ In other words, the exact distance between two points $X_i,X_j$, where $X_i = \{
 **\textcolor{blue}{Question 1:}** The data frame `df_a0` contains all the individuals that did not take AspiTyleCedrin, and the data frame `df_a1` contains all those who did. In the `R` code chunk below, use the first ten rows of `df_a0` and the first five rows of `df_a1` to find the exact distance of the first ten individuals who did not take AspiTyleCedrin from *each* of the first five individuals who did. (Hint: How many comparisons should you be making?)
 
 ```{r}
-df_a0_small <- df_a0[1:10,]
-df_a1_small <- df_a1[1:5,]
+
+#
+# calculate exact matches by hand
+# --------------------------------------------------
+
+# create dataframe
+# ---------
+df_a0_small <- df_a0[1:10,] 
+df_a1_small <- df_a1[1:5,]  
 cols <- c("W1", "W2", "W3")
 
+# create function to only keep where observations are equal 
+# # ---------
 dist.exact <- function(x,y) {
-  ifelse(all(x == y), 0, Inf)
+  ifelse(all(x == y), 0, NA) # NA means no match
 }
 
+# funciton to calculate distances
+# ---------
 calculate.dist <- function(x, y, dist.method, xnames = df_a1_small$ID, ynames = df_a0_small$ID) {
   dists <- apply(y, 1, function(j) {apply(x, 1, function(i) {dist.method(i,j)})})
   rownames(dists) <- xnames
@@ -170,10 +320,14 @@ calculate.dist <- function(x, y, dist.method, xnames = df_a1_small$ID, ynames = 
   return(dists)
 }
 
-dists_ex <- calculate.dist(df_a1_small[, cols], df_a0_small[, cols], dist.exact)
+# apply to data and save as new object
+# ---------
+dists_ex <- calculate.dist(df_a1_small[, cols], # x 
+                           df_a0_small[, cols], # y
+                           dist.exact)          # distance metric
 dists_ex
-```
 
+```
 
 While exact matching is ideal, it is not always possible, such as in the case of continuous variables, such as our BMI variable, `W3`. 
 
@@ -184,10 +338,12 @@ The probability of any exact value of a continuous variable is by definition zer
 **\textcolor{blue}{Question 3:}** Modify your code above to only check the distance for `W1` and `W2` values.
 
 ```{r}
+
+# check again but omit W3 (BMI)
+# ---------
 dists_ex_lim <- calculate.dist(df_a1_small[, cols[1:2]], df_a0_small[, cols[1:2]], dist.exact)
 dists_ex_lim
 ```
-
 Since exact matching is not always possible, there are a variety of alternative distance metrics which may be used to determine how similar a potential match is. A few of these methods are discussed below.
 
 ### Mahalanobis Distance Matching
@@ -202,40 +358,69 @@ where $S^{-1}$ is the covariance matrix of $X_i$ and $X_j$.
 **\textcolor{blue}{Question 4:}** Using the `cov()` function to find the covariance matrix of $\{W1, W2, W3\}$ from the *whole dataset*, modify your code from **Question 1** to instead find the Mahalanobis distance of the first ten individuals who did not take AspiTyleCedrin from *each* of the first five individuals who did. (Hint: The `t()` function will transpose a vector or matrix, and matrix multiplication uses the `%*%` character, not `*`)
 
 ```{r}
+
+#
+# calculate Mahalanobis distance metric
+# --------------------------------------------------
+
+# calculate covariance matrix
+# ---------
 cov_df <- cov(df[,cols])
 
+# create a function to calculate mahalanobis distance
+# ---------
 dist_mahalanobis <- function(x,y) {
-  diff <- (x - y)
-  sqrt( t(diff) %*% cov_df %*% (diff) )
+  diff <- (x - y)                       # return the difference of x-matrix from y-matrix
+  sqrt( t(diff) %*% cov_df %*% (diff) ) # transpose difference and multiply by the covariance and the difference 
 }
 
-dists_ma <- calculate.dist(df_a1_small[, cols], df_a0_small[, cols], dist_mahalanobis)
+# apply function to calculate Mahalanobis distance 
+# ---------
+dists_ma <- calculate.dist(df_a1_small[, cols], # x
+                           df_a0_small[, cols], # y
+                           dist_mahalanobis)    # distance
+# return
 dists_ma
 ```
 
 ### Propensity Score Matching
 
-The propensity score of an individual is a measure of the probabilty of that individual receiving the treatment based upon the baseline covariates. That is, given a set of covariate values ($\{W1_i, W2_i, W3_i\}$ in our case), the propensity score represents the estimated probability of treatment ($A_i = 1$). The propensity score is often estimated using a logit model and is therefore defined as follows:
+The propensity score of an individual is a measure of the probability of that individual receiving the treatment based upon the baseline covariates. That is, given a set of covariate values ($\{W1_i, W2_i, W3_i\}$ in our case), the propensity score represents the estimated probability of treatment ($A_i = 1$). The propensity score is often estimated using a logit model and is therefore defined as follows:
 
 $\pi_i = P(A_i = 1 | X_i) = \frac{1}{1 + e^{-X_i \beta}}$
 
 We can estimate these propensity scores using logistic regression, by regressing the treatment $A$ on the baseline covariates $X$, like so:
 
 ```{r}
-model_ps <- glm(A ~ W1 + W2 + W3, family = binomial(), data = df)
+#
+# fit a logit model
+# --------------------------------------------------
+model_ps <-                 # save logit model as an object
+  glm(A ~ W1 + W2 + W3,     # regress A (treatment) on covariates (W1, W2, W3) 
+      family = binomial(),  # specifying binomial calls a logit model
+      data = df)            # specify data for regression
+
+# print summary
 summary(model_ps)
 ```
 
 We can then use this model and the `predict()` function to add all of the estimated propensity scores for each data point in `df`:
 
 ```{r}
-df <- df %>% mutate(prop_score = predict(model_ps))
 
-# Also update the subsetted datasets
-df_a0 <- df %>% filter(A == 0)
-df_a1 <- df %>% filter(A == 1)
-df_a0_small <- df_a0[1:10,]
-df_a1_small <- df_a1[1:5,]
+# predict
+# ---------
+df <-                                    # save over df dataframe object
+  df %>%                                 # pass data 
+  mutate(prop_score = predict(model_ps)) # create a new variable that predicts propensity score based on logit model
+
+# update the subsetted datasets - WOULD NOT DO THIS IN YOUR WORK
+# ---------
+df_a0 <- df %>% filter(A == 0) # save anything under control as a dataframe
+df_a1 <- df %>% filter(A == 1) # save anything under treatment as a dataframe
+df_a0_small <- df_a0[1:10,]    # further subsetting
+df_a1_small <- df_a1[1:5,]     # further subsetting 
+
 ```
 
 Propensity score *matching* uses the absolute difference between two propensity scores as its distance metric, or rather:
@@ -244,13 +429,19 @@ $$\text{Distance}(X_i, X_j) = |\pi_i - \pi_j| $$
 **\textcolor{blue}{Question 5:}** Again modify your previous code to find the propensity score distance of the first ten individuals who did not take AspiTyleCedrin from *each* of the first five individuals who did.
 
 ```{r}
+
+# calculate distances based on propensity scores
+# ---------
 dist.prop.score <- function(x,y) {
-  abs(x-y) 
+  abs(x-y)  # distance based on absolute value
 }
 
-dists_ps <- calculate.dist(as.matrix(df_a1_small[, "prop_score"]),
-                           as.matrix(df_a0_small[, "prop_score"]),
-                           dist.prop.score)
+# apply function
+# ---------
+dists_ps <- calculate.dist(as.matrix(df_a1_small[, "prop_score"]), # x
+                           as.matrix(df_a0_small[, "prop_score"]), # y
+                           dist.prop.score)                        # method
+# view
 dists_ps
 ```
 
@@ -258,7 +449,7 @@ dists_ps
 
 A key advantage of propensity score matching is that, when used in conjunction with outcome regression, provides a "doubly robust" estimator. That is,
 
-> "When used individually to estimate a causal effect, both outcome regression and propensity score methods are unbiased only if the statistical model is correctly specified. The doubly robust estimator combines these 2 approaches such that only 1 of the 2 models need be correctly specified to obtain an unbiased effect estimator."
+> "When used individually to estimate a causal effect, both outcome regression and propensity score methods are unbiased only if the statistical model is correctly specified. The doubly robust estimator combines these 2 approaches such that only 1 of the 2 models need be correctly specified to obtain an unbiased efficient estimator."
 
 "Correctly specified" means that a model accurately represents the relationship between the variables. E.g. a linear model between $x$ and $y$ is correctly specified if and only if $x$ and $y$ truly do have a linear relationship to each other.
 
@@ -283,24 +474,34 @@ Most greedy matching algorithms in common use (including those listed above) are
 
 **\textcolor{blue}{Question 6:}** Using the propensity score distances you made in Question 5, find the greedy matching of this subset using highest to lowest propensity score. Report the IDs of both elements of each matched pair. (Hint: You may find the `which.min()` and `which.max()` functions helpful)
 
-```{r}
-treat <- c()
-control <- c()
-df_a1_small_copy <- as.data.frame(df_a1_small)
-dists_ps_copy <- as.data.frame(dists_ps)
+```{r, warning=FALSE}
+#
+# use greedy matching - subset on highest to lowest propensity
+# --------------------------------------------------
 
+# create new datasets
+# ---------
+treat <- c()   # create empty treatment vector
+control <- c() # create empty control vector
+df_a1_small_copy <- as.data.frame(df_a1_small) # create a copy to prevent overwrite within cell  
+dists_ps_copy <- as.data.frame(dists_ps)       # create a copy to prevent overwrite within cell  
+
+# loop through to grab matches based on propensity scores
+# ---------
 for(i in 1:nrow(df_a1_small)) {
-  max_treat <- which.max(df_a1_small_copy$prop_score)# %>% select(-ID))
-  treat[i] <- names(max_treat)
-  df_a1_small_copy <- df_a1_small_copy %>% slice(-max_treat)
+  max_treat <- which.max(df_a1_small_copy$prop_score)# %>% select(-ID)) # save max propensity score
+  treat[i] <- names(max_treat)                                          # add max_treat names
+  df_a1_small_copy <- df_a1_small_copy %>% slice(-max_treat)            # remove it from the dataframe
   
-  match_control <- which.min(dists_ps_copy[max_treat,])
-  control[i] <- names(all_of(match_control))
-  dists_ps_copy <- dists_ps_copy %>% 
-      select(-match_control) %>% 
+  match_control <- which.min(dists_ps_copy[max_treat,])                 # find it's match in control
+  control[i] <- names(all_of(match_control))                            # store names as control
+  dists_ps_copy <- dists_ps_copy %>%                                    # drop what we have just selected - selection w/o replacement
+      select(-match_control) %>%    
       slice(-max_treat)
 }
 
+# print
+# ---------
 treat
 control
 ```
@@ -308,11 +509,21 @@ control
 **\textcolor{blue}{Question 7:}** Same as Question 6, but now find the greedy matching of this subset using lowest to highest propensity score.
 
 ```{r}
+
+#
+# use greedy matching - subset on lowest to highest propensity
+# --------------------------------------------------
+
+
+# create new datasets
+# ---------
 treat <- c()
 control <- c()
 df_a1_small_copy <- as.data.frame(df_a1_small)
 dists_ps_copy <- as.data.frame(dists_ps)
 
+# loop through to grab matches based on propensity scores
+# ---------
 for(i in 1:nrow(df_a1_small)) {
   min_treat <- which.min(df_a1_small_copy$prop_score)
   treat[i] <- names(min_treat)
@@ -325,18 +536,30 @@ for(i in 1:nrow(df_a1_small)) {
       slice(-min_treat)
 }
 
+# print
+# ---------
 treat
 control
+
 ```
 
 
 **\textcolor{blue}{Question 8:}** Same as in the previous two problems, but now find the greedy matching of this subset using best overall match.
 
 ```{r}
+
+#
+# use greedy matching - subset using best overall
+# --------------------------------------------------
+
+# create new datasets
+# ---------
 treat <- c()
 control <- c()
 dists_ps_copy <- as.data.frame(dists_ps)
 
+# loop through to grab matches based on propensity scores
+# ---------
 for(i in 1:nrow(df_a1_small)) {
   best <- which(dists_ps_copy == min(dists_ps_copy), arr.ind = TRUE)
   treat[i] <- rownames(dists_ps_copy)[best[1]]
@@ -347,13 +570,15 @@ for(i in 1:nrow(df_a1_small)) {
     select(-(best[2]))
 }
 
+# print
+# ---------
 treat
 control
 ```
 
 **\textcolor{blue}{Question 9:}** Were there any differences in the matchings you found in the previous three problems?
 
-> Your answer here.
+**ANSWER:** There were  significant differences across each one, meaning the matching algorithm can have a big impact.
 
 ### Optimal Matching
 
@@ -365,13 +590,22 @@ You may have noticed that in the previous examples we only selected one "control
 
 **\textcolor{blue}{Question 10:}** Modify your code from Question 6 to perform a 2:1 matching rather than 1:1. That is, find the two best "control" matches for each treatment individual, using highest to lowest propensity score. 
 
-```{r}
+```{r, warning=FALSE}
+
+#
+# manual matching - using 2:1 ratio
+# --------------------------------------------------
+# 
+# create new datasets
+# ---------
 treat <- c()
 control_1 <- c()
 control_2 <- c()
 df_a1_small_copy <- as.data.frame(df_a1_small)
 dists_ps_copy <- as.data.frame(dists_ps)
 
+# loop through to grab matches based on propensity scores
+# ---------
 for(i in 1:nrow(df_a1_small)) {
   max_treat <- which.max(df_a1_small_copy$prop_score)
   treat[i] <- names(max_treat)
@@ -393,6 +627,8 @@ for(i in 1:nrow(df_a1_small)) {
   
 }
 
+# print
+# ---------
 treat
 control_1
 control_2
@@ -400,7 +636,7 @@ control_2
 
 **\textcolor{blue}{Question 11:}** Did any of the matches you made in Question 6 change in Question 10?
 
-> Your answer here.
+**ANSWER:** Yes.
 
 It is also possible to have a variable number of control individuals per treatment individual in "full" matching. Full matching assures that every individual in the dataset is paired. Full matching can only by achieved using an optimal matching algorithm.
 
@@ -415,9 +651,16 @@ Another consideration when deciding upon a matching algorithm is whether matches
 **\textcolor{blue}{Question 12:}** Write code to perform the same greedy matching as in Question 6 but **with** replacement. (Hint: This code will likely be much simpler!)
 
 ```{r}
+
+#
+# implement with replacement
+# --------------------------------------------------
+
 row_mins <- apply(dists_ps, 1, which.min)
 treat <- names(row_mins)
 control <- colnames(dists_ps)[row_mins]
+
+# view
 treat
 control
 ```
@@ -428,11 +671,11 @@ control
 
 ## Estimand
 
-Depending on the matching algorithm used, you may be limited in whether it is possible to estimate the Average Treatment Effect (ATE) or the Average Treatment Effect on the Treated (ATT) only. For example, 1:1 nearest neighbor matching almost always estimates the ATE and cannot estimate the ATE.
+Depending on the matching algorithm used, you may be limited in whether it is possible to estimate the Average Treatment Effect (ATE) or the Average Treatment Effect on the Treated (ATT) only. For example, 1:1 nearest neighbor matching almost always estimates the ATT and cannot estimate the ATE.
 
 **\textcolor{blue}{Question 14:}** Briefly explain why 1:1 nearest neighbor matching may not be able to estimate the ATE.
 
-> Your answer here.
+It may not be able to estimate the ATE because it may not be able to find appropriate controls to match to the treatment.
 
 # Matching Algorithm Examples
 
@@ -453,20 +696,60 @@ The main `matchit()` function of this package includes the following arguments:
 
 ## Exact Matching Example
 
+
+### ATE
+
 For example, for an exact matching on our dataset ignoring BMI we would do the following to estimate ATE:
 
 ```{r}
-match_exact_ate <- matchit(formula = A ~ W1 + W2, data = df, method = "exact", estimand = "ATE")
+
+#
+# ATE using matchit for exact
+# --------------------------------------------------
+match_exact_ate <- matchit(formula = A ~ W1 + W2, # formula (leaving out W3 bc it is continuous)
+                           data = df,             # data 
+                           method = "exact",      # specify method to use
+                           estimand = "ATE")      # specify estimand you want
+
+# view
 summary(match_exact_ate)
+
 ```
 
 We can see from the summary how much the balance has improved after matching, but remember that this is only the balance on `W1` and `W2`.
 
-To use this matching to estimate the ATE we first get the matched data using the `match.data()` function. We can then use logistic regression to estmate the ATE.
+Another useful plot is the `love.plot` that comes from the `cobalt` package. It's an easy way to visualize key information from the table above, specifically comparing the standardized mean differences for "All Data" (unadjusted) with the "Matched Data" (adjusted).  You can read more about it [here](https://cran.r-project.org/web/packages/cobalt/vignettes/cobalt.html#love.plot). We want the "Adjusted" sample to have a standardized mean difference of zero.
 
 ```{r}
+
+# plot 
+# ---------
+love.plot(match_exact_ate)
+
+```
+
+To use this matching to estimate the ATE we first get the matched data using the `match.data()` function. We can then use linear regression to estimate the ATE.
+
+
+```{r}
+#
+# estimate the ATE using linear regression
+# ---------
+
+# construct a matched dataset from the matchit object
 match_exact_ate_data <- match.data(match_exact_ate)
-lm_exact_ate <- lm(Y_obs ~ A + W1 + W2 + W3, data = match_exact_ate_data, weights = weights)
+
+# uncomment to see the difference between original dataset and new matchit dataset
+#head(df) 
+#head(match_exact_ate_data)
+
+
+# specify a linear model 
+lm_exact_ate <- lm(Y_obs ~ A + W1 + W2 + W3,    # specify the linear model
+                   data = match_exact_ate_data, # specify the data
+                   weights = weights)           # specify the weights
+
+# view summary of results 
 lm_exact_ate_summ <- summary(lm_exact_ate)
 lm_exact_ate_summ
 ```
@@ -474,21 +757,47 @@ lm_exact_ate_summ
 The ATE estimate is the coefficient estimate on the treatment variable `A`:
 
 ```{r}
+#
+# pull out ATE
+# ---------
 ATE_exact <- lm_exact_ate_summ$coefficients["A", "Estimate"]
 ATE_exact
 ```
 
-We could also have estimated the ATT using this method:
+### ATT
+
+We could also have estimated the ATT using this method. 
 
 ```{r}
-match_exact_att <- matchit(formula = A ~ W1 + W2, data = df, method = "exact", estimand = "ATT")
+
+# ATT using matchit for exact
+# --------------------------------------------------
+match_exact_att <- matchit(formula = A ~ W1 + W2, data = df,  # formula
+                           method = "exact",                  # method
+                           estimand = "ATT")                  # estimand
+
+# summary 
 summary(match_exact_att, un = FALSE)
 
+#
+# estimate the ATT using linear regression
+# ---------
+
+# construct a matched dataset from the matchit object
 match_exact_att_data <- match.data(match_exact_att)
-lm_exact_att <- lm(Y_obs ~ A + W1 + W2 + W3, data = match_exact_att_data, weights = weights)
+
+# specify a linear model 
+lm_exact_att <- lm(Y_obs ~ A + W1 + W2 + W3,    # specify linear regression 
+                   data = match_exact_att_data, # data
+                   weights = weights)           # weights 
+
+# view summary of results 
 lm_exact_att_summ <- summary(lm_exact_att)
 lm_exact_att_summ
 
+#
+# pull out ATT
+# ---------
 ATT_exact <- lm_exact_att_summ$coefficients["A", "Estimate"]
 ATT_exact
 ```
@@ -496,17 +805,46 @@ ATT_exact
 
 ## $k$ Nearest Neighbor Matching Example
 
+### ATT
+
 Now let's perform a 2:1 nearest neighbor matching using (logistic regression) propensity scores on all three covariates. Remember that we can only estimate ATT in this case.
 
 ```{r}
-match_ps_att <- matchit(formula = A ~ W1 + W2 + W3, data = df, method = "nearest", distance = "glm", link = "logit", discard = "control", replace = FALSE, ratio = 2)
+
+#
+# ATT using matchit for k-nearest neighbor
+# --------------------------------------------------
+match_ps_att <- matchit(formula = A ~ W1 + W2 + W3, # formula
+                        data = df,                  # data
+                        method = "nearest",         # method
+                        distance = "glm",           # use glm, which by default is logistic regression
+                        link = "logit",             # specify we want a logit model, default when distance is specified
+                        discard = "control",        # obs to be discarded that are outside region of common support
+                        replace = FALSE,            # whether matching should be done with replacement
+                        ratio = 2)                  # k:1 matching
+
+# view summary results 
 summary(match_ps_att)
 
+#
+# estimate the ATT using linear regression
+# ---------
+
+# construct a matched dataset from the matchit object
 match_ps_att_data <- match.data(match_ps_att)
-lm_ps_att <- lm(Y_obs ~ A + W1 + W2 + W3, data = match_ps_att_data, weights = weights)
+
+# specify linear model 
+lm_ps_att <- lm(Y_obs ~ A + W1 + W2 + W3,  # formula
+                data = match_ps_att_data,  # data
+                weights = weights)         # weights 
+
+# view summary results 
 lm_ps_att_summ <- summary(lm_ps_att)
 lm_ps_att_summ
 
+#
+# pull out ATT
+# ---------
 ATT_ps <- lm_ps_att_summ$coefficients["A", "Estimate"]
 ATT_ps
 ```
@@ -516,32 +854,93 @@ ATT_ps
 Now let's perform a full optimal matching on all three covariates using Mahalanobis distances. (We'll need to do this on a smaller subset of the data)
 
 ```{r}
-df_small <- sample_n(df, 1000) # SRS of 1000
+
+# set seed 
+set.seed(1000)
+
+# create a smaller dataframe so this runs more quickly 
+df_small <- 
+  df %>% 
+  slice_sample(n = 1000) # SRS of 1000
+
 ```
 
+### ATE
 
 ```{r}
-match_full_ate <- matchit(formula = A ~ W1 + W2 + W3, data = df_small, method = "full", distance = "mahalanobis")
+
+#
+# ATE using matchit for full optimal matching
+# --------------------------------------------------
+match_full_ate <- matchit(formula = A ~ W1 + W2 + W3,   # specify formula
+                          estimand = "ATE",             # specify estimate
+                          data = df_small,              # specify data
+                          method = "full",              # specify method
+                          distance = "mahalanobis")     # specify distance metric
+
+# view summary of results 
 summary(match_full_ate)
 
+
+#
+# estimate the ATE using linear regression
+# ---------
+
+# construct a matched dataset from the matchit object
 match_full_ate_data <- match.data(match_full_ate)
-lm_full_ate <- lm(Y_obs ~ A + W1 + W2 + W3, data = match_full_ate_data, weights = weights)
+
+# specify linear model 
+lm_full_ate <- lm(Y_obs ~ A + W1 + W2 + W3,   # specify model 
+                  data = match_full_ate_data, # specify data
+                  weights = weights)          # specify weights
+
+# view summary of results 
 lm_full_ate_summ <- summary(lm_full_ate)
 lm_full_ate_summ
 
+
+#
+# pull out ATE
+# ---------
 ATE_full <- lm_full_ate_summ$coefficients["A", "Estimate"]
 ATE_full
 ```
 
+### ATT
+
 ```{r}
-match_full_att <- matchit(formula = A ~ W1 + W2 + W3, data = df_small, method = "full", distance = "mahalanobis")
+
+#
+# ATT using matchit for full optimal matching
+# --------------------------------------------------
+match_full_att <- matchit(formula = A ~ W1 + W2 + W3,   # specify formula
+                          estimand = "ATT",             # specify estimand
+                          data = df_small,              # specify data
+                          method = "full",              # specify method
+                          distance = "mahalanobis")     # specify distance metric
+
+# view summary of results 
 summary(match_full_att)
 
+#
+# estimate the ATT using linear regression
+# ---------
+# construct a matched dataset from the matchit object
 match_full_att_data <- match.data(match_full_att)
-lm_full_att <- lm(Y_obs ~ A + W1 + W2 + W3, data = match_full_att_data, weights = weights)
+
+# specify linear model 
+lm_full_att <- lm(Y_obs ~ A + W1 + W2 + W3,
+                  data = match_full_att_data, 
+                  weights = weights)
+
+
+# view summary of results 
 lm_full_att_summ <- summary(lm_full_att)
 lm_full_att_summ
 
+#
+# pull out ATT
+# ---------
 ATT_full <- lm_full_att_summ$coefficients["A", "Estimate"]
 ATT_full
 ```
@@ -555,14 +954,21 @@ ATT_full
 **\textcolor{blue}{Question 16:}** Compare the estimates of ATE and ATT found above with the true values (saved as `ATE_true` and `ATT_true`). Which method was most accurate? Considering the pros and cons of different methods we have discussed, which method do you prefer?
 
 ```{r}
+
+#
+# compare ATE and ATT across matching algorithims
+# ---------
+# compare ATE
 ATE_true
 c(ATE_exact, ATE_full)
 
+# compare ATT
 ATT_true
 c(ATT_exact, ATT_ps, ATT_full)
+
 ```
 
-> Your answer here.
+**ANSWER:** It seems for the ATT effect, the propensity score model came the closest to the "true ATE", whereas exact matching seemed to come closest to ATE. One of the reason that full matching likely did worse is that we were matching on a smaller sample (1,000 randomly selected cases) instead, so it might perform better if you were to rerun the analysis with the full data (which will take longer to run, of course. )
 
 
 # References
