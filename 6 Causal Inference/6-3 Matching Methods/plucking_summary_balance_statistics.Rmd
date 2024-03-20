@@ -1,0 +1,168 @@
+---
+title: '6-3 Matching Methods - Solutions'
+author: ""
+date: " `r format(Sys.time(), '%B %d, %Y')`"
+output: html_document
+header-includes:
+   - \usepackage{amsmath}
+---
+
+```{r message=FALSE}
+
+# libraries
+xfun::pkg_attach2(c("tidyverse", # load all tidyverse packages
+                    "here",      # set file path
+                    "MatchIt",   # for matching
+                    "optmatch",  # for matching
+                    "cobalt"))   # for matching assessment
+
+
+# chunk options ----------------------------------------------------------------
+knitr::opts_chunk$set(
+  warning = FALSE            # prevents warning from appearing after code chunk
+)
+
+# prevent scientific notation
+# ----------
+options(scipen = 999)
+
+```
+
+# Simulation 
+
+Create simulation data. 
+
+
+```{r}
+
+# set seed
+# ----------
+set.seed(42) # set so that random process of generating data is reproducible 
+
+# set the number of individuals for simulated dataset
+# ----------
+n = 1e4 # Number of individuals (smaller than last time)
+
+# NOTE: Again, don't worry too much about how we're creating this dataset, 
+# this is just an example.
+
+# W3 scaled to have mu=24 and sigma=4 a la
+# https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4789291/
+# where k = mu^2/sigma^2 and theta = sigma^2/mu
+
+# Also make treatment less likely so that there are more controls,
+# and add ID column
+df <- data.frame(ID = seq.int(n),
+                 W1 = sample(0:2, size = n, replace = TRUE, 
+                             prob = c(0.49,0.50,0.01)),
+                 W2 = sample(0:5, size = n, replace = TRUE, 
+                             prob = c(0.60,0.13,0.19,0.06, 0.015, 0.005)),
+                 W3 = rgamma(n, 
+                    shape = 36,
+                    scale = (2/3)))
+df <- df %>% 
+  mutate(W3 = W3 + 8*(W1 == 1)+ 12*(W2==2) + 
+           8*(W2==3) + 4*(W2==4) + (-4)*(W2 == 5),
+         A = as.numeric(rbernoulli(n, 
+                                   p = (0.16 + 0.07*(W1 > 0) + 0.21*(W2 == 0) - 
+                                          0.1*(W3 > 25) ))),
+         Y_0 = as.numeric(rbernoulli(n, 
+                                     p = (0.87 + 0.035*(W1 > 0) + 0.05*(W2 > 0)) + 
+                                       abs((W3 - 22)/100))),
+         Y_1 = as.numeric(rbernoulli(n, 
+                                     p = (0.34 + 0.035*(W1 > 0) + 0.3*(W2 > 0)) + 
+                                       abs((W3 - 22)/100) + 0.2*(W3 > 30))),
+         ITE = Y_1 - Y_0,
+         Y_obs = as.numeric((A & Y_1) | (!A & Y_0))) 
+
+ATE_true <- mean(df$ITE)
+df_a1 <- df %>% filter(A == 1)
+ATT_true <- mean(df_a1$ITE)
+
+df <- df %>% select(-Y_0, -Y_1, -ITE)
+df_a1 <- df_a1 %>% select(-Y_0, -Y_1, -ITE)
+df_a0 <- df %>% filter(A == 0)
+                 
+head(df)
+summary(df)
+```
+
+
+# Run Matching analysis for Exact matching
+
+Run the match analysis to and store the details in an object called `match_exact_ate`.
+
+```{r}
+
+#
+# ATE using matchit for exact
+# --------------------------------------------------
+match_exact_ate <- matchit(formula = A ~ W1 + W2, # formula (leaving out W3 bc it is continuous)
+                           data = df,             # data 
+                           method = "exact",      # specify method to use
+                           estimand = "ATE")      # specify estimand you want
+
+# view
+summary(match_exact_ate)
+
+
+```
+
+There are a number of ways to view balance statistics. Check out the online documentation [here](https://kosukeimai.github.io/MatchIt/articles/assessing-balance.html#assessing-balance-with-matchit). However, if you want to pull out summary statistics so you can manually manipulate them to create you own table or ggplot, for example, you need the `pluck()` function to pull specific information for the lists (which is how they are stored). 
+
+You can use the code `summary(match_exact_ate) %>% View()` to view the stored information which is saved as lists. 
+
+```{r}
+summary(match_exact_ate) %>% glimpse() #use View here instead
+```
+
+You can then `pluck()` elements of the lists as you see fit. Here's an example of how to "pluck"  the `sum.all` column, which you can then manipulate into a datframe and use in a ggplot or a table.  
+
+```{r}
+
+
+
+# pluck the "Summary of Balance for Matched Data" column
+# note you will need to manually create a column to identify W1 and W2 rows 
+summary_df <- 
+  summary(match_exact_ate) %>% 
+  pluck("sum.all") %>% 
+  as_tibble() %>% 
+  glimpse() 
+
+```
+
+Similarly, you can view summary statistics with another package called `cobalt`. 
+
+
+```{r}
+
+# summarize statistics 
+bal.tab(match_exact_ate, un = TRUE, stats = c("m", "v", "ks"))
+
+
+```
+
+View the list of the information stored in this object. 
+
+```{r}
+
+# View list of the stored information 
+bal.tab(match_exact_ate, un = TRUE, stats = c("m", "v", "ks")) %>% 
+  glimpse() # use "View" here instead
+
+```
+
+
+Pluck the "balance" and create a data frame. 
+
+```{r}
+
+# pluck the "Balance" column
+balance_statistics <- 
+  bal.tab(match_exact_ate, un = FALSE, stats = c("m", "v", "ks")) %>% 
+  pluck("Balance") %>% 
+  glimpse()
+
+```
+
