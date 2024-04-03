@@ -1,5 +1,7 @@
 ---
-title: "Diff in Diffs and Synthetic Control"
+title: '6-6 DiD and Synthetic Control'
+author: ""
+date: " `r format(Sys.time(), '%B %d, %Y')`"
 output: pdf_document
 ---
 
@@ -7,20 +9,45 @@ output: pdf_document
 # Install packages 
 if (!require("pacman")) install.packages("pacman")
 
+# We are using a package (augsynth) that is not on CRAN, R packages on CRAN have to pass
+# some formal tests. Always proceed with caution if a packages is not on CRAN. Since the
+# R package is not on CRAN, we needed to download and install the package directly from 
+# GitHub. Always use the CRAN version if there is one because it is most stable. However, 
+# if you need something that is currently in development, you might want to download from
+# GitHub. I've commented out the workflow since I already have it on my computer: 
+
+#
+# workflow to install a package from GitHub
+# ----------------------------------------------------------------
+
+
+# 1. install `devtools` if you don't already have it. Note that you might need to update the 'rlang' package 
+# ----------
 #install.packages("devtools") # download developer tools package 
-library(devtools) 
+#library(devtools)            # load library 
 
-devtools::install_github("ebenmichael/augsynth")
+# 2. install the package ("augsynth"). you can find this path on the GitHub instructions
+# ----------
+#devtools::install_github("ebenmichael/augsynth")
 
+
+# install libraries - install "augsynth" here since it is now on CRAN
 pacman::p_load(# Tidyverse packages including dplyr and ggplot2 
                tidyverse,
                ggthemes,
-               augsynth)
+               augsynth)  
 
-# you might need to update the 'rlang' package here if you've had r for a while and haven't updated 
+#
+# chunk options 
+# ----------------------------------------------------------------
+knitr::opts_chunk$set(
+  warning = FALSE            # prevents warning from appearing after code chunk
+)
 
 
+# set seed 
 set.seed(44)
+
 ```
 
 # Introduction
@@ -32,132 +59,218 @@ In this lab we will explore difference-in-differences estimates and a newer exte
 We'll use the kansas dataset that comes from the `augsynth` package. Our goal here is to estimate the effect of the 2012 Kansas tax cuts on state GDP. Let's take a look at our dataset:
 
 ```{r}
+# load data 
 data(kansas)
+
+# summary statistics of kansas
 summary(kansas)
 ```
+
 
 We have a lot of information here! We have quarterly state GDP from 1990 to 2016 for each U.S. state, as well as some other covariates. Let's begin by adding a treatment indicator to Kansas in Q2 2012 and onward.
 
 ```{r}
-kansas <- kansas %>%
-  select(year, qtr, year_qtr, state, treated, gdp, lngdpcapita, fips) %>% 
-  mutate(treatment = ifelse(state == "Kansas" & year_qtr >= 2012.50,
-                            1,
-                            0))
+
+# create a treatment indicator 
+# ----------
+kansas <- 
+  kansas %>%
+  # select subset of variables 
+  select(year, qtr, year_qtr, state, treated, gdp, lngdpcapita, fips) %>%
+  # create new treatment flag just to see
+  mutate(treatment = case_when(state == "Kansas" & year_qtr >= 2012.5 ~ 1, # note this adds treatment in 2012 Q3
+                               TRUE ~ 0))
+# view head
 head(kansas)
 ```
 
 One approach might be to compare Kansas to itself pre- and post-treatment. If we plot state GDP over time we get something like this:
 
 ```{r}
+
+# visualize intervention in Kansas
+# ----------
 kansas %>%
+  
+  # processing 
+  # ----------
   filter(state == 'Kansas') %>%
+  
+  # ggplot 
+  # ----------
   ggplot() +
-  geom_point(aes(x = year_qtr, y = lngdpcapita)) +
-  geom_vline(xintercept = 2012.5) +
-  theme_fivethirtyeight() +
-  theme(axis.title = element_text()) +
-  ggtitle('Kansas State GDP Per Capita Over Time') +
-  xlab('Year-Quarter') +
-  ylab('State GDP Per Capita')
+    # geometries
+    geom_point(aes(x = year_qtr, y = lngdpcapita)) +
+    geom_vline(xintercept = 2012.5, color = "maroon") + # color horizontal line red
+  
+    # themes
+    theme_fivethirtyeight() +
+    theme(axis.title = element_text()) +
+  
+    # labels
+    labs(x = "Year-Quarter ",                             # x-axis label
+     	   y = "State GDP Per Capita \n(in thousands)",     # y-axis label
+         title = "Kansas State GDP Per Capita Over Time") # title 
+  
   
 ```
 
-**Question**: Looks like GDP went up after the tax cut! What is the problem with this inference?
+**QUESTION**: Looks like GDP went up after the tax cut! What is the problem with this inference?
 
-**Solution**: It looks like GDP went up after the tax cut, but we have no way of telling whether it went up because of the tax cut or went up because it would have otherwise. In short, we need to compare the treated Kansas to a counterfactual for if taxes weren't cut.
+**ANSWER**: It looks like GDP went up after the tax cut, but we have no way of telling whether it went up because of the tax cut or went up because it would have otherwise. In short, we need to compare the treated Kansas to a counterfactual for if taxes weren't cut.
 
-Ideally, we would like to compare treated Kansas to control Kansas. Because of the fundamental problem of causal inference, we will never oberserve both of these conditions though. The core idea behind DiD is that we could instead use the fact that our treated unit was similar to a control unit, and then measure the differences between them. Perhaps we could choose neighboring Colorado:
+Ideally, we would like to compare treated Kansas to control Kansas. Because of the fundamental problem of causal inference, we will never observe both of these conditions though. The core idea behind DiD is that we could instead use the fact that our treated unit was similar to a control unit, and then measure the differences between them. Perhaps we could choose neighboring Colorado:
 
 ```{r}
+
+# visualize intervention in Kansas
+# ----------
 kansas %>%
-  filter(state %in% c("Kansas","Colorado")) %>%
-  filter(year_qtr >= 2012.5 & year_qtr<= 2012.75) %>%
+  # processing 
+  # ----------
+  filter(state %in% c("Kansas","Colorado")) %>%  # use "%in% to filter values in a vector
+  filter(year_qtr >= 2012.5 & year_qtr<= 2012.75) %>%  
+  #filter(between(year_qtr, 2012.5, 2012.75)) %>%   # same filtering but using between() instead which I find simpler
+  
+  # plot
+  # ----------
   ggplot() + 
+  # add in point layer
   geom_point(aes(x = year_qtr, 
                  y = lngdpcapita, 
-                 color = state)) +
+                 color = state)) + # color by state
+  # add in line
   geom_line(aes(x = year_qtr, 
                 y = lngdpcapita, 
                 color = state)) +
+  
+  # themes
   theme_fivethirtyeight() +
   theme(axis.title = element_text()) +
+  
+  # labels - PREFER TO USE labs() SO THAT IT IS ALL IN ONE ARGUMENT
   ggtitle('Colorado and Kansas GDP \n before/after Kansas tax cut') +
   xlab('Year-Quarter') +
-  ylab('State GDP')
+  ylab('State GDP Per Capita \n(in thousands)')
 ```
 
 This is basically what [Card-Krueger (1994)](https://davidcard.berkeley.edu/papers/njmin-aer.pdf) did measuring unemployment rates among New Jersey and Pennsylvania fast food restaurants. 
 
-**Challenge**: Try writing a simple DiD estimate using dplyr/tidyr (use subtraction instead of a regression):
+**Challenge**: Try writing a simple DiD estimate using `dplyr/tidyr` (use subtraction instead of a regression):
 
 ```{r}
-# kansas-colorado
-kc <- kansas %>%
+
+#
+# DiD for: kansas-colorado
+# ----------------------------------------------------------------
+# create a dataset for kansas and colorado
+kc <- 
+  kansas %>%
   filter(state %in% c("Kansas","Colorado")) %>%
   filter(year_qtr >= 2012.5 & year_qtr<= 2012.75) 
 
 # pre-treatment difference
-
-pre_diff <- kc %>%
+# ----------
+pre_diff <- 
+  kc %>%
+  # filter out only the quarter we want
   filter(year_qtr == 2012.5) %>%
+  # subset to select only vars we want
   select(state, 
          lngdpcapita) %>%
-  spread(state, 
-         lngdpcapita) %>%
+  # make the data wide
+  pivot_wider(names_from = state, 
+              values_from = lngdpcapita) %>%
+  # subtract to make calculation
   summarise(Colorado - Kansas)
   
 # post-treatment difference
-
-post_diff <- kc %>%
+# ----------
+post_diff <- 
+  kc %>%
+  # filter out only the quarter we want
   filter(year_qtr == 2012.75) %>%
+  # subset to select only vars we want
   select(state, 
          lngdpcapita) %>%
-  spread(state, 
-         lngdpcapita) %>%
+  # make the data wide
+  pivot_wider(names_from = state, 
+              values_from = lngdpcapita) %>%
+  # subtract to make calculation
   summarise(Colorado - Kansas)
 
 # diff-in-diffs
-
+# ----------
 diff_in_diffs <- post_diff - pre_diff
 diff_in_diffs
+
 ```
 
 Looks like our treatment effect is about .003 (in logged thousands dollars per capita). Again this is the basic idea behind Card-Krueger.
 
-**Question**: Why might there still be a problem with this estimate?
+**QUESTION**: Why might there still be a problem with this estimate?
 
-**Answer**: We just assumed that Colorado was similar to Kansas because they are neighbors - we don't really have evidence for this idea.
+**ANSWER**: We just assumed that Colorado was similar to Kansas because they are neighbors - we don't really have evidence for this idea.
 
 # Parallel Trends Assumptions
 
 One of the core assumptions for difference-in-differences estimation is the "parallel trends" or "constant trends" assumption. Essentially, this assumption requires that the difference between our treatment and control units are constant in the pre-treatment period. Let's see how Kansas and Colorado do on this assumption:
 
 ```{r}
+
+#
+# parallel trends
+# ----------------------------------------------------------------
 kansas %>%
+  
+  # process
+  # ---------
   filter(state %in% c("Kansas","Colorado")) %>%
+  # plotting all of the time periods -- not filtering out any of them
+
+  # plot
+  # ---------
   ggplot() + 
+  # add in point layer
   geom_point(aes(x = year_qtr, 
                  y = lngdpcapita, 
                  color = state)) +
+  # add in line layer
   geom_line(aes(x = year_qtr, 
                 y = lngdpcapita, 
                 color = state)) +
+  # add a horizontal line
   geom_vline(aes(xintercept = 2012.5)) +
+  
+  # themes
   theme_fivethirtyeight() +
   theme(axis.title = element_text()) +
+  
+  # labels
   ggtitle('Colorado and Kansas GDP \n before/after Kansas tax cut') +
   xlab('Year-Quarter') +
-  ylab('State GDP')
+  ylab('State GDP Per Capita \n(in thousands)')
 ```
+
 
 The two lines somewhat move together, but the gap does grow and shrink at various points over time. The most concerning part here is that the gap quickly shrinks right before treatment. What do we do if we do not trust the parallel trends assumption? Perhaps we pick a different state.
 
 **Challenge**: Choose another state that you think would be good to try out, and plot it alongside Kansas and Colorado.
 
 ```{r}
+
+#
+# parallel trends: add a third state
+# ----------------------------------------------------------------
 kansas %>%
-  filter(state %in% c("Kansas","Colorado", "Missouri")) %>%
+  # process
+  # ---------
+  filter(state %in% c("Kansas",
+                      "Colorado", 
+                      "Missouri")) %>%
+  
+  # plot
+  # ---------
   ggplot() + 
   geom_point(aes(x = year_qtr, 
                  y = lngdpcapita, 
@@ -166,16 +279,20 @@ kansas %>%
                 y = lngdpcapita, 
                 color = state)) +
   geom_vline(aes(xintercept = 2012.5)) +
+  
+  # themes
   theme_fivethirtyeight() +
   theme(axis.title = element_text()) +
+  
+  # labels
   ggtitle('Colorado and Kansas GDP \n before/after Kansas tax cut') +
   xlab('Year-Quarter') +
   ylab('State GDP')
 ```
 
-**Question**: Would you pick Colorado or your choice? be the more plausible control unit in this case? Why?
+**QUESTION**: Would you pick Colorado or your choice? be the more plausible control unit in this case? Why?
 
-**Solution**: There is a good argument for both of them (Missouri in this case). However, the gap between Colorado and Kansas closes quickly before the treatment period, and similarly it grows between between Kansas and Missouri at the same point.
+**ANSWER**: There is a good argument for both of them (Missouri in this case). However, the gap between Colorado and Kansas closes quickly before the treatment period, and similarly it grows between between Kansas and Missouri at the same point.
 
 Selecting comparative units this way can be hard to justify theoretically, and sometimes we do not have a good candidate. What can we do then? This is where synthetic control comes in.
 
@@ -183,38 +300,66 @@ Selecting comparative units this way can be hard to justify theoretically, and s
 
 Synthetic control is motivated by the problem of choosing comparison units for comparative case studies. It aims to create a "synthetic" version of the treatment unit by combining and weighting covariates from other units ("donors"). In this case, we would construct a synthetic Kansas by creating a weighted average of the other 49 U.S. states. Ideally, the synthetic unit would match the treatment unit in the pre-treatment periods.
 
-For constructing a synthetic control, we are going to use the [`augsynth`](https://github.com/ebenmichael/augsynth) library. The basic syntax for this library is:
+For constructing a synthetic control, we are going to primarily rely on the [`augsynth`](https://github.com/ebenmichael/augsynth) library, since you can use the same library for augmented synthetic controls. The basic syntax for this library is:
 
 `augsynth(outcome ~ trt, unit, time, t_int, data)`
 
-```{r}
-syn <- augsynth(lngdpcapita ~ treated, state, year_qtr, kansas,
-                progfunc = "None", scm = T)
+## augsynth library
 
+This is a very flexible package that can handle both synthetic controls as well as augmentation and staggered adoption. It's a bit more clunky but will handle the heavy lifting of estimation. Here is a [tutorial](https://github.com/ebenmichael/augsynth/blob/master/vignettes/singlesynth-vignette.md) for simultaneous adoption. 
+
+Note that the ATT here varies slightly from the tutorial because we have specified 2012.5 as the first treatment quarter, whereas the tutorial specifies 2012.25 (the quarter in which the law was passed (May)).
+
+```{r}
+
+# NOTE: when t_int is not specified (time when intervention took place), then the code will automatically determine
+# Doesn't seem to run when try to specify t_int anyways
+  
+# synthetic control
+# ---------
+syn <-                              # save object 
+  augsynth(lngdpcapita ~ treatment, # treatment - use instead of treated bc latter codes 2012.25 as treated
+                         state,     # unit
+                         year_qtr,  # time
+                         kansas,    # data
+           progfunc = "None",       # plain syn control
+           scm = T)                 # synthetic control 
+
+# summary 
 summary(syn)
 ```
 
-We can use the built in plot function to see how Kansas did relative to synthetic Kansas:
+We can use the built in plot function to see how Kansas did relative to synthetic Kansas. The confidence intervals are calculated using Jackknife procedures (leave one out, calculate, and cycle through all). 
+
 
 ```{r}
+# plot
 plot(syn)
 ```
+
 
 We can see which donors contributed the most to the synthetic Kansas:
 
 ```{r}
-# Convert weights to dataframe
-data.frame(syn$weights) %>%
+# view each state's contribution
+# ---------
+data.frame(syn$weights) %>% # coerce to data frame since it's in vector form
+  # process 
+  # ---------
   # change index to a column
-  tibble::rownames_to_column('State') %>%
+  tibble::rownames_to_column('State') %>% # move index from row to column (similar to index in row as in Python)
+  # plot
+  # ---------
   ggplot() +
   # stat = identity to take the literal value instead of a count for geom_bar()
   geom_bar(aes(x = State, 
                y = syn.weights),
-           stat = 'identity') +
+           stat = 'identity') +  # override count() which is default of geom_bar(), could use geom_col() instead
+  coord_flip() +   # flip to make it more readable
+  # themes
   theme_fivethirtyeight() +
-  theme(axis.title = element_text(),
-        axis.text.x = element_text(angle = 90)) +
+  theme(axis.title = element_text()) +
+  # labels
   ggtitle('Synthetic Control Weights') +
   xlab('State') +
   ylab('Weight') 
@@ -223,48 +368,173 @@ data.frame(syn$weights) %>%
 Surprisingly, only a few units ended up contributing! Let's take a closer look at the ones that did:
 
 ```{r}
+
+# view each state's contribution, where weights are greater than 0
+# ---------
 data.frame(syn$weights) %>%
+  # processing
+  # ---------
   tibble::rownames_to_column('State') %>%
-  filter(syn.weights > 0) %>%
+  filter(syn.weights > 0) %>% # filter out weights less than 0
+  # plot
+  # ---------
   ggplot() +
   geom_bar(aes(x = State, 
                y = syn.weights),
            stat = 'identity') +
+  coord_flip() +   # flip to make it more readable
+  # themes
   theme_fivethirtyeight() +
-  theme(axis.title = element_text(),
-        axis.text.x = element_text(angle = 90)) +
+  theme(axis.title = element_text()) +
+  # labels
   ggtitle('Synthetic Control Weights') +
   xlab('State') +
   ylab('Weight') 
   
 ```
 
+## tidysynth library 
+
+Before we move on, I want to talk about the `tidysynth` library, which is a new, `tidyverse`-friendly implementation of original `synth` package. As you will see, it is easy to use to visualize the parallel trends, but it cannot handle the augmentation functions we might want to implement and it doesn't have as much support for estimation, unlike `augsynth`. So, you should be aware of it, use it for visualization, but maybe use `augsynth` for estimation and augmentation. Here is a helpful tutorial by the [package author](http://ericdunford.com/tidysynth/) as well as an [another implementation](https://causalpolicy.nl/practicals/03_synthetic_control/synthetic_control.html) that might be helpful.
+
+
+```{r}
+
+#
+# specifying a synthetic control using tidysynth
+# ----------------------------------------------------------------
+# install package 
+# install.packages('tidysynth')
+
+# load library
+library(tidysynth)
+
+# specify synthetic control 
+kansas_out <-
+  
+  kansas %>%
+  
+  # initial the synthetic control object
+  synthetic_control(outcome = lngdpcapita, # outcome
+                    unit = state, # unit index in the panel data
+                    time = year_qtr, # time index in the panel data
+                    i_unit = "Kansas", # unit where the intervention occurred (treatment in augsynth)
+                    i_time = 2012.25, # time period when the intervention occurred #  (t_int variable in augsynth)
+                    generate_placebos=T # generate placebo synthetic controls (for inference)
+                    ) %>%
+  
+  # GDP covariate 
+  generate_predictor(gdp = gdp) %>%
+  
+  # Generate the fitted weights for the synthetic control
+  generate_weights(optimization_window = 1990.00:2012.25, # time to use in the optimization task
+                   margin_ipop = .02,
+                   sigf_ipop = 7,
+                   bound_ipop = 6) %>% # optimizer options
+
+  
+  # Generate the synthetic control
+  generate_control()
+
+
+```
+
+Now we can manually calculate a treatment effect (ATT) that approximates what we obtained using `augsynth` but is not exactly the same. For this reason, I might use `augsynth` for estimation.
+
+```{r, eval=FALSE}
+
+#
+# calculate the treatment effect manually 
+# ----------------------------------------------------------------
+kansas_out %>% 
+  grab_synthetic_control(placebo = T) %>%  # specify placebo to be able to filter on .id variable
+  filter(.id == "Kansas")%>% 
+  filter(time_unit >= 2012.5) %>%  # time period
+  # sum all of the post-treatment effects
+  mutate(estimate = synth_y - real_y) %>% 
+  summarize(ATT = sum(estimate)) %>%         # subtract difference to obtain treatment effect
+  glimpse()                             
+
+```
+
+Plot trends. The key here is that we differences in synthetic Kansas more closely tracts Kansas than did Missouri in our DiD.
+
+```{r}
+
+#
+# plot parallel trends for synthetic Kansas vs observed Kansas
+# ----------------------------------------------------------------
+kansas_out %>% plot_trends()
+```
+
+View the differences between Kansas and Synthetic Kansas.
+
+```{r}
+#
+# plot observed differences between synthetic Kansas vs observed Kansas
+# ----------------------------------------------------------------
+kansas_out %>% plot_differences()
+```
+
+Differences in each state in the donor pool from Kansas. So this shows how much each state varies from Kansas. 
+
+```{r}
+#
+# plot differences in trends for all other states that contribute to synethetic Kansas vs observed Kansas
+# ----------------------------------------------------------------
+kansas_out %>% plot_placebos()
+```
+
+
+```{r}
+
+#
+# plot control weights of each other state
+# ----------------------------------------------------------------
+kansas_out %>% plot_weights()
+
+```
+
 # Synthetic Control Augmentation
 
 The main advantage of the `asynth` package is that it allows for ["augmented synthetic control"](https://arxiv.org/abs/1811.04170). One of the main problems with synthetic control is that if the pre-treatment balance between treatment and control outcomes is poor, the estimate is not valid. Specifically, they advocate for using [L2 imbalance](https://en.wikipedia.org/wiki/Ridge_regression#:~:text=Ridge%20regression%20is%20a%20method,econometrics%2C%20chemistry%2C%20and%20engineering.), which he first encountered as the penalty that ridge regression uses. L2 uses "squared magnitude" of the coefficient to penalize a particular feature.
 
+## Parallel Trends
+
+
 ```{r}
+
+#
+# plot parallel trends for synthetic Kansas vs observed Kansas (manually)
+# ----------------------------------------------------------------
+
 # Aniket's method for getting the underlying data
+# ---------
 syn_sum <- summary(syn)
 
-kansas_synkansas <- kansas %>%
-  filter(state == "Kansas") %>%
-  bind_cols(difference = syn_sum$att$Estimate) %>%
-  mutate(synthetic_kansas = lngdpcapita + difference)
+# create synthetic Kansas 
+# ---------
+kansas_synkansas <- 
+  # data
+  kansas %>%   
+  # filter just Kansas 
+  filter(state == "Kansas") %>% 
+  # bind columns 
+  bind_cols(difference = syn_sum$att$Estimate) %>%    # add in estimate 
+  # calculate synthetic Kansas
+  mutate(synthetic_kansas = lngdpcapita + difference) # adds the estimate to the observed Kansas to create synthetic Kansas
 
-# Plot
-
+# plot
+# ---------
 kansas_synkansas %>%
   ggplot() +
-  geom_point(aes(x = year_qtr, 
-                 y = lngdpcapita, 
-                 color = 'Kansas')) +
+  # kansas
+  # ---------
   geom_line(aes(x = year_qtr, 
                 y = lngdpcapita, 
                 color = 'Kansas')) +
-  geom_point(aes(x = year_qtr, 
-                 y = synthetic_kansas, 
-                 color = 'Synthetic Kansas')) +
+  # synthetic kansas
+  # ---------
   geom_line(aes(x = year_qtr, 
                 y = synthetic_kansas, 
                 color = 'Synthetic Kansas')) +
@@ -272,33 +542,50 @@ kansas_synkansas %>%
   geom_vline(aes(xintercept = 2012.5)) +
   theme_fivethirtyeight() +
   theme(axis.title = element_text()) +
-  ggtitle('Kansas and Synthetic Kansas') +
+  ggtitle('Kansas vs Synthetic Kansas') +
   xlab('Year-Quarter') +
   ylab('State GDP Per Capita')
 ```
 
-**Question**: How does pre-treatment matching between Kansas and Synthetic Kansas look here?
+**QUESTION**: How does pre-treatment matching between Kansas and Synthetic Kansas look here?
 
-**Answer**: Pretty good! We may not need to augment this synthetic control, though let's try anyway.
+**ANSWER**: Pretty good! We may not need to augment this synthetic control, though let's try anyway.
+
+## Augmentation
+
+Let's play a bit with the augmentation parameters that will adjust the weights to see if we can find better fits to create a synthetic control.  
 
 ```{r}
-ridge_syn <- augsynth(lngdpcapita ~ treated, state, year_qtr, kansas,
-                progfunc = "ridge", scm = T)
 
-summary(ridge_syn)
+#
+# recalculate with Ridge function that penalizes really high weights 
+# ----------------------------------------------------------------
+ridge_syn <- 
+  augsynth(lngdpcapita ~ treatment, 
+                         state, 
+                         year_qtr, 
+                         kansas,
+           progfunc = "ridge",  # specify 
+           scm = T)
+
+summary(ridge_syn) # the lower the L2 balance, the better -- now 0.07 compared to ~0.08
 ```
 
 Let's look at the weights:
 
 ```{r}
+
+#
+# view weights - now we have negative weights as a result of Ridge
+# ----------------------------------------------------------------
 data.frame(ridge_syn$weights) %>%
   tibble::rownames_to_column('State') %>%
   ggplot() +
   geom_bar(aes(x = State, y = ridge_syn.weights),
            stat = 'identity') +
+  coord_flip() + # coord flip
   theme_fivethirtyeight() +
-  theme(axis.title = element_text(),
-        axis.text.x = element_text(angle = 90)) +
+  theme(axis.title = element_text()) +
   ggtitle('Synthetic Control Weights') +
   xlab('State') +
   ylab('Weight') 
@@ -307,38 +594,49 @@ data.frame(ridge_syn$weights) %>%
 Notice how with the ridge augmentation, some weights are allowed to be negative now. Now let's go ahead and plot the ridge augmented synthetic Kansas alongside Kansas and synthetic Kansas:
 
 ```{r}
+#
+# plot parallel trends for observed Kansas vs synthetic Kansas vs ridge Kansas
+# ----------------------------------------------------------------
+
+# Aniket's method for getting the underlying data
+# ---------
 ridge_sum <- summary(ridge_syn)
 
+# create synthetic Kansas 
+# ---------
 kansas_synkansas_ridgesynkansas <- kansas_synkansas %>%
   bind_cols(ridge_difference = ridge_sum$att$Estimate) %>%
   mutate(ridge_synthetic_kansas = lngdpcapita + ridge_difference)
 
+# plot
+# ---------
 kansas_synkansas_ridgesynkansas %>%
   ggplot() +
-  geom_point(aes(x = year_qtr, 
-                 y = lngdpcapita, 
-                 color = 'Kansas')) +
+  
+  # kansas
+  # ---------
   geom_line(aes(x = year_qtr, 
                 y = lngdpcapita, 
                 color = 'Kansas')) +
-  geom_point(aes(x = year_qtr, 
-                 y = synthetic_kansas, 
-                 color = 'Synthetic Kansas')) +
+  # synthetic kansas
+  # ---------
   geom_line(aes(x = year_qtr, 
                 y = synthetic_kansas, 
                 color = 'Synthetic Kansas')) +
-  geom_point(aes(x = year_qtr, 
-                 y = ridge_synthetic_kansas, 
-                 color = 'Ridge Synthetic Kansas')) +
+  # ridge kansas
+  # ---------
   geom_line(aes(x = year_qtr, 
                 y = ridge_synthetic_kansas, 
                 color = 'Ridge Synthetic Kansas')) +
+  # use scale color manual to assign color values 
   scale_color_manual(values = c('Kansas' = 'red', 
                                 'Synthetic Kansas' = 'blue',
                                 'Ridge Synthetic Kansas' = 'green')) +
   geom_vline(aes(xintercept = 2012.5)) +
+  # themes
   theme_fivethirtyeight() +
   theme(axis.title = element_text()) +
+  # labels 
   ggtitle('Kansas, Synthetic Kansas, Ridge Synthetic Kansas') +
   xlab('Year-Quarter') +
   ylab('State GDP Per Capita')
@@ -347,33 +645,46 @@ kansas_synkansas_ridgesynkansas %>%
 These all seem pretty good! Like we thought, augmentation did not necessarily improve the matches in this particular dataset. We can check the two L2 imbalances and see that we have reduced the overall imbalance a bit with our ridge model:
 
 ```{r}
+# print imbalances
+# ---------
 print(syn$l2_imbalance)
 print(ridge_syn$l2_imbalance)
 ```
 
 Finally, we can add covariates to our model if we would like:
 
+## Adding covariates
+
 ```{r}
+
+#
+# add in some covariates
+# ----------------------------------------------------------------
 data(kansas)
 
 covsyn <- augsynth(lngdpcapita ~ treated | lngdpcapita + log(revstatecapita) +
                                            log(revlocalcapita) + log(avgwklywagecapita) +
                                            estabscapita + emplvlcapita,
-                   fips, year_qtr, kansas,
-                   progfunc = "ridge", scm = T)
+                   fips,                # unit
+                   year_qtr,            # time
+                   kansas,              # data
+                   progfunc = "ridge",  # augmentation 
+                   scm = T)             # synthetic control 
 
 summary(covsyn)
 ```
 
 ## Staggered Adoption
 
-The last technique we'll look at is "staggered adoption" of some policy. In the original Hainmueller paper, states that already had similar cigaratte taxes were discarded from the donor pool to create a synthetic California. But what if we were interested in the effect of a policy overall, for every unit that adopted treatment? The problem is, these units all choose to adopt treatment at different times. We could construct different synthetic controls for each one, or we can use a staggered adoption approach.
+The last technique we'll look at is "staggered adoption" of some policy. In the original Hainmueller paper, states that already had similar cigarette taxes were discarded from the donor pool to create a synthetic California. But what if we were interested in the effect of a policy overall, for every unit that adopted treatment? The problem is, these units all choose to adopt treatment at different times. We could construct different synthetic controls for each one, or we can use a staggered adoption approach.
 
 To explore this question, we'll continue using the `augsynth` package's vignette. This time we will load a dataset that examines the effect of states instituting mandatory collective bargaining agreements.
 
 ```{r}
+# import data
 collective_bargaining <- read_delim("https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/WGWMAV/3UHTLP", delim = '\t')
 
+# view head
 head(collective_bargaining)
 ```
 The main variables we'll use here are:
@@ -387,10 +698,17 @@ The dataset contains several important variables that we'll use:
 Let's do some preprocessing before we estimate some models. We're going to remove DC and Wisconsin from the analysis and cabin our dataset to 1959 - 1997. Finally, we'll add a treatment indicator `cbr` which takes a 1 if the observation was a treated state after it adopted mandatory collective bargaining, or a 0 otherwise: 
 
 ```{r}
-collective_bargaining_clean <- collective_bargaining %>%
+#
+# create dataset
+# ---------
+collective_bargaining_clean <- 
+  # data
+  collective_bargaining %>%
+    # filter out two exceptions and subset to appropriate years
     filter(!State %in% c("DC", "WI"),
            year >= 1959, 
            year <= 1997) %>%
+    # create "treatment" - year collective bargaining was adopted
     mutate(YearCBrequired = ifelse(is.na(YearCBrequired), 
                                    Inf, YearCBrequired),
            cbr = 1 * (year >= YearCBrequired))
@@ -402,16 +720,32 @@ We're ready to start estimating a model! To do this, we use the `multisynth()` f
 mutltisynth(outcome ~ treatment, unit, time, nu, data,  n_leads)
 ```
 
-The key parameters here are `nu` and `n_leads`. Staggered adoption uses multi-synthetic control which essentially pools together similar units and estimates a synthetic control for each pool. `nu` determines how much pooling to do. A value of 0 will fit a separate synthetic control for each model, whereas a value of 1 will pool all units together. Leaving this argument blank with have `augsynth` search for the best value of `nu` that minimizes L2 loss. `n_leads` determines how many time periods to estimate in the post-treatment period.
+The key parameters here are `nu` and `n_leads`. Staggered adoption uses multi-synthetic control which essentially pools together similar units and estimates a synthetic control for each pool. `nu` determines how much pooling to do. A value of 0 will fit a separate synthetic control for each model, whereas a value of 1 will pool all units together. Leaving this argument blank with have `augsynth` search for the best value of `nu` that minimizes L2 loss. Determining this is more of an art---the hard and fast rule is DO NOT estimate more post-treatment periods than pre-treatment ones.  `n_leads` determines how many time periods to estimate in the post-treatment period.
 
 ```{r}
-# with a choice of nu
-ppool_syn <- multisynth(lnppexpend ~ cbr, State, year, 
-                        nu = 0.5, collective_bargaining_clean, n_leads = 10)
-# with default nu
-ppool_syn <- multisynth(lnppexpend ~ cbr, State, year, 
-                        collective_bargaining_clean, n_leads = 10)
 
+#
+# implementing staggered adoption
+# ----------------------------------------------------------------
+
+#
+# setting nu to 0.5
+# ---------
+ppool_syn <- multisynth(lnppexpend ~ cbr, 
+                        State,                       # unit
+                        year,                        # time
+                        nu = 0.5,                    # varying degree of pooling 
+                        collective_bargaining_clean, # data
+                        n_leads = 10)                # post-treatment periods to estimate 
+# with default nu
+# ---------
+ppool_syn <- multisynth(lnppexpend ~ cbr, 
+                        State,                        # unit
+                        year,                         # time
+                        collective_bargaining_clean,  # data 
+                        n_leads = 10)                 # post-treatment periods to estimate
+
+# view results 
 print(ppool_syn$nu)
 
 ppool_syn
@@ -420,12 +754,17 @@ ppool_syn
 After you've fit a model that you like, use the `summary()` function to get the ATT and balance statistics.
 
 ```{r}
+# save ATT and balance stats
+# ---------
 ppool_syn_summ <- summary(ppool_syn)
 ```
 
 Next, plot the estimates for each state as well as the average average treatment effect (so average for all treated states). Try to do this with `ggplot()` instead of the built-in plotting function (hint: how did we get the dataframe with the estimates before?)
 
 ```{r}
+
+# plot actual estimates not values of synthetic controls
+# ---------
 ppool_syn_summ$att %>%
   ggplot(aes(x = Time, y = Estimate, color = Level)) +
   geom_point() +
@@ -440,6 +779,9 @@ ppool_syn_summ$att %>%
 ```
 
 ```{r}
+
+# plot actual estimates not values of synthetic controls - use a facet_wrap for readability
+# ---------
 ppool_syn_summ$att %>%
   ggplot(aes(x = Time, y = Estimate, color = Level)) +
   geom_point() +
@@ -451,21 +793,34 @@ ppool_syn_summ$att %>%
   ggtitle('Synthetic Controls for State Collective Bargaining') +
   xlab('Time') +
   ylab('Expenditure on Pupil Estimate') +
-  facet_wrap(~Level)
+  facet_wrap(~Level)   # facet-wrap by level (state in this case) for clearer presentation
 ```
 
 We can also combine our observations into "time cohorts" or units that adopted treatment at the same time. Try adding `time_cohort = TRUE` to your multisynth function and see if your estimates differ. Plot these results as well.
 
 ```{r}
-ppool_syn_time <- multisynth(lnppexpend ~ cbr, State, year,
-                        collective_bargaining_clean, n_leads = 10, time_cohort = TRUE)
 
+#
+# break observations into time cohorts 
+# ----------------------------------------------------------------
+ppool_syn_time <- multisynth(lnppexpend ~ cbr,
+                             State, 
+                             year,
+                             collective_bargaining_clean, 
+                             n_leads = 10, 
+                             time_cohort = TRUE)           # time cohort set to TRUE
+
+# save summary
 ppool_syn_time_summ <- summary(ppool_syn_time)
 
+# view 
 ppool_syn_time_summ
 ```
 
 ```{r}
+
+# plot effect for each time period (local treatment effects)
+# ---------
 ppool_syn_time_summ$att %>%
   ggplot(aes(x = Time, y = Estimate, color = Level)) +
   geom_point() +
@@ -485,14 +840,29 @@ Finally, we can add in augmentation. Again augmentation essentially adds a regul
 Try creating an augmented synthetic control model. How do your balance and estimates compare? 
 
 ```{r}
-scm_gsyn <- multisynth(lnppexpend ~ cbr, State, year,
-                        collective_bargaining_clean, n_leads = 10, 
-                        fixedeff = T, n_factors = 2)
 
+# likely need to install gsynth package do not need to load
+# install.packages("gsynth")
+
+# play with fixed effects and use cross validation 
+# ----------------------------------------------------------------
+scm_gsyn <- multisynth(lnppexpend ~ cbr, 
+                       State, 
+                       year,
+                       collective_bargaining_clean, 
+                       n_leads = 10, 
+                       fixedeff = T,   # fixed effect- for units in time
+                       n_factors = 2)  # uses cross-validation to determine most appropriate weights
+
+# save s
 scm_gsyn_summ <- summary(scm_gsyn)
 ```
 
 ```{r}
+
+#
+# plot multisynth
+# ----------------------------------------------------------------
 scm_gsyn_summ$att %>%
   ggplot(aes(x = Time, y = Estimate, color = Level)) +
   geom_point() +
