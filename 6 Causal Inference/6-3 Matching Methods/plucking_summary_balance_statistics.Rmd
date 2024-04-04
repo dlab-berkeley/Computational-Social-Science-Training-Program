@@ -122,11 +122,11 @@ You can then `pluck()` elements of the lists as you see fit. Here's an example o
 
 
 
-# pluck the "Summary of Balance for Matched Data" column
+# pluck the "Summary of Balance" column
 # note you will need to manually create a column to identify W1 and W2 rows 
 summary_df <- 
   summary(match_exact_ate) %>% 
-  pluck("sum.all") %>% 
+  pluck("sum.all") %>%  # Summary of Balance for All Data
   as_tibble() %>% 
   glimpse() 
 
