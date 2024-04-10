@@ -1,20 +1,30 @@
 ---
-title: "Untitled"
-output: html_document
+title: "6-4 Regression Discontinuity Design - Student"
+author: ""
+date: " `r format(Sys.time(), '%B %d, %Y')`"
+output: pdf_document
 ---
 
 # Regression Discontinuity
 
 ```{r}
-# Install packages 
+# install packages
+# ----------
 if (!require("pacman")) install.packages("pacman")
 
+# load
 pacman::p_load(# Tidyverse packages including dplyr and ggplot2 
                tidyverse,
-               rdd,
+               rdd,         # regression discontinuity design library
                ggthemes,
-               tidymodels)
+               tidymodels,  # machine learning workflow (R's version of Python's sklearn)
+               here)
 
+# run here to set working directory
+here()
+
+# set seed
+# ----------
 set.seed(1)
 ```
 
@@ -35,22 +45,24 @@ To explore this question, we are going to use data taken from [Lee (2008)](https
 - `incumbent`: 0/1 for whether the candidate is an incumbent
 
 ```{r}
-elections <- read_csv('indiv_final.csv')
-
-elections <- elections %>%
-  mutate(win_reelection = ifelse(myoutcomenext == 1,
-                                 'win',
-                                 'lose')) %>%
-  mutate(incumbent = ifelse(difshare > 0, 
-                            1, 
-                            0))
+# load data
+# ----------
+elections <- read_csv('../../data/indiv_final.csv') %>% 
+  # add two new columns
+  mutate(win_reelection = case_when(myoutcomenext == 1 ~ 'win',
+                                    TRUE ~ 'lose')) %>%
+  mutate(incumbent = case_when(difshare > 0  ~ 1, 
+                               TRUE ~ 0))
 ```
 
 Suppose we are interested in the effect of incumbency on the probability of winning re-election. We might look at the distribution of vote shares by incumbency. Let's look at this boxplot:
 
 ```{r}
+#
+# visualize shares of incumbency
+# ----------------------------------------------------------------
 elections %>%
-  mutate(incumbent = as.factor(incumbent)) %>%
+  mutate(incumbent = as_factor(incumbent)) %>% # as_factor to treat as integers instead of numeric
   ggplot() +
   geom_boxplot(aes(x = incumbent, 
                    y = difshare, 
@@ -63,9 +75,22 @@ elections %>%
 Looks like incumbents enjoy a pretty significant advantage! Let's investigate this further by this using a linear probability model:
 
 ```{r}
+#
+# linear probability model
+# ----------------------------------------------------------------
+
+# linear probability model (instead of logit) 
 election_lm <- lm(myoutcomenext ~ incumbent, 
-                   data = elections)
+                  data = elections)
+
+# view
 summary(election_lm)
+
+
+# another option is to use model summary
+# ----------
+#library(modelsummary)
+#modelsummary(election_lm)
 ```
 
 Incumbency is a statistically significant covariate! 
@@ -74,11 +99,20 @@ What might be the problem with using .77 as the coefficient in this case? Let's 
 
 
 ```{r}
+#
+# visualize distribution of winners and losers based on previous election
+# ----------------------------------------------------------------
 elections %>% 
-  mutate(incumbent = as.factor(incumbent)) %>%
-  mutate(decile = as.factor(ntile(difshare, 10)))  %>%
+  
+  # process
+  # ----------
+  mutate(incumbent = as_factor(incumbent)) %>%        # as_factor makes incumbent an interger
+  mutate(decile = as_factor(ntile(difshare, 10))) %>% # calculates deciles of difshare
+  
+  # plot 
+  # ----------
   ggplot() +
-  geom_bar(aes(y = decile,
+  geom_bar(aes(y = decile,    # bar plot counts number of people who win re-election by decile
                fill = win_reelection),
            position = 'dodge') +
   ggtitle('Barplot of Re-Election Winners by \n Previous Election Vote Share Decile') +
@@ -86,9 +120,9 @@ elections %>%
   coord_flip()
 ```
 
-**Question**: Groups 1 - 4 look ok - by definition someone cannot win reelection if they lost the last election. But what about the difference in distributions between deciles like 5 and 6, versus the distributions in declies 7-10? Why would these different distributions pose a problem for trusting our previous point estimate?
+***QUESTION:*** Groups 1 - 4 look ok - by definition someone cannot win reelection if they lost the last election. But what about the difference in distributions between deciles like 5 and 6, versus the distributions in deciles 7-10? Why would these different distributions pose a problem for trusting our previous point estimate?
 
-**Solution**: ...
+**ANSWER:** ...
 
 ## Running Variable
 
@@ -97,9 +131,12 @@ We might assume that the selection into treatment/control conditions is driven e
 The basic intuition behind regression discontinuity designs is that we use a **running variable** that determines whether a unit was assigned to either treatment or control. Let's take a look:
 
 ```{r}
+#
+# visualize distribution of winners and losers based on previous election by the running variable
+# ----------------------------------------------------------------
 elections %>%
   ggplot() + 
-  geom_density(aes(x = difshare)) +
+  geom_density(aes(x = difshare)) + # smoothed kernal density estimator
   ggtitle('Density of Normalized Voteshare') + 
   geom_vline(xintercept = 0) +
   theme_fivethirtyeight() 
@@ -114,7 +151,11 @@ Before we estimate model for individuals on either side of the cutpoint though, 
 [McCrary](https://www.nber.org/system/files/working_papers/t0334/t0334.pdf) proposes a test for this kind of problem. Specifically, he motivates the test by giving an example of patients who are assigned to either waiting room A or B, but only waiting room A receives the experimental treatment. Patients learn about this fact, so as those who are assigned to waiting room B are are walking there, they instead decide to go to waiting room A. Given enough patients doing this, we should expect waiting room A to become crowded and waiting room B to be relatively empty. Let's see what that looks like graphically in our dataset:
 
 ```{r}
+#
+# density test using histograms
+# ----------------------------------------------------------------
 elections %>%
+  # filter to just those who won or lost (basically zoom in)
   filter(difshare > -.05 & difshare < .05) %>%
   ggplot() +
   geom_histogram(aes(x = difshare, 
@@ -125,63 +166,64 @@ elections %>%
 It looks like there isn't evidence of sorting at the cutpoint - in fact the distributions look identical. McCrary points out that these types of histograms can be biased at the cutpoint. He instead advocates for using local linear regressions to smooth the histograms at the cutpoint. Luckily, this procedure is implemented for us in the [rdd package](https://cran.r-project.org/web/packages/rdd/rdd.pdf):
 
 ```{r}
-DCdensity(elections$difshare, 
-          cutpoint = 0,
-          verbose = TRUE,
-          ext.out = TRUE,
-          htest = TRUE)
+#
+# density test using histograms
+# ----------------------------------------------------------------
+DCdensity(elections$difshare, # specify variable
+          cutpoint = 0,       # specify the cutpoint
+          verbose = TRUE,     # gives the output
+          ext.out = TRUE,     # save the output
+          htest = TRUE)       # pass through to other testing functions in base R
 ```
 
-The hypothesis test is looking to see whether the density of the points is statistically different at the cutpoint. Here we do not see evidence of this (it would be hard to manipulate winning an election!).
+The hypothesis test is looking to see whether the density of the points is statistically different at the cutpoint. The p-value does is rather larger, indicating that there is no evidence of this (it would be hard to manipulate winning an election!).
 
 ## Sharp Discontinuity
 
 We can go ahead and estimate our model now! Once again the `rdd` package provides a nice function to let us do this:
 
 ```{r}
-sharp_rdd_model <- RDestimate(# formula. outcome regressed on running variable x 
-           # add a | c1 + c2... to add additional covariates
-           myoutcomenext ~ difshare, 
-           # data
-           data = elections,
-           # specify cutpoint
-           cutpoint = 0,
-           # specify bandwidth from Lee paper
-           bw = .25,
-           # return a model object
-           model = TRUE)
+#
+# Sharp discontinuity
+# ----------------------------------------------------------------
+sharp_rdd_model <- 
+  RDestimate(myoutcomenext ~ difshare,  # y ~ x | c1 + c2... (add additional covariates using the "|")
+             data = elections,          # data
+             cutpoint = 0,              # specify cut point
+             bw = .25,                  # specify bandwidth from Lee paper
+             model = TRUE)              # return a model object
 
+# view output
 sharp_rdd_model
 ```
 
-**Question**: How does our LATE compare to the .77 estimate we saw before?
+***QUESTION:*** How does our LATE compare to the .77 estimate we saw before?
 
-**Solution**: Much lower, a difference of about 20% in predicted probability of being re-elected.
+**ANSWER:** Much lower, a difference of about 20% in predicted probability of being re-elected.
 
 ## Fuzzy Discontinuity
 
 We can also easily implement a fuzzy RD design. As we discussed in lecture, a fuzzy RD does not use one cutoff to assign to treatment and control, but rather uses the running variable as an instrument. To do a fuzzy RD, you simply need to add a `z` to your formula to indicate the treatment variable. 
 
 ```{r}
-fuzzy_rdd_model <- RDestimate(# formula. outcome regressed on running variable x 
-          # To change this to a fuzzy rdd, add a +z to the formula to indicate the treatment variable
-           # add a | c1 + c2... to add additional covariates
-           myoutcomenext ~ difshare + incumbent, 
-           # data
-           data = elections,
-           # specify cutpoint
-           cutpoint = 0,
-           # specify bandwidth from Lee paper
-           bw = .25,
-           # return a model object
-           model = TRUE)
+#
+# Fuzzy discontinuity 
+# ----------------------------------------------------------------
+fuzzy_rdd_model <- 
+  RDestimate(# A fuzzy rdd requires you add "z" to the formula to indicate the treatment variable
+             # formula = y ~ x + z + | c1 + c2 (add additional covariates using the "|")
+             formula = myoutcomenext ~ difshare + incumbent, # incumbent is our "z" in this case
+             data = elections,          # data
+             cutpoint = 0,              # specify cut point
+             bw = .25,                  # specify bandwidth from Lee paper
+             model = TRUE)              # return a model object
 
 fuzzy_rdd_model
 ```
 
-**Question**: Our LATE for both the Sharp and Fuzzy models was the same here. Does that make sense?
+***QUESTION:*** Our LATE for both the Sharp and Fuzzy models was the same here. Does that make sense?
 
-**Solution**: 
+***ANSWER:*** ...
 
 ## Bandwidth Selection
 
@@ -196,16 +238,23 @@ The `rdd` package implements the [Imbens-Kalyanaraman](https://www.nber.org/syst
 By iterating on these steps, we can eventually find the optimal bandwidth. Luckily, this is also implemented for us and we can just leave the `bw` argument blank by default to do this calculation:
 
 ```{r}
-rdd_model <- RDestimate(# formula. outcome regressed on running variable x .
-           # add a | c1 + c2... to add additional covariates
-           myoutcomenext ~ difshare, 
-           # data
-           data = elections,
-           # specify cutpoint
-           cutpoint = 0)
+#
+# let the model choose the bandwidth iteratively
+# ----------------------------------------------------------------
+rdd_model <- 
+  RDestimate(myoutcomenext ~ difshare, # formula
+           data = elections,           # data
+                                       # omit bw argument and it will search
+           cutpoint = 0)               # specify cutpoint
+
+# view model output
+rdd_model 
 ```
 
-How did the Imbens-Kalyanaraman bandwidth estimate compare to our choice of .25?
+**QUESTION:** How did the Imbens-Kalyanaraman bandwidth estimate compare to our choice of .25?
+
+**ANSWER:** ...
+
 
 ### Challenge
 
@@ -221,6 +270,184 @@ See if you can implement these steps for cross-validation on your own! In the so
 
 Also note that the `RDEstimate()` function returns an object with class "RD". See if you can extract the model object from it for calculating the MSE.
 
+### Solution
+
+1. The first step here is to create a function that we will use to estimate a regression discontinuity and calculate the Mean Squared Error.
+
+
 ```{r}
 
+
+#
+# 1: create a function 
+# ----------------------------------------------------------------
+calculate_rdd_and_bandwidth <- function(df_split, bw){ # two arguments the function takes
+  
+  # specify model 
+  # ---------
+  rdd_model <- 
+    RDestimate(
+           ... ~ ...,       # specify the formula 
+           data = ...,      # specify data set we'll use
+           cutpoint = ..,   # specify the cutpoint
+           bw = ..,         # specify the bandwidth 
+           model = TRUE)    # return a model object
+  
+  # calculations
+  # ---------
+  # create a dataframe 
+  mse_data <- ...(  # what's the function to create a dataframe?
+    # get predictions from the model
+    pred = ...(rdd_model$model[[1]]), # pull models from the object because rrd does not automatically return them
+    # compare them to the actual values of myoutcomenext
+    actual = (df_split %>% filter(difshare >= -bw & difshare <= bw))$difshare)
+    # return the mean of MSE
+    return(mean((mse_data$actual - mse_data$pred)^2))
+}
+
+```
+
+2. Now we need to split our data. The `vfold()` function from `tidymodels` is similar to `train_test_split()` or `Kfold()` in Python's sklearn
+
+3. Then we use the `map()` function from `purrr` to grab the data associated with each split using the "assessment" feature. We can then use `compose()` to prepare our rdd's for each split. For now we'll set a constant bw to test our function.
+
+4. Then we use `map2()` to map our tidy functions and our custom rdd function to each split. **Note**: This operation returns *v* tibbles instead of a numeric vector, so we bind rows and then grab the mean
+
+```{r}
+
+#
+# 2 - 4: test run: split, map, and map2 
+# ----------------------------------------------------------------
+
+# set constant bw just to test our function
+bw = .25
+
+# 2: split
+# ---------
+elections_vfold <- 
+  # create train-test splits
+  vfold_cv(...,           # specify data
+           v = ...,       # specify 10 folds
+           repeats = ...) # repeat just once
+
+
+# 3: map
+# ---------
+elections_vfold <- 
+  elections_vfold %>%
+  # grab the data associated with each split
+  mutate(df_split = ...(splits, assessment)) # do we use map or map2 here?
+
+
+
+# prepare each split
+tidy_rdd_model <- 
+  purrr::compose( # compose multiple functions
+  broom::tidy,    # convert lm objects into tidy tibbles
+  calculate_rdd_and_bandwidth
+)
+
+# 4: map2
+# ---------
+tidied_models <- 
+  elections_vfold %>%
+  # create new rdd variable
+  mutate(rdd = map2(df_split, bw, tidy_rdd_model))
+
+# calculate mean and add to dataframe
+mean(bind_rows(tidied_models$rdd)$x)
+```
+
+
+5. Now that we know this works for one value of bw, let's loop through 10 values of bw by incrementing from .01 to 1 in a for loop and performing the same operations. We'll return our average mean squared errors to a list and see which one was the lowest.
+
+
+```{r}
+
+#
+# 5: final run: loop 
+# ----------------------------------------------------------------
+
+# set seed for replication 
+set.seed(123456789)
+
+# set bandwidth sequence
+# ---------
+bw_seq <- seq(.01, 1, .05)
+
+# create empty list and counter
+# ---------
+mses <- c()
+counter = 1
+
+# loop
+# ---------
+for (bw in bw_seq){
+  
+  # 2: split
+  # ---------
+  elections_vfold <- 
+    vfold_cv(elections, v = 10, repeats = 1)
+
+  # 3: map
+  # ---------
+  elections_vfold <- 
+    elections_vfold %>%
+    mutate(df_split = map(splits, assessment))
+  
+  tidy_rdd_model <- purrr::compose( # compose multiple functions
+    broom::tidy, # convert lm objects into tidy tibbles
+    calculate_rdd_and_bandwidth
+  )
+  
+  # 4: map2
+  # ---------
+  tidied_models <- 
+    elections_vfold %>%
+    mutate(rdd = map2(df_split, bw, tidy_rdd_model))
+  
+  # set counter
+  mses[counter] <- 
+    mean(bind_rows(tidied_models$rdd)$x)
+  counter = counter + 1
+}
+```
+
+
+Now identify the best model with the lowest MSE and identify the bw
+
+
+```{r}
+# identify the lowest mses and corresponding bandwidth
+# ---------
+bw_seq %>% 
+  # bind bw_seq with mses
+  bind_cols(mses) %>% 
+  # rename columns
+  rename(bw_seq= `...1`) %>% 
+  rename(mses = `...2`) %>%
+  # sort with min at top 
+  arrange(mses) %>% 
+  # take minimum 
+  slice_head(n = 1) %>%   
+  print()
+```
+
+
+**QUESTION:** What was our lowest bandwidth?
+
+**ANSWER:** ...
+
+
+Go ahead and apply that bandwidth to the model
+
+```{r}
+#
+# final model with CV bandwidth
+# ----------------------------------------------------------------
+RDestimate(myoutcomenext ~ difshare, # formula 
+           data = elections,         # data
+           cutpoint = 0,             # specify cutpoint
+           bw = ...,                 # specify corresponding bandwidth from CV 
+           model = TRUE)             # return a model object
 ```
