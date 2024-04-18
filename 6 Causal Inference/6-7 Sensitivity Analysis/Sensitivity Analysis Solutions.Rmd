@@ -1,5 +1,5 @@
 ---
-title: '6-6: Sensitivity Analysis and Bounds - Solutions'
+title: '6-7: Sensitivity Analysis and Bounds - Solutions'
 author: ""
 date: " `r format(Sys.time(), '%B %d, %Y')`"
 output: pdf_document
