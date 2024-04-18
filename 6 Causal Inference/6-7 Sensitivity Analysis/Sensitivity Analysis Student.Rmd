@@ -1,24 +1,34 @@
 ---
-title: 'Computational Social Science: Sensitivity Analysis and Bounds'
-author: "Your Name Here"
-date: "MM/DD/YYYY"
+title: '6-7: Sensitivity Analysis and Bounds - Student'
+author: ""
+date: " `r format(Sys.time(), '%B %d, %Y')`"
 output: pdf_document
 ---
 
 ```{r message=FALSE, echo=FALSE}
 # Install packages 
+# # ----------
 if (!require("pacman")) install.packages("pacman")
 
 pacman::p_load(# Tidyverse packages including dplyr and ggplot2 
                tidyverse,
                ggthemes,
-               ATE,
+               konfound,
                dagitty,
                ggdag,
-               sensitivitymv)
+               sensitivitymv,
+               EValue)  
 
+# set dag theme
+# ----------
 theme_set(theme_dag())
+
+# source functions
+# ----------
 source("pretty_dag.R")
+
+# set seed
+# ----------
 set.seed(13)
 ```
 
@@ -51,6 +61,8 @@ Thus we have the following variables:
 And our DAG is as follows:
 
 ```{r out.width="75%", echo=FALSE}
+# Create a DAG using dagify
+# ----------
 dagify(Y ~ A,
        Y ~ U,
        Y ~ W,
@@ -71,17 +83,24 @@ dagify(Y ~ A,
 Simulate the dataset:
 
 ```{r}
+
+# specify the number of observations we want for our simulated data
+# ----------
 n = 1e4 # Number of individuals
 
 # NOTE: Again, don't worry too much about how we're creating this dataset, 
 # this is just an example.
 
+# create simulated dataframe
+# ----------
 df <- data.frame(U = rbernoulli(n, p = 0.34),
                  W = sample(0:2, size = n, replace = TRUE, 
-                             prob = c(0.49,0.50,0.01))
-)
+                             prob = c(0.49,0.50,0.01)) 
+) %>% 
 
-df <- df %>% 
+# create 
+# ----------
+# df <- df %>% 
   mutate(Y_0 = as.numeric(rbernoulli(n,
                                      p = (0.87 + 0.035*(W > 0) + 
                                             0.05*(U > 0)))),
@@ -94,25 +113,39 @@ df <- df %>%
          Y = as.numeric((A & Y_1) | (!A & Y_0))
 )
 
+# summarize
+# ----------
 head(df)
 summary(df)
 
+# calculate ATE "true" as a reference - remember we'd likely not have this in practice
+# ----------
 ATE_true <- mean(df$ITE)
 ATT_true <- mean((df %>% filter(A == 1))$ITE)
+ATE_true
 
-df <- df %>% select(A, W, Y)
+# shirk dataframe to only include treatment (A), covariates (W: sex at birth), and outcome (Y)
+# ----------
+df <- 
+  df %>% 
+  select(A, W, Y)
 ```
 
 Recall that the Average Treatment Effect (ATE) is the average difference in the pair of potential outcomes averaged over the entire population of interest (at a particular moment in time), or rather, it is just the average (or expected value) of the individual-level treatment effect.
 
 $$\text{ATE} = E[Y_{i}(1) - Y_{i}(0)]$$
 
-**\textcolor{blue}{Question 1:}** Use the `group_by()` and `summarize()` functions to find the estimated average treatment effect using the following formula. Compare this result to the actual ATE (saved as `ATE_true`).
+**\textcolor{blue}{QUESTION 1:}** Use the `group_by()` and `summarize()` functions to find the estimated average treatment effect using the following formula. Compare this result to the actual ATE (saved as `ATE_true`).
 
 $$\hat{\text{ATE}} = E[Y_i |A_i = 1, W_i = w_i] - E[Y_i|A_i = 0, W_i = w_i]$$
 ```{r}
+
+# calculate mean of outcome by treatment
+# ----------
 est <- ...
 
+# calculate the ATE 
+# ----------
 ATE_crude <- ...
 ```
 
@@ -120,23 +153,36 @@ $$\text{ATE} = ATE_{true}$$
 
 $$\hat{\text{ATE}} \approx ATE_{crude}$$
 
-The following code chunk uses the `R` package `ATE` to estimate the ATE in a similar manner, but also allows us to calculate confidence intervals and p-values for this estimate:
 
-```{r}
-ate_out <- ATE(df$Y, df$A, (df %>% select(W)))
-summary(ate_out)
+The following code chunk uses the base `R` package `confint()` to estimate the ATE in a similar manner, but also allows us to calculate confidence intervals and p-values for this estimate:
+
+```{r,} 
+
+# estimate the treatment effect assuming no confounding
+# ----------
+ATE_est <- 
+  df %>% 
+  # run a linear model 
+  lm(Y ~ A, data = .)
+
+# calculate confidence for ATE using confint() package
+confint(ATE_est) 
+  
+# compare to "true" ATE
+ATE_true
+
 ```
 
-**\textcolor{blue}{Question 2:}** Report the estimate calculated by the `ATE()` function call above, as well as the 95% confidence interval and p-value. 
+**\textcolor{blue}{QUESTION 2:}** Report the estimate calculated by the `confint()` function call above, as well as the 95% confidence interval and p-value.
 
 $$\hat{\text{ATE}} \approx summary(ate_{out})$Estimate[3,1]$$
 $$\text{95\% CI}_{\hat{\text{ATE}}} \approx [summary(ate_{out})$Estimate[3,3], summary(ate_{out})$Estimate[3,4]] $$
 $$\text{p-value} \approx summary(ate_{out})$Estimate[3,6]$$
 
 
-**\textcolor{blue}{Question 3:}** What would you conclude from the information you reported in the previous question if you did not know the true ATE? From what you do know the true ATE and the DAG, do you think the confidence interval appropriately captures the level of uncertainty of that estimate? Explain.
+**\textcolor{blue}{QUESTION 3:}** What would you conclude from the information you reported in the previous question if you did not know the true ATE? From what you do know the true ATE and the DAG, do you think the confidence interval appropriately captures the level of uncertainty of that estimate? Explain.
 
-**Answer**: 
+**ANSWER**: 
 
 This is a stark reminder that our interpretation of measures such as p-values, CIs, etc. are only valid if our assumptions are correct! Here we know they are not.
 
@@ -176,9 +222,9 @@ where:
 
 In practice, we can reasonably estimate $p$, $\mu_{t,1}$ and $\mu_{c,0}$, but *not* $\mu_{t,0}$ and $\mu_{c,1}$.
 
-**\textcolor{blue}{Question 4:}** Explain why the previous statement is true.
+**\textcolor{blue}{QUESTION 4:}** Explain why the previous statement is true.
 
-**Answer**: 
+**ANSWER**: 
 
 However, we do know that since the outcome $Y$ is binary, $\mu_{t,0}$ and $\mu_{c,1}$ must by definition lie inside the interval [0,1]. This knowledge allows us to construct bounds on $\mu_t$ and $\mu_c$ like so:
 
@@ -214,9 +260,9 @@ UL_{ATE} &= UL_{\mu_t} - LL_{\mu_c} \\
 &= [p \cdot \mu_{t,1} + (1-p)] - [(1-p)\cdot \mu_{c,0}]  \\
 \end{align*}
 
-**\textcolor{blue}{Question 6:}** Why are the bounds for the ATE calculated in this way? For example, why not find the difference of both lower bounds and both upper bounds, respectively?
+**\textcolor{blue}{QUESTION 6:}** Why are the bounds for the ATE calculated in this way? For example, why not find the difference of both lower bounds and both upper bounds, respectively?
 
-**Answer**: 
+**ANSWER**: 
 
 We now have a formula for the ATE using only $p$, $\mu_{t,1}$ and $\mu_{c,0}$, which we said earlier can be reasonably estimated from our data. Thus we can use plug-in estimators for these values to estimate the bounds for the ATE, like so:
 
@@ -225,18 +271,32 @@ We now have a formula for the ATE using only $p$, $\mu_{t,1}$ and $\mu_{c,0}$, w
 \hat{UL}_{ATE} &= [\hat{p} \cdot \hat{\mu}_{t,1} + (1 - \hat{p})] - [(1 - \hat{p})\cdot \hat{\mu}_{c,0}]  \\
 \end{align*}
 
-**\textcolor{blue}{Question 7:}** Calculate these bounds on the ATE using the data.
+**\textcolor{blue}{QUESTION 7:}** Calculate these bounds on the ATE using the data.
 
 ```{r}
-...
+
+# get necessary statistics   
+# ----------
+p_hat <- nrow(df %>% filter(... == 1)) / nrow(df) # filter only treated units, calculate % under treatment
+mu.t1_hat <- df %>% filter(... == 1) %>% summarise(...(Y)) %>% pull(...) # calculate outcome mean under treatment, pull
+mu.c0_hat <- df %>% filter(... == 0) %>% summarise(...(Y)) %>% pull(...) # calculate outcome mean under control, pul...
+
+# calculate lower and upper bounds of ATE
+# ----------
+LL_ATE <- p_hat*mu.t1_hat - (p_hat + (1 - p_hat)*mu.c0_hat)
+UL_ATE <- p_hat*mu.t1_hat + (1 - p_hat) - (1 - p_hat)*mu.c0_hat
+
+LL_ATE
+UL_ATE
+
 ```
 
 $$ATE \in [`LL_{ATE}`,`UL_{ATE}`]$$
 Note that by definition this interval must contain zero and must have a width of one. Do not confuse this with a confidence interval! Also note that this does not include the random variation associated with our estimates.
 
-**\textcolor{blue}{Question 8:}** Compare this interval to the true ATE.
+**\textcolor{blue}{QUESTION 8:}** Compare this interval to the true ATE.
 
-**Answer**: 
+**ANSWER**: 
 
 # Rosenbaum Sensitivity Analysis
 
@@ -292,15 +352,20 @@ which is equivalent to the upper limit derived from the Manski bounds! Therefore
 
 This approach has been implemented via a Shiny App [here](https://carohaensch.shinyapps.io/tippingsens/). This app allows you to upload your data and adjust two of the parameters discussed above ($q$, $\gamma_1$, $\alpha_1$, $\beta_1$) while holding the other two constant.
 
-**\textcolor{blue}{Question 9:}** Upload our data to the app and play around with a few different values/ranges of the four parameters. Take a screesnot of at least one of your iterations and include it below. Discuss what you see and interpret in terms of our original analysis. (Note: You will need to modify the format of our dataset slightly before uploading--read instructions on the app webpage for details)
+**\textcolor{blue}{QUESTION 9:}** Upload our data to the app and play around with a few different values/ranges of the four parameters. Take a screesnot of at least one of your iterations and include it below. Discuss what you see and interpret in terms of our original analysis. (Note: You will need to modify the format of our dataset slightly before uploading--read instructions on the app webpage for details)
 
 ```{r}
-df.shiny <- df %>% 
+# create dataframe for uploading
+# ----------
+df.shiny <- 
+  df %>% 
   mutate(Treatment = A,
          Outcome = Y) %>%
   select(-W)
 
-write.csv(df.shiny, "df.shiny.csv")
+# save as .csv
+# ----------
+write_csv(df.shiny, "df.shiny_new.csv")
 ```
 
 # E-Value
@@ -310,17 +375,82 @@ The last technique we will look at is the E-Value. The basic logic of the E-valu
 To run the E-value calculation, we can use the [`EValue`](https://cran.r-project.org/web/packages/EValue/index.html) package. THe main function we will look at is `evalues.RR()` which evaluates the E-Value using a risk ratio (the probability of an outcome occurring in the exposed group relative to the probability of an outcome in the unexposed group). To run this analysis we simply need this one line:
 
 ```{r}
+# calculate Evalue's Risk Ratio: prob outcome in treatment / prob outcome in control
+# ----------
 evalues.RR(est = 0.3434709, lo = 0.3152002, hi =0.3717417)
 ```
 Using our ATE estimates from earlier, we see that we get an E-value of 5.27. This E-value implies that a confounder would need to be associated with a 5.27-fold increase in the individual experiencing a migraine, and be 5.27 times more prevalent among people who received the drug. 
 
-**Question**: Do you find this figure to be reassuring?
+**\textcolor{blue}{QUESTION 10:}** Do you find this figure to be reassuring?
 
-**Answer**: 
+**ANSWER**: 
 
+
+# Konfound
+
+Finally, another similar sensitivity option is `konfound`. The logic is similar to that of the E-value--what would the correlational strength of a possible confounder need to be to invalidate inference? To get at this, the output returns an estimate of the percent of the estimate that would have to be due to bias to invalidate the inference. One added bonus with this method is that it will give you the number of observations that would have to be replaced with a case that has a null effect to invalidate inference, which is a very intuitive way to explain sensitivity to readers.  
+
+Take a look at the [documentation](https://cran.r-project.org/web/packages/konfound/konfound.pdf) and a useful [tutorial](https://cran.r-project.org/web/packages/konfound/vignettes/introduction-to-konfound.html).
+
+
+```{r}
+
+#
+# before we have conducted an analysis
+# ------------------------------------------------
+
+
+# estimate a model 
+# ---------
+ATE_est <- 
+  df %>% 
+  # run a linear model 
+  lm(Y ~ A, data = .)
+
+# konfound
+# ---------
+konfound(ATE_est, A)
+
+```
+
+We can use `pkonfound()` when we have values from an already-conducted analysis. One noteable application is that this would allow you to estimate sensativity for models you might encounter in a paper. 
+
+```{r}
+
+#
+# when we already conducted an analysis
+# ------------------------------------------------
+
+# pkonfound
+# ---------
+pkonfound(est_eff = -0.3244, 
+          std_err = 0.010019, 
+          n_obs = 10000, 
+          n_covariates = 1)
+
+# threshold plot 
+# share "above threshold" represents share of estimate not confounded
+pkonfound(est_eff = -0.3244, 
+          std_err = 0.010019, 
+          n_obs = 10000, 
+          n_covariates = 1,
+          to_return = "thresh_plot") 
+
+# correlation plot 
+# 0.697 represents the correlation needed of a confounder with treatment & outcome
+pkonfound(est_eff = -0.3244, 
+          std_err = 0.010019, 
+          n_obs = 1000,
+          to_return = "corr_plot") 
+
+```
 
 # References
 
 * Imbens, G. W., &amp; Rubin, D. B. (2018). Causal inference for statistics, social, and biomedical sciences: An introduction. New York: Cambridge University Press.
+
+* Frank, Kenneth, Spiro J. Maroulis, Minh Q. Duong, and Benjamin M. Kelcey. 2013. “What Would It Take to Change an Inference? Using Rubin’s Causal Model to Interpret the Robustness of Causal Inferences.” Educational Evaluation and Policy Analysis 35(4):437–60. doi: 10.3102/0162373713493129.
+
+* Crosnoe, Robert. 2009. “Low-Income Students and the Socioeconomic Composition of Public High Schools.” American Sociological Review 74(5):709–30.
 
 * https://carohaensch.shinyapps.io/tippingsens/
