@@ -386,7 +386,21 @@ To run the E-value calculation, we can use the [`EValue`](https://cran.r-project
 # ----------
 evalues.RR(est = 0.3434709, lo = 0.3152002, hi =0.3717417)
 ```
-Using our ATE estimates from earlier, we see that we get an E-value of 5.27. This E-value implies that a confounder would need to be associated with a 5.27-fold increase in the individual experiencing a migraine, and be 5.27 times more prevalent among people who received the drug. 
+
+Using our ATE estimates from earlier, we see that we get an E-value of 5.27. This E-value implies that a confounder would need to be associated with a 5.27-fold increase in the individual experiencing a migraine, AND be 5.27 times more prevalent among people who received the drug. 
+
+We can use the `bias_plot()` function to get a sense of the range of values for which unobserved confounding would invalidate our inference.  
+
+```{r}
+
+# look at a range of values
+# ----------
+bias_plot(0.3434709, xmax = 20)
+```
+
+
+In the example above, we see that if the exposure-confounder parameter ($RR_{EU}$) were about 3.5, meaning that the confounder(s) is 3.5 times more likely among the treatment group (people who receive the drug), the ($RR_{UD}$) parameter would have to be about 20 (migraine) for it to even be possible that confounding explains the entire observed association (remember in the E-value literature, E is exposure or treatment and D is outcome).
+
 
 **\textcolor{blue}{QUESTION 10:}**  Do you find this figure to be reassuring?
 
