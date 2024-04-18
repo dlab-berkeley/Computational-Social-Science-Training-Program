@@ -398,7 +398,8 @@ In the example above, we see that if the exposure-confounder parameter ($RR_{EU}
 
 **\textcolor{blue}{QUESTION 10:}**  Do you find this figure to be reassuring?
 
-**ANSWER**: Probably not, it is easy to imagine an exogenous variable that increases the likelihood someone both takes the drug and develops a migraine anyway, and a 5-fold increase in this risk is not especially high. Like with p-values though, we should be careful about using arbitrary cutoffs to determine whether our results are valid. 
+**ANSWER**: ...
+
 
 # Konfound
 
