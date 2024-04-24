@@ -25,12 +25,12 @@ pacman::p_load(# Tidyverse packages including dplyr and ggplot2
                tmle,    # Targeted Maximum Likelihood Estimation
                SuperLearner,
                caret,
-               e1071,    # svm
-               rpart,    # decision trees
-               furrr,    # parallel processing
-               parallel, # parallel processing
-               ranger, 
-               tidymodels)   # fast implementation of random forests
+               e1071,       # svm
+               rpart,       # decision trees
+               furrr,       # parallel processing
+               parallel,    # parallel processing
+               ranger,      # fast implementation of random forests
+               tidymodels)  # workflow for machine learning
 
 # set seed
 # ----------
