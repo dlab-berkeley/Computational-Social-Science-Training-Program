@@ -25,12 +25,12 @@ pacman::p_load(# Tidyverse packages including dplyr and ggplot2
                tmle,    # Targeted Maximum Likelihood Estimation
                SuperLearner,
                caret,
-               e1071,    # svm
-               rpart,    # decision trees
-               furrr,    # parallel processing
-               parallel, # parallel processing
-               ranger, 
-               tidymodels)   # fast implementation of random forests
+               e1071,       # svm
+               rpart,       # decision trees
+               furrr,       # parallel processing
+               parallel,    # parallel processing
+               ranger,      # fast implementation of random forests
+               tidymodels)  # workflow for machine learning
 
 # set seed
 # ----------
@@ -217,6 +217,8 @@ caret::confusionMatrix(as.factor(validation$pred),
 
 SuperLearner can take a long time to run, but we can also speed this up with parallelization. Unfortunately this works slightly differently in Windows and Mac/Linux (R doesn't seem to recognize Windows Subsystem for Linux).
 
+Here is some useful [resources on  parallelization](https://berkeley-scf.github.io/tutorial-parallelization/parallel-R) from Berkeley if you want to dig deeper.
+
 ```{r}
 
 # 
@@ -224,7 +226,7 @@ SuperLearner can take a long time to run, but we can also speed this up with par
 # -------------------------------------------------------- 
 
 # identify number of cores to use
-n_cores <- availableCores() - 1
+n_cores <- availableCores() - 1 # maybe 2 cores instead?
 
 
 # plan separate session 
@@ -579,7 +581,7 @@ data_obs_ltmle <-
   rename(W1 = tax, W2 = age, W3 = crim) %>%
   select(W1, W2, W3, A, Y)
 
-# ltmle implementation
+# implement ltmle
 # ----------
 result <- ltmle(data_obs_ltmle, # dataset
                 Anodes = "A",   # vector that shows treatment
@@ -603,7 +605,7 @@ Let's simulate some data that captures this relationship. Notice how we added tw
 # ----------
 rexpit <- function(x) rbinom(n=length(x), size=1, prob=plogis(x))
 
-# specify model parameters
+# simulate data
 # ----------
 n <- 1000
 W1 <- rnorm(n)
@@ -613,7 +615,7 @@ A <- rexpit(-1 + 2 * W1 + W3)
 Y <- rexpit(-0.5 + 2 * W1^2 + 0.5 * W2 - 0.5 * A + 0.2 * W3 * A - 1.1 * W3)
 data <- data.frame(W1, W2, W3, A, Y)
 
-# implement above all in one step using tmle
+# implement tmle
 # ----------
 result <- ltmle(data, 
                 Anodes="A",       
@@ -635,7 +637,7 @@ We can simulate some more data to reflect this structure, and then fit a `ltme()
 
 ```{r, warning=FALSE}
 
-# specify model parameters
+# simulate data
 # ----------
 n <- 1000
 W <- rnorm(n)
