@@ -394,7 +394,7 @@ If you encounter an error message such as "pathspec 'master' did not match any f
 
 ## Git Cheatsheet
 
-There are a lot of Git commands and many commands have different options. Here is a link to a [list of commonly used Git commands](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/kz_module1/1%20Installation%20and%20Reproducible%20Data%20Science/git%20cheatsheet.md).
+There are a lot of Git commands and many commands have different options. Here is a link to a [list of commonly used Git commands](https://github.com/dlab-berkeley/Computational-Social-Science-Training-Program/blob/main/1%20Installation%20and%20Reproducible%20Data%20Science/git%20cheatsheet.md).
 ## Git Tutorials
 
 The above lab is sufficient for what you will need to know this semester for Git. However, if you are interested in really developing your skills, this workshop from [Software Carpentry: Version Control with Git](https://swcarpentry.github.io/git-novice/index.html) is a really great, free resource.
