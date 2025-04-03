@@ -446,14 +446,15 @@ There is no empirical way to determine whether the "exclusion restriction" requi
 
 ## First Stage 
 
+
 The "first stage" requirement (that $Z$ must have a causal effect on $A$), however, can be empirically tested, and as the name implies, doing so is indeed the first stage in implementing an instrumental variable analysis. 
 
-To do so, we simply run a linear regression of the intended instrument $Z$ on the exposure $A$ (and any measured confounders $W$ that we have determined appropriate to control for):
+To do so, we simply regress the intended instrument $Z$ on the exposure $A$ (and any measured confounders $W$ that we have determined appropriate to control for) using a simple linear regression:
 
-$$Z = \beta_0 + \beta_1A + \epsilon$$
-If this regression results in a high correlation value, $Z$ is considered a **strong** instrument and we may proceed. If correlation is low, however, $Z$ is considered a **weak** instrument and may be a poor choice of instrument.
+$$A = \beta_0 + \beta_1Z + \beta_2W + \epsilon$$
+If this regression results in a high correlation value (the regression coefficent), $Z$ is considered a **strong** instrument and we may proceed. If value is low, however, $Z$ is considered a **weak** instrument and may be a poor choice of instrument.
 
-If we decide to move forward with using $Z$ as an instrument, we save the predicted values of the instrument $\hat{Z}$ and the covariance of $Z$ and $A$ ($Cov(Z,A)$) for the next stage.
+If we decide to move forward with using $Z$ as an instrument, we save the predicted values of the treatment $\hat{A}$ that are a function of $Z$ and the covariance of $Z$ and $A$ ($Cov(Z,A)$) for the next stage.
 
 **\textcolor{blue}{Question 6:}** Consider, what are some potential concerns with using a weak instrument?
 
@@ -461,10 +462,10 @@ If we decide to move forward with using $Z$ as an instrument, we save the predic
 
 ## Second Stage 
 
-Now that we have the predicted values of the instrument $\hat{Z}$, we regress the outcome $Y$ on these values, like so:
+Now that we have the predicted values of the treatment $\hat{A}$, we regress the outcome $Y$ on these values (and any covariates included in the first stage), like so:
 
-$$Y = \beta_0 + \beta_1\hat{Z} + \epsilon$$
-We then retrieve the covariance between $Z$ and $Y$ ($Cov(Z,Y)$). The ratio between this and $Cov(Z,A)$ is then our 2SLS estimate of the coefficient on $A$ in the original model.
+$$Y = \beta_0 + \beta_1\hat{A} + \beta_1W + \epsilon$$
+We then retrieve the covariance between $Z$ and $Y$ ($Cov(Z,Y)$). The ratio between this and $Cov(Z,A)$ is then our 2SLS estimate of the coefficient on $A$ in the original model. *Note that this will differ slightly if you control for any $W$.*
 
 $$\hat{\beta}_1 = \frac{Cov(Z,Y)}{Cov(Z,A)}$$
 
@@ -547,17 +548,17 @@ head(df)
 summary(df)
 ```
 
-**\textcolor{blue}{Question 8:}** Use the `lm()` function to regress proximity $Z$ on AspiTyleCedrin use $A$ and sex assigned at birth $W$. Assign the predicted values to the variable name `Z_hat`. Use the `cov()` function to find $Cov(Z,A)$ and assign the result to the variable name `cov_za`.
+**\textcolor{blue}{Question 8:}** Use the `lm()` function to regress whether the individual took AspiTyleCedrin ($A$) on proximity to a pharmacy that sells AspiTyleCedrin  $Z$ and sex assigned at birth $W$. Assign the predicted values to the variable name `A_hat`. Use the `cov()` function to find $Cov(Z,A)$ and assign the result to the variable name `cov_za`.
 
 ```{r}
 lm_out1 <- lm(..., data = df)
 summary(lm_out1)
 
-Z_hat <- lm_out1$...
+A_hat <- lm_out1$...
 cov_za <- cov(..., ...)
 ```
 
-**\textcolor{blue}{Question 9:}** Use the `lm()` function to regress migraines $Y$ on your fitted values `Z_hat`. Use the `cov()` function to find $Cov(Z,Y)$ and assign the result to the variable name `cov_zy`.
+**\textcolor{blue}{Question 9:}** Use the `lm()` function to regress migraines $Y$ on your fitted values `A_hat`. Use the `cov()` function to find $Cov(Z,Y)$ and assign the result to the variable name `cov_zy`.
 
 ```{r}
 lm_out2 <- lm(..., data = df)
@@ -578,7 +579,7 @@ beta_hat
 > ...
 
 
-The `AER` package also provides us with the `ivreg()` function which allows us to perform IV regression in one command:
+The `AER` package also provides us with the `ivreg()` function which allows us to perform IV regression in one command (*note that the standard errors will correctly adjusted when using the `ivreg()` function*:
 
 ```{r}
 lm_out3 <- ivreg(..., data = df)
