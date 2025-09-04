@@ -64,7 +64,7 @@ The process should look something like this:
 
 ## Generating a Personal Access Token (PAT)
 
-In the next step, we will pull down (clone) an repo from GitHub to our local computer via the command line. There are two main ways to do this: using either an `https` or `ssh` protocol. We'll be using a `https` (web address) protocol, which is a simple way to clone a repo by directing Git to the online GitHub web address and then pulling the contents of the repo down to your local machine. See the resource section belwo to learn how to use the `ssh` (secure shell protocol), which is more secure. 
+In the next step, we will pull down (clone) an repo from GitHub to our local computer via the command line. There are two main ways to do this: using either an `https` or `ssh` protocol. We'll be using a `https` (web address) protocol, which is a simple way to clone a repo by directing Git to the online GitHub web address and then pulling the contents of the repo down to your local machine. You will need this later on when you push changes to GitHub. See the resource section belwo to learn how to use the `ssh` (secure shell protocol), which is more secure. 
 
 In the past, the `https` protocol has relied on users using their GitHub passwords to authenticate their individual computer to the GitHub repo. However, as of 2021, that process was superseeded by the use of a Personal Access Token (PAT) instead of your user password. Essentiallly, PATs are encripted tokens that are more secure than a user-generated password that essentially authenticates the compupter or user with GitHub.
 
@@ -81,7 +81,7 @@ Let's go ahead and generate a classic PAT. Make sure that you:
 	- “Workflow”
 	- “User”
 	- “delete_repo”
-- Finally, **be sure to copy the token because we will use that as our new password in a few steps and you will not be able to see this again**. If you make a mistake, you will need to delete the PAT and start over. 
+- Finally, **be sure to copy the token because we will use that as our new password in a few steps (when pushing changes) and you will not be able to see this again**. If you make a mistake, you will need to delete the PAT and start over. 
 
 Let's follow [these steps carefully:](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
 
@@ -199,7 +199,7 @@ The next step is where we push those recorded changes to GitHub, where others ca
 git push
 ```
 
-This is where you will be prompted to enter the PAT credentials we created earlier. Enter your username and then the PAT you copied in place of the password. Once you set this up, you shouldn't have to enter your credentials every time you want to push. Navigate back to your online repository and you should see the changes reflected there. 
+**This is where you will be prompted to enter the PAT credentials we created earlier.** Enter your username and then the PAT you copied in place of the password. Once you set this up, you shouldn't have to enter your credentials every time you want to push. Navigate back to your online repository and you should see the changes reflected there. 
 
 ## Collaborative Tools
 
@@ -236,6 +236,14 @@ This code will create a new branch called "new_branch". To switch back to the ma
 git switch main
 
 ```
+
+To check what branches you have and to see which branch you are currently on, run the following:
+
+```
+git branch
+
+```
+Alternatively, when you type `git status`, the working branch will be listed at the top of the output.
 
 Be aware that when you create a new branch on your local machine, Git does not know where to send those tracked changes because that branch is only on your local machine. So, when you make changes and then `git push` those changes, you will encounter an error like the following: `fatal: The current branch new_branch has no upstream branch.` Fortunately, Git will suggest the solution: ` git push --set-upstream origin new_branch`, where "new_branch" is the name of the new branch you just created. Essentially, this command pushes your changes but the option `--set-upstream` tells git to push those changes to the origin (the original repo from which your local is operating) via a new branch you just created, "new_branch", which is then added to the GitHub repo. Be sure you use the name of the new branch you just created and not "new_branch" every time. A shortcut code to use instead is the following: `git push -u origin new_branch`, where "new_branch" refers to the name of the new branch you just created and `-u` option is short for `--set-upstream`.
 
