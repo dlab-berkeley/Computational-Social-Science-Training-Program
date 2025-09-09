@@ -293,7 +293,7 @@ These challenges are taken from [D-Lab's BashGit workshop.](https://github.com/d
 
 5. The maintainer creates a file named animals.txt using the command line, adds their favorite animal to this file and pushes these changes to the repo.
 
-6. Contributors A and B fork this repository and each add their favorite animals to this file. 
+6. Contributors A and B clone or fork this repository and each add their favorite animals to this file. 
 
 7. Contributors A and B then create a pull request (click the "pull request" button, then click it again) so the maintainer can see the proposed changes. 
 
