@@ -313,6 +313,11 @@ All of the code you will need for the semester is contained in the [D-Lab Comput
 
 Keep in mind that the work flow for each lab will look like the following: 
 - At the beginning of each class, we will activate a virtual anaconda environment.
+```
+conda create -n CSS python=3 anaconda
+conda activate CSS
+conda deactivate
+```
 - Navigate to the directory where we cloned the class repo.
 - Fire up a `jupyter notebook` to run our lab scripts. 
  
